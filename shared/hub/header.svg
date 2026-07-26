@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 120" width="640" height="120">
+  <defs>
+    <linearGradient id="hdrGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C3AED" />
+      <stop offset="100%" stop-color="#EC4899" />
+    </linearGradient>
+  </defs>
+  <rect x="20" y="20" width="80" height="80" rx="20" fill="url(#hdrGrad)" />
+  <path d="M46 45h28a14 14 0 0 1 13.7 16.8l-2.5 12.7a8 8 0 0 1-13.8 3.8L65 71.5h-10l-6.4 6.8a8 8 0 0 1-13.8-3.8l-2.5-12.7A14 14 0 0 1 46 45Z" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M49 54v10M44 59h10" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="72" cy="56" r="3" fill="#FFFFFF"/>
+  <circle cx="79" cy="61" r="3" fill="#FFFFFF"/>
+  <text x="120" y="74" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="42" font-weight="700" fill="#1E293B">Tarenx Games</text>
+</svg>

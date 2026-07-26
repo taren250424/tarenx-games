@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="sokOgBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="60%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#451A03" />
+    </linearGradient>
+    <linearGradient id="crateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#B45309" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#sokOgBg)" />
+
+  <circle cx="1060" cy="110" r="190" fill="#D97706" opacity="0.12" />
+  <circle cx="110" cy="550" r="150" fill="#F59E0B" opacity="0.08" />
+
+  <g transform="translate(120, 190)">
+    <circle cx="60" cy="60" r="62" fill="none" stroke="#F59E0B" stroke-width="6" stroke-dasharray="16 13" opacity="0.6"/>
+    <rect x="22" y="22" width="76" height="76" rx="10" fill="url(#crateGrad)" stroke="#FBBF24" stroke-width="7"/>
+    <path d="M22 38l76 44M98 38l-76 44" stroke="#FBBF24" stroke-width="7" stroke-linecap="round"/>
+  </g>
+
+  <text x="300" y="270" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="76" font-weight="800" fill="#F8FAFC">Sokoban</text>
+  <text x="300" y="340" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="34" font-weight="400" fill="#94A3B8">Push every crate onto its goal. Free classic puzzle.</text>
+
+  <rect x="300" y="380" width="360" height="6" rx="3" fill="url(#crateGrad)" />
+
+  <text x="300" y="470" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="26" fill="#CBD5E1">games.tarenx.com/sokoban</text>
+</svg>

@@ -6,12 +6,16 @@
 
 :root {
 	--tile: clamp(28px, 5.4vmin, 48px);
-	--bg: #0f172a;
-	--panel: #1e293b;
-	--line: #334155;
-	--text: #e2e8f0;
-	--muted: #94a3b8;
+	--bg: #f8fafc;
+	--panel: #ffffff;
+	--line: #e2e8f0;
+	--text: #1e293b;
+	--muted: #64748b;
 	--accent: #f59e0b;
+	--accent-strong: #b45309;
+	/* the board keeps its dark "screen" look — piece colors are tuned for it */
+	--board: #1e293b;
+	--board-wall: #475569;
 }
 
 body {
@@ -142,13 +146,13 @@ aside.ad {
 }
 
 .tile.wall {
-	background-color: #475569;
+	background-color: var(--board-wall);
 	border-radius: 4px;
 	box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.3);
 }
 
 .tile.floor {
-	background-color: var(--panel);
+	background-color: var(--board);
 }
 
 .tile.goal::before {
@@ -288,5 +292,5 @@ footer {
 }
 
 footer a {
-	color: var(--accent);
+	color: var(--accent-strong);
 }

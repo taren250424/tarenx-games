@@ -5,12 +5,15 @@
 }
 
 :root {
-	--bg: #0f172a;
-	--panel: #1e293b;
-	--line: #334155;
-	--text: #e2e8f0;
-	--muted: #94a3b8;
+	--bg: #f8fafc;
+	--panel: #ffffff;
+	--line: #e2e8f0;
+	--text: #1e293b;
+	--muted: #64748b;
 	--accent: #22d3ee;
+	--accent-strong: #0e7490;
+	/* the well keeps its dark "screen" look — piece colors are tuned for it */
+	--board: #0b1120;
 }
 
 body {
@@ -123,6 +126,9 @@ aside.ad {
 .panel canvas {
 	display: block;
 	margin: 0 auto;
+	background-color: var(--board);
+	border-radius: 8px;
+	padding: 4px;
 }
 
 .board-wrap {
@@ -135,7 +141,7 @@ aside.ad {
 	height: auto;
 	border: 1px solid var(--line);
 	border-radius: 8px;
-	background-color: #0b1120;
+	background-color: var(--board);
 }
 
 #overlay {
@@ -165,7 +171,7 @@ aside.ad {
 }
 
 #overlay p {
-	color: var(--muted);
+	color: #94a3b8;
 	font-size: 0.95rem;
 }
 
@@ -261,5 +267,5 @@ footer {
 }
 
 footer a {
-	color: var(--accent);
+	color: var(--accent-strong);
 }

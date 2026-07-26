@@ -1,6 +1,21 @@
 (function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel="modulepreload"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),e.crossOrigin===`use-credentials`?t.credentials=`include`:e.crossOrigin===`anonymous`?t.credentials=`omit`:t.credentials=`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})();var e=Object.entries(Object.assign({"../../blockdrop/index.html":`<!doctype html>
 <html lang="en">
 	<head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-NLCK842B");
+    <\/script>
+    <!-- End Google Tag Manager -->
+
 		<meta charset="UTF-8" />
 		<meta
 			name="description"
@@ -22,6 +37,17 @@
 	</head>
 
 	<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-NLCK842B"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
 		<header>
 			<div class="header-brand">
 				<img class="header-logo" src="shared/blockdrop/logo.svg" alt="Block Drop Logo" />
@@ -228,6 +254,21 @@
 `,"../../sokoban/index.html":`<!doctype html>
 <html lang="en">
 	<head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-NLCK842B");
+    <\/script>
+    <!-- End Google Tag Manager -->
+
 		<meta charset="UTF-8" />
 		<meta
 			name="description"
@@ -249,6 +290,17 @@
 	</head>
 
 	<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-NLCK842B"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
 		<header>
 			<div class="header-brand">
 				<img class="header-logo" src="shared/sokoban/logo.svg" alt="Sokoban Logo" />
@@ -372,8 +424,10 @@
 </html>
 `})).map(([e,t])=>{let n=e.split(`/`),r=n[n.length-2],i=r===`..`?`hub`:r,a=t.match(/<title>(.*?)<\/title>/),o=a?a[1]:i,s=t.match(/<meta\s+name="description"\s+content="([^"]*)"/);return{name:o,description:s?s[1]:``,icon:`shared/${i}/logo.svg`,href:`/${i}/`}}).filter(e=>{let t=e.href.replace(/\//g,``);return t!==`hub`&&t!==`shared`});function t(){let t=document.querySelector(`main`);t.innerHTML=e.map(e=>`
         <a href="${e.href}">
-          <img src="${e.icon}" alt="${e.name}" />
-          <span class="game-name">${e.name}</span>
+          <span class="game-brand">
+            <img src="${e.icon}" alt="${e.name}" />
+            <span class="game-name">${e.name}</span>
+          </span>
           <span class="game-desc">${e.description}</span>
         </a>
       `).join(``)}document.addEventListener(`DOMContentLoaded`,t);

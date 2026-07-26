@@ -41,8 +41,10 @@ function main() {
 		.map(
 			(game) => `
         <a href="${game.href}">
-          <img src="${game.icon}" alt="${game.name}" />
-          <span class="game-name">${game.name}</span>
+          <span class="game-brand">
+            <img src="${game.icon}" alt="${game.name}" />
+            <span class="game-name">${game.name}</span>
+          </span>
           <span class="game-desc">${game.description}</span>
         </a>
       `

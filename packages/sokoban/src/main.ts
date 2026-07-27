@@ -69,7 +69,11 @@ function loadProgress(): Progress {
 }
 
 function saveProgress(progress: Progress) {
-	localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+	try {
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+	} catch {
+		// storage full or blocked — keep playing with in-memory progress
+	}
 }
 
 const progress = loadProgress();

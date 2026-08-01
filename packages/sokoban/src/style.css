@@ -74,12 +74,6 @@ main .game-column {
 	gap: 16px;
 }
 
-aside.ad {
-	background-color: var(--panel);
-	border: 1px solid var(--line);
-	border-radius: 12px;
-}
-
 @media (max-width: 1200px) {
 	aside.ad {
 		display: none;

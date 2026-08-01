@@ -6,7 +6,7 @@
 
 body {
   display: grid;
-  grid-template-rows: 200px 1fr 120px;
+  grid-template-rows: 200px 1fr auto;
   min-height: 100vh;
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   background-color: #f8fafc;
@@ -97,16 +97,4 @@ main a .game-desc {
   main a .game-desc {
     text-align: center;
   }
-}
-
-footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #64748b;
-  font-size: 0.9rem;
-}
-
-footer a {
-  color: #7c3aed;
 }

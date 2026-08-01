@@ -61,7 +61,7 @@ header {
 
 main {
 	display: grid;
-	grid-template-columns: 180px minmax(0, 900px) 180px;
+	grid-template-columns: var(--ad-slot-width) minmax(0, 900px) var(--ad-slot-width);
 	justify-content: center;
 	gap: 24px;
 	padding: 24px 16px 48px;
@@ -75,10 +75,6 @@ main .game-column {
 }
 
 @media (max-width: 1200px) {
-	aside.ad {
-		display: none;
-	}
-
 	main {
 		grid-template-columns: minmax(0, 900px);
 	}

@@ -1,3 +1,4 @@
+import "../../shared/ads/ad-slot.css";
 import "./style.css";
 
 // --- constants ---

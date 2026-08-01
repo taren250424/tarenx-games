@@ -1,0 +1,25 @@
+/*
+ * Shared styles for ad slots.
+ *
+ * This is the single place to edit when real ads are wired up; every game
+ * picks up the change.
+ *
+ * Usage
+ *   1. Import from the app entry: `import "../../shared/ads/ad-slot.css";`
+ *   2. Place <aside class="ad"></aside> on both sides of <main>
+ *   3. Use var(--ad-slot-width) for the outer grid columns of main
+ *
+ * Slots carry no decoration until an ad fills them. A border or background
+ * would advertise the empty space as an ad placement.
+ */
+
+:root {
+  /* Sized for the 160x600 wide skyscraper unit */
+  --ad-slot-width: 160px;
+}
+
+@media (max-width: 1200px) {
+  aside.ad {
+    display: none;
+  }
+}

@@ -243,10 +243,6 @@
 		</header>
 		<main></main>
 		<footer>
-			<p>
-				More utilities at
-				<a href="https://tools.tarenx.com/">tools.tarenx.com</a>
-			</p>
 		</footer>
 		<script type="module" src="/src/main.ts"><\/script>
 	</body>

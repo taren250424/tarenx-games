@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="sudFavGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#4338CA" />
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="#1E293B" />
+  <rect x="6" y="6" width="20" height="20" rx="2" fill="none" stroke="#64748B" stroke-width="1.5"/>
+  <path d="M12.67 6v20M19.33 6v20M6 12.67h20M6 19.33h20" stroke="#475569" stroke-width="1"/>
+  <rect x="13.1" y="6.6" width="5.8" height="5.6" rx="1" fill="url(#sudFavGrad)"/>
+  <text x="16" y="9.6" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="5.4" font-weight="700" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">5</text>
+  <text x="9.3" y="16.1" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="5.4" font-weight="700" fill="#A5B4FC" text-anchor="middle" dominant-baseline="central">3</text>
+  <text x="22.7" y="16.1" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="5.4" font-weight="700" fill="#A5B4FC" text-anchor="middle" dominant-baseline="central">7</text>
+  <text x="16" y="22.8" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="5.4" font-weight="700" fill="#A5B4FC" text-anchor="middle" dominant-baseline="central">9</text>
+</svg>

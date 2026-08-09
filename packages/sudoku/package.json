@@ -1,0 +1,16 @@
+{
+  "name": "sudoku",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "generate": "node tools/generate-puzzles.mjs"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2"
+  }
+}

@@ -16,6 +16,8 @@
     "build:sokoban": "pnpm --filter sokoban run build",
     "dev:blockdrop": "pnpm --filter blockdrop run dev",
     "build:blockdrop": "pnpm --filter blockdrop run build",
+    "dev:sudoku": "pnpm --filter sudoku run dev",
+    "build:sudoku": "pnpm --filter sudoku run build",
 
     "preview": "pnpm run build && node scripts/preview.mjs",
     "deploy": "pnpm run build && node scripts/deploy.mjs",

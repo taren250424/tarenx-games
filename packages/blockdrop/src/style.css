@@ -113,6 +113,16 @@ main .game-column {
 	font-variant-numeric: tabular-nums;
 }
 
+#sound-btn {
+	color: var(--text);
+	font-size: 1.05rem;
+	cursor: pointer;
+}
+
+#sound-btn:hover {
+	border-color: var(--accent);
+}
+
 .panel canvas {
 	display: block;
 	margin: 0 auto;

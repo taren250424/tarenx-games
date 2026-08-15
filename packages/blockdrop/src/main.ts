@@ -1,5 +1,6 @@
 import "../../shared/ads/ad-slot.css";
 import "./style.css";
+import { createSfx } from "../../shared/audio/sfx.ts";
 
 // --- constants ---
 const COLS = 10;
@@ -7,6 +8,7 @@ const ROWS = 20;
 const HIDDEN = 2; // spawn rows above the visible field
 const TOTAL_ROWS = ROWS + HIDDEN;
 const STORAGE_KEY = "tarenx.blockdrop.highscore";
+const SOUND_KEY = "tarenx.blockdrop.sound";
 
 type PieceType = "I" | "O" | "T" | "S" | "Z" | "J" | "L";
 
@@ -98,6 +100,21 @@ const highEl = document.getElementById("high") as HTMLElement;
 const overlayEl = document.getElementById("overlay") as HTMLElement;
 const overlayTitleEl = document.getElementById("overlay-title") as HTMLElement;
 const overlayTextEl = document.getElementById("overlay-text") as HTMLElement;
+const soundBtn = document.getElementById("sound-btn") as HTMLButtonElement;
+
+// --- audio ---
+let soundOn = localStorage.getItem(SOUND_KEY) !== "0";
+const play = createSfx(["drop", "clear", "levelup", "gameover"] as const, () => soundOn);
+
+function updateSoundBtn() {
+	soundBtn.textContent = soundOn ? "🔊" : "🔇";
+}
+
+soundBtn.addEventListener("click", () => {
+	soundOn = !soundOn;
+	localStorage.setItem(SOUND_KEY, soundOn ? "1" : "0");
+	updateSoundBtn();
+});
 
 const CELL = 30;
 const PREVIEW_CELL = 18;
@@ -204,6 +221,7 @@ function hardDrop() {
 	let dist = 0;
 	while (tryMove(1, 0)) dist++;
 	score += dist * 2;
+	play("drop");
 	lockPiece();
 }
 
@@ -247,7 +265,9 @@ function lockPiece() {
 	if (cleared > 0) {
 		score += LINE_SCORES[cleared] * level;
 		lines += cleared;
-		level = Math.floor(lines / 10) + 1;
+		const newLevel = Math.floor(lines / 10) + 1;
+		play(newLevel > level ? "levelup" : "clear");
+		level = newLevel;
 	}
 
 	canHold = true;
@@ -261,6 +281,7 @@ function lockPiece() {
 
 function endGame() {
 	running = false;
+	play("gameover");
 	if (score > highScore) {
 		highScore = score;
 		localStorage.setItem(STORAGE_KEY, String(highScore));
@@ -536,5 +557,6 @@ overlayEl.addEventListener("click", () => {
 // --- init ---
 board = emptyBoard();
 highEl.textContent = highScore.toLocaleString();
+updateSoundBtn();
 showOverlay("Block Drop", "Press Enter or tap to start");
 draw();

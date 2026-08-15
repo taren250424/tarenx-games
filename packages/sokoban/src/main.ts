@@ -1,5 +1,6 @@
 import "../../shared/ads/ad-slot.css";
 import "./style.css";
+import { createSfx } from "../../shared/audio/sfx.ts";
 import { COLLECTIONS } from "./levels.ts";
 
 type Dir = "up" | "down" | "left" | "right";
@@ -14,6 +15,7 @@ interface Snapshot {
 interface Progress {
 	current: string; // "collectionIndex:levelIndex"
 	best: Record<string, number>; // "collectionIndex:levelIndex" -> best moves
+	settings: { sound: boolean };
 }
 
 const STORAGE_KEY = "tarenx.sokoban.progress";
@@ -49,6 +51,7 @@ const bestEl = document.getElementById("best") as HTMLElement;
 const overlayEl = document.getElementById("win-overlay") as HTMLElement;
 const winStatsEl = document.getElementById("win-stats") as HTMLElement;
 const nextBtn = document.getElementById("next-btn") as HTMLButtonElement;
+const soundBtn = document.getElementById("sound-btn") as HTMLButtonElement;
 
 function loadProgress(): Progress {
 	try {
@@ -60,13 +63,17 @@ function loadProgress(): Progress {
 				parsed.best !== null &&
 				typeof parsed.best === "object"
 			) {
-				return { current: parsed.current, best: parsed.best };
+				return {
+					current: parsed.current,
+					best: parsed.best,
+					settings: { sound: parsed.settings?.sound ?? true },
+				};
 			}
 		}
 	} catch {
 		// corrupted storage — start fresh
 	}
-	return { current: "0:0", best: {} };
+	return { current: "0:0", best: {}, settings: { sound: true } };
 }
 
 function saveProgress(progress: Progress) {
@@ -78,6 +85,19 @@ function saveProgress(progress: Progress) {
 }
 
 const progress = loadProgress();
+
+// --- audio ---
+const play = createSfx(["bump", "goal", "clear"] as const, () => progress.settings.sound);
+
+function updateSoundBtn() {
+	soundBtn.textContent = progress.settings.sound ? "🔊" : "🔇";
+}
+
+soundBtn.addEventListener("click", () => {
+	progress.settings.sound = !progress.settings.sound;
+	saveProgress(progress);
+	updateSoundBtn();
+});
 
 function idx(r: number, c: number): number {
 	return r * width + c;
@@ -166,14 +186,21 @@ function move(dir: Dir) {
 	const { dr, dc } = DIRS[dir];
 	const delta = dr * width + dc;
 	const target = player + delta;
-	if (walls.has(target)) return;
+	if (walls.has(target)) {
+		play("bump");
+		return;
+	}
 
 	if (boxes.has(target)) {
 		const beyond = target + delta;
-		if (walls.has(beyond) || boxes.has(beyond)) return;
+		if (walls.has(beyond) || boxes.has(beyond)) {
+			play("bump");
+			return;
+		}
 		history.push({ player, boxes: new Set(boxes), moves, pushes });
 		boxes.delete(target);
 		boxes.add(beyond);
+		if (goals.has(beyond)) play("goal");
 		pushes++;
 	} else {
 		history.push({ player, boxes: new Set(boxes), moves, pushes });
@@ -203,6 +230,7 @@ function checkWin() {
 		if (!goals.has(b)) return;
 	}
 	won = true;
+	play("clear");
 	const key = levelKey(colIndex, levelIndex);
 	const best = progress.best[key];
 	const isRecord = best === undefined || moves < best;
@@ -315,6 +343,7 @@ function buildLevelOptions() {
 
 function init() {
 	buildLevelOptions();
+	updateSoundBtn();
 	let [ci, li] = (progress.current ?? "0:0").split(":").map(Number);
 	if (!COLLECTIONS[ci]?.levels[li]) {
 		ci = 0;

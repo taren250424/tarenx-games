@@ -1,5 +1,6 @@
 import "../../shared/ads/ad-slot.css";
 import "./style.css";
+import { createSfx } from "../../shared/audio/sfx.ts";
 import { PUZZLES, type Difficulty } from "./puzzles.ts";
 
 interface Snapshot {
@@ -75,20 +76,11 @@ const winStatsEl = document.getElementById("win-stats") as HTMLElement;
 const nextBtn = document.getElementById("next-btn") as HTMLButtonElement;
 
 // --- audio ---
-const SOUND_NAMES = ["select", "place", "erase", "error", "hint", "button", "win"] as const;
-type SoundName = (typeof SOUND_NAMES)[number];
-const sounds = Object.fromEntries(
-	SOUND_NAMES.map((name) => [name, new Audio(`${import.meta.env.BASE_URL}audio/${name}.mp3`)])
-) as Record<SoundName, HTMLAudioElement>;
-
-function play(name: SoundName) {
-	if (!progress.settings.sound) return;
-	const audio = sounds[name];
-	audio.currentTime = 0;
-	audio.play().catch(() => {
-		// autoplay blocked before first interaction — ignore
-	});
-}
+const play = createSfx(
+	["select", "place", "erase", "error", "hint", "button", "win"] as const,
+	() => progress.settings.sound,
+	"mp3"
+);
 
 // --- persistence ---
 function loadProgress(): Progress {

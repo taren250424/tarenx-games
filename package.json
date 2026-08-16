@@ -18,6 +18,8 @@
     "build:blockdrop": "pnpm --filter blockdrop run build",
     "dev:sudoku": "pnpm --filter sudoku run dev",
     "build:sudoku": "pnpm --filter sudoku run build",
+    "dev:minesweeper": "pnpm --filter minesweeper run dev",
+    "build:minesweeper": "pnpm --filter minesweeper run build",
 
     "preview": "pnpm run build && node scripts/preview.mjs",
     "deploy": "pnpm run build && node scripts/deploy.mjs",

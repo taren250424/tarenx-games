@@ -1,8 +1,10 @@
-// Synthesizes the sound effects for blockdrop and sokoban as 16-bit mono WAV
-// files under each game's public/audio/ directory. The files are committed;
-// re-run this script only when tuning the sounds.
+// Synthesizes each game's sound effects as 16-bit mono WAV files under its
+// public/audio/ directory. The files are committed; re-run this script only
+// when tuning the sounds. The noise generator is not seeded, so regeneration
+// changes the bytes of every file it writes — pass game names to regenerate
+// only those games.
 //
-//   node scripts/gen-sfx.mjs
+//   node scripts/gen-sfx.mjs [game ...]
 
 import { writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -119,7 +121,33 @@ sokoban.clear = silence(0.9);
 });
 tone(sokoban.clear, { freq: C6, start: 0.33, dur: 0.55, amp: 0.9, tau: 0.16, harmonics: [[2, 0.2]] });
 
-for (const [game, sounds] of [["blockdrop", blockdrop], ["sokoban", sokoban]]) {
+// --- minesweeper ---
+const minesweeper = {};
+
+// open a square: soft pop
+minesweeper.reveal = silence(0.08);
+tone(minesweeper.reveal, { freq: 620, endFreq: 420, dur: 0.06, amp: 1, tau: 0.018 });
+
+// place/remove a flag: crisp tick
+minesweeper.flag = silence(0.07);
+tone(minesweeper.flag, { freq: 980, dur: 0.05, amp: 1, tau: 0.014, harmonics: [[2, 0.2]] });
+
+// hit a mine: rumbling explosion
+minesweeper.boom = silence(0.6);
+noise(minesweeper.boom, { dur: 0.55, amp: 1, tau: 0.13, lowpass: 0.3 });
+tone(minesweeper.boom, { freq: 95, endFreq: 28, dur: 0.5, amp: 0.9, tau: 0.14 });
+
+// field cleared: rising jingle
+minesweeper.win = silence(0.9);
+[E5, G5, C6].forEach((f, i) => {
+	tone(minesweeper.win, { freq: f, start: i * 0.11, dur: 0.2, amp: 0.7, tau: 0.06, harmonics: [[2, 0.2]] });
+});
+tone(minesweeper.win, { freq: 1318.51, start: 0.33, dur: 0.55, amp: 0.9, tau: 0.16, harmonics: [[2, 0.2]] });
+
+const games = [["blockdrop", blockdrop], ["sokoban", sokoban], ["minesweeper", minesweeper]];
+const only = process.argv.slice(2);
+for (const [game, sounds] of games) {
+	if (only.length > 0 && !only.includes(game)) continue;
 	for (const [name, samples] of Object.entries(sounds)) {
 		writeWav(join(ROOT, "packages", game, "public", "audio", `${name}.wav`), samples);
 	}

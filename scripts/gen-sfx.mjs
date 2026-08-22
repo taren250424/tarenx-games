@@ -144,7 +144,33 @@ minesweeper.win = silence(0.9);
 });
 tone(minesweeper.win, { freq: 1318.51, start: 0.33, dur: 0.55, amp: 0.9, tau: 0.16, harmonics: [[2, 0.2]] });
 
-const games = [["blockdrop", blockdrop], ["sokoban", sokoban], ["minesweeper", minesweeper]];
+// --- 2048 ---
+const twenty48 = {};
+
+// tiles slide but nothing merges: soft muted swish
+twenty48.move = silence(0.09);
+noise(twenty48.move, { dur: 0.07, amp: 0.5, tau: 0.02, lowpass: 0.12 });
+tone(twenty48.move, { freq: 300, endFreq: 210, dur: 0.06, amp: 0.35, tau: 0.02 });
+
+// tiles merge: bright two-note blip
+twenty48.merge = silence(0.18);
+tone(twenty48.merge, { freq: G5, dur: 0.09, amp: 0.8, tau: 0.03, harmonics: [[2, 0.25]] });
+tone(twenty48.merge, { freq: C6, start: 0.06, dur: 0.11, amp: 0.9, tau: 0.04, harmonics: [[2, 0.25]] });
+
+// the 2048 tile appears: rising jingle with a held final note
+twenty48.win = silence(0.9);
+[C5, E5, G5].forEach((f, i) => {
+	tone(twenty48.win, { freq: f, start: i * 0.11, dur: 0.2, amp: 0.7, tau: 0.06, harmonics: [[2, 0.2]] });
+});
+tone(twenty48.win, { freq: C6, start: 0.33, dur: 0.55, amp: 0.9, tau: 0.16, harmonics: [[2, 0.25], [3, 0.1]] });
+
+// board is stuck: slow descending line
+twenty48.gameover = silence(0.8);
+[C5, 415.3, 349.23, 261.63].forEach((f, i) => {
+	tone(twenty48.gameover, { freq: f, start: i * 0.14, dur: 0.3, amp: 0.8, tau: 0.1, harmonics: [[2, 0.15]] });
+});
+
+const games = [["blockdrop", blockdrop], ["sokoban", sokoban], ["minesweeper", minesweeper], ["2048", twenty48]];
 const only = process.argv.slice(2);
 for (const [game, sounds] of games) {
 	if (only.length > 0 && !only.includes(game)) continue;

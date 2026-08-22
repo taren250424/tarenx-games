@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 120" width="640" height="120">
+  <defs>
+    <linearGradient id="g2048HdrGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C084FC" />
+      <stop offset="100%" stop-color="#7E22CE" />
+    </linearGradient>
+  </defs>
+  <g transform="translate(20, 20) scale(2.5)">
+    <rect width="32" height="32" rx="8" fill="#1E293B" />
+    <g font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-weight="700" fill="#F8FAFC" text-anchor="middle">
+      <rect x="4" y="4" width="11" height="11" rx="2" fill="#475569"/>
+      <text x="9.5" y="9.9" font-size="7" dominant-baseline="central">2</text>
+      <rect x="17" y="4" width="11" height="11" rx="2" fill="#0891B2"/>
+      <text x="22.5" y="9.9" font-size="7" dominant-baseline="central">4</text>
+      <rect x="4" y="17" width="11" height="11" rx="2" fill="#EA580C"/>
+      <text x="9.5" y="22.9" font-size="7" dominant-baseline="central">8</text>
+      <rect x="17" y="17" width="11" height="11" rx="2" fill="url(#g2048HdrGrad)"/>
+      <text x="22.5" y="22.9" font-size="5.6" dominant-baseline="central">16</text>
+    </g>
+  </g>
+  <text x="120" y="56" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="34" font-weight="800" fill="#1E293B">2048</text>
+  <text x="120" y="84" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="17" fill="#64748B">Slide, merge, reach 2048</text>
+</svg>

@@ -1,0 +1,412 @@
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+:root {
+	--bg: #f8fafc;
+	--panel: #ffffff;
+	--line: #e2e8f0;
+	--text: #1e293b;
+	--muted: #64748b;
+	--accent: #a855f7;
+	--accent-strong: #7e22ce;
+	/* the board keeps its dark "screen" look, matching the other games */
+	--board: #1e293b;
+	--slot: rgba(255, 255, 255, 0.05);
+}
+
+body {
+	font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+	background-color: var(--bg);
+	color: var(--text);
+	min-height: 100vh;
+}
+
+header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 20px;
+	border-bottom: 1px solid var(--line);
+}
+
+.header-brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.header-logo {
+	width: 32px;
+	height: 32px;
+}
+
+.header-title {
+	font-size: 1.2rem;
+	font-weight: 700;
+}
+
+.header-home {
+	color: var(--muted);
+	text-decoration: none;
+	font-size: 0.9rem;
+}
+
+.header-home:hover {
+	color: var(--text);
+}
+
+main {
+	display: grid;
+	grid-template-columns: var(--ad-slot-width) minmax(0, 900px) var(--ad-slot-width);
+	justify-content: center;
+	gap: 24px;
+	padding: 24px 16px 48px;
+}
+
+main .game-column {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+}
+
+@media (max-width: 1200px) {
+	main {
+		grid-template-columns: minmax(0, 900px);
+	}
+}
+
+/* --- controls bar --- */
+.controls {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+
+.controls select,
+.controls button {
+	background-color: var(--panel);
+	color: var(--text);
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	padding: 8px 14px;
+	font-size: 0.9rem;
+	cursor: pointer;
+}
+
+.controls select:hover,
+.controls button:hover {
+	border-color: var(--accent);
+}
+
+.controls button:disabled {
+	color: var(--muted);
+	cursor: default;
+	opacity: 0.55;
+}
+
+.controls button:disabled:hover {
+	border-color: var(--line);
+}
+
+.hud {
+	position: relative;
+	display: flex;
+	gap: 18px;
+	font-size: 0.9rem;
+	color: var(--muted);
+}
+
+.hud strong {
+	color: var(--text);
+	font-variant-numeric: tabular-nums;
+}
+
+/* score gain floating up out of the HUD after a merge */
+#gain {
+	position: absolute;
+	left: 50%;
+	top: -4px;
+	transform: translateX(-50%);
+	font-weight: 700;
+	color: var(--accent-strong);
+	opacity: 0;
+	pointer-events: none;
+}
+
+#gain.show {
+	animation: float-up 700ms ease-out;
+}
+
+@keyframes float-up {
+	0% {
+		opacity: 0.9;
+		transform: translate(-50%, 0);
+	}
+	100% {
+		opacity: 0;
+		transform: translate(-50%, -26px);
+	}
+}
+
+/* --- board --- */
+.board-wrap {
+	position: relative;
+}
+
+#board {
+	--n: 4;
+	--gap: clamp(6px, 1.7vmin, 12px);
+	--board-px: min(460px, calc(100vw - 40px));
+	--tile-size: calc((var(--board-px) - (var(--n) + 1) * var(--gap)) / var(--n));
+	position: relative;
+	width: var(--board-px);
+	height: var(--board-px);
+	padding: var(--gap);
+	border-radius: 12px;
+	background-color: var(--board);
+	/* swipes drive the game, so the browser must not scroll or zoom on them */
+	touch-action: none;
+	user-select: none;
+}
+
+#cells {
+	display: grid;
+	grid-template-columns: repeat(var(--n), var(--tile-size));
+	grid-auto-rows: var(--tile-size);
+	gap: var(--gap);
+}
+
+.cell {
+	border-radius: 8px;
+	background-color: var(--slot);
+}
+
+#tiles {
+	position: absolute;
+	top: var(--gap);
+	left: var(--gap);
+}
+
+.tile {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: var(--tile-size);
+	height: var(--tile-size);
+	transform: translate(
+		calc(var(--c) * (var(--tile-size) + var(--gap))),
+		calc(var(--r) * (var(--tile-size) + var(--gap)))
+	);
+	/* keep in sync with MOVE_MS in main.ts */
+	transition: transform 110ms ease-in-out;
+}
+
+/* The face carries the look, so its scale animations never fight the
+   translate that positions the tile. */
+.tile-face {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+	background-color: var(--tile-bg, #475569);
+	color: var(--tile-fg, #f8fafc);
+	box-shadow: var(--tile-glow, none);
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+	line-height: 1;
+	font-size: calc(var(--tile-size) * var(--tile-font, 0.44));
+}
+
+.tile-new > .tile-face {
+	animation: appear 180ms ease-out 110ms backwards;
+}
+
+.tile-merged > .tile-face {
+	animation: pop 200ms ease-out 110ms backwards;
+}
+
+@keyframes appear {
+	from {
+		opacity: 0;
+		transform: scale(0.3);
+	}
+}
+
+@keyframes pop {
+	0% {
+		transform: scale(0.5);
+	}
+	60% {
+		transform: scale(1.14);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+/* digits shrink as the numbers grow so 4- and 5-digit tiles still fit */
+.tile[data-len="3"] {
+	--tile-font: 0.36;
+}
+
+.tile[data-len="4"] {
+	--tile-font: 0.29;
+}
+
+.tile[data-len="5"] {
+	--tile-font: 0.23;
+}
+
+/* Value ramp: cool slate at the bottom, warming through the mid tiles,
+   then violet once the board is past the target. */
+.tile[data-value="2"] { --tile-bg: #475569; --tile-fg: #e2e8f0; }
+.tile[data-value="4"] { --tile-bg: #64748b; --tile-fg: #f1f5f9; }
+.tile[data-value="8"] { --tile-bg: #0284c7; }
+.tile[data-value="16"] { --tile-bg: #0891b2; }
+.tile[data-value="32"] { --tile-bg: #0d9488; }
+.tile[data-value="64"] { --tile-bg: #16a34a; }
+.tile[data-value="128"] { --tile-bg: #ca8a04; }
+.tile[data-value="256"] { --tile-bg: #ea580c; }
+.tile[data-value="512"] { --tile-bg: #dc2626; }
+.tile[data-value="1024"] { --tile-bg: #db2777; }
+.tile[data-value="2048"] {
+	--tile-bg: #a855f7;
+	--tile-glow: 0 0 0 2px rgba(216, 180, 254, 0.7), 0 0 18px rgba(168, 85, 247, 0.55);
+}
+.tile[data-value="4096"] {
+	--tile-bg: #7c3aed;
+	--tile-glow: 0 0 0 2px rgba(196, 181, 253, 0.7), 0 0 18px rgba(124, 58, 237, 0.55);
+}
+.tile[data-value="8192"],
+.tile[data-value="max"] {
+	--tile-bg: #4f46e5;
+	--tile-glow: 0 0 0 2px rgba(165, 180, 252, 0.75), 0 0 22px rgba(79, 70, 229, 0.6);
+}
+
+/* --- end overlay --- */
+#end-overlay {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	padding: 20px;
+	text-align: center;
+	background-color: rgba(15, 23, 42, 0.85);
+	border-radius: 12px;
+	backdrop-filter: blur(2px);
+}
+
+#end-overlay.hidden {
+	display: none;
+}
+
+#end-overlay h2 {
+	font-size: 1.6rem;
+	/* lighter than --accent, which is too dark to read on the dimmed board */
+	color: #d8b4fe;
+}
+
+#end-overlay p {
+	color: #cbd5e1;
+}
+
+.overlay-actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+}
+
+.overlay-actions button {
+	background-color: var(--accent);
+	color: #0f172a;
+	font-weight: 700;
+	border: none;
+	border-radius: 8px;
+	padding: 10px 20px;
+	font-size: 1rem;
+	cursor: pointer;
+}
+
+.overlay-actions button.secondary {
+	background-color: transparent;
+	color: #e2e8f0;
+	border: 1px solid #64748b;
+}
+
+.overlay-actions button.hidden {
+	display: none;
+}
+
+/* --- article content --- */
+article {
+	max-width: 680px;
+	width: 100%;
+	margin-top: 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	color: var(--muted);
+	line-height: 1.7;
+	font-size: 0.95rem;
+}
+
+article h2 {
+	color: var(--text);
+	font-size: 1.2rem;
+	border-bottom: 1px solid var(--line);
+	padding-bottom: 6px;
+}
+
+article ul {
+	padding-left: 20px;
+}
+
+article table {
+	border-collapse: collapse;
+	width: 100%;
+	max-width: 380px;
+}
+
+article td,
+article th {
+	border: 1px solid var(--line);
+	padding: 6px 12px;
+	text-align: left;
+}
+
+article kbd {
+	background-color: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: 4px;
+	padding: 1px 6px;
+	font-size: 0.85em;
+	color: var(--text);
+}
+
+article a {
+	color: var(--accent-strong);
+}
+
+footer {
+	text-align: center;
+	padding: 24px;
+	color: var(--muted);
+	font-size: 0.85rem;
+	border-top: 1px solid var(--line);
+}
+
+footer a {
+	color: var(--accent-strong);
+}

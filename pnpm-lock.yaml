@@ -69,6 +69,12 @@ importers:
         specifier: ~6.0.2
         version: 6.0.3
 
+  packages/word-guess:
+    devDependencies:
+      typescript:
+        specifier: ~6.0.2
+        version: 6.0.3
+
 packages:
 
   '@emnapi/core@1.11.1':

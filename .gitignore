@@ -29,3 +29,6 @@ generated-data.json
 
 packages/shared/size.txt
 todo.txt
+
+# word-guess: cached ESDB downloads, re-fetched by tools/build-words.mjs
+packages/word-guess/tools/.cache

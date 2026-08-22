@@ -22,6 +22,8 @@
     "build:minesweeper": "pnpm --filter minesweeper run build",
     "dev:2048": "pnpm --filter 2048 run dev",
     "build:2048": "pnpm --filter 2048 run build",
+    "dev:word-guess": "pnpm --filter word-guess run dev",
+    "build:word-guess": "pnpm --filter word-guess run build",
 
     "preview": "pnpm run build && node scripts/preview.mjs",
     "deploy": "pnpm run build && node scripts/deploy.mjs",

@@ -170,7 +170,38 @@ twenty48.gameover = silence(0.8);
 	tone(twenty48.gameover, { freq: f, start: i * 0.14, dur: 0.3, amp: 0.8, tau: 0.1, harmonics: [[2, 0.15]] });
 });
 
-const games = [["blockdrop", blockdrop], ["sokoban", sokoban], ["minesweeper", minesweeper], ["2048", twenty48]];
+// --- word-guess ---
+const wordGuess = {};
+
+// a row of tiles turns over: dry wooden clack
+wordGuess.flip = silence(0.12);
+noise(wordGuess.flip, { dur: 0.05, amp: 0.6, tau: 0.012, lowpass: 0.35 });
+tone(wordGuess.flip, { freq: 480, endFreq: 300, dur: 0.09, amp: 0.7, tau: 0.025 });
+
+// rejected guess: flat low buzz
+wordGuess.nope = silence(0.16);
+tone(wordGuess.nope, { freq: 150, dur: 0.14, amp: 0.9, tau: 0.09, harmonics: [[2, 0.5], [3, 0.3]] });
+
+// word found: rising jingle with a held final note
+wordGuess.win = silence(0.9);
+[C5, E5, G5].forEach((f, i) => {
+	tone(wordGuess.win, { freq: f, start: i * 0.1, dur: 0.2, amp: 0.7, tau: 0.06, harmonics: [[2, 0.2]] });
+});
+tone(wordGuess.win, { freq: C6, start: 0.3, dur: 0.55, amp: 0.9, tau: 0.16, harmonics: [[2, 0.25]] });
+
+// out of guesses: short descending sigh
+wordGuess.lose = silence(0.7);
+[G5, E5, 349.23, 261.63].forEach((f, i) => {
+	tone(wordGuess.lose, { freq: f, start: i * 0.12, dur: 0.28, amp: 0.75, tau: 0.09, harmonics: [[2, 0.15]] });
+});
+
+const games = [
+	["blockdrop", blockdrop],
+	["sokoban", sokoban],
+	["minesweeper", minesweeper],
+	["2048", twenty48],
+	["word-guess", wordGuess],
+];
 const only = process.argv.slice(2);
 for (const [game, sounds] of games) {
 	if (only.length > 0 && !only.includes(game)) continue;

@@ -32,3 +32,6 @@ todo.txt
 
 # word-guess: cached ESDB downloads, re-fetched by tools/build-words.mjs
 packages/word-guess/tools/.cache
+
+# passant: cached Stockfish binary and puzzle-db sample, re-fetched by tools/build-positions.mjs
+packages/passant/tools/.cache

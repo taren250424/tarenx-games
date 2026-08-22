@@ -309,6 +309,13 @@ class Engine {
 	}
 }
 
+// Puzzle ids are case-sensitive base62, but Windows file names are not, so an
+// uppercase letter is spelled out ("03LO0" → "03_l_o0") to keep twins apart.
+function cachePath(id) {
+	const safe = id.replace(/[A-Z]/g, (c) => "_" + c.toLowerCase());
+	return path.join(EVAL_CACHE, `${safe}-d${DEPTH}.json`);
+}
+
 // cp from the mover's point of view; mates sort above any cp
 function scoreKey(e) {
 	if (e.mate !== null) return e.mate > 0 ? 100000 - e.mate : -100000 - e.mate;
@@ -317,7 +324,7 @@ function scoreKey(e) {
 
 async function evaluatePositions(jobs) {
 	fs.mkdirSync(EVAL_CACHE, { recursive: true });
-	const queue = jobs.filter((j) => !fs.existsSync(path.join(EVAL_CACHE, `${j.id}-d${DEPTH}.json`)));
+	const queue = jobs.filter((j) => !fs.existsSync(cachePath(j.id)));
 	console.log(`engine: ${jobs.length - queue.length} cached, ${queue.length} to evaluate, ${WORKERS} workers × ${THREADS} threads, depth ${DEPTH}`);
 	if (queue.length === 0) return;
 	if (!ENGINE) throw new Error("no engine: pass --engine or unpack Stockfish under tools/.cache/sf/");
@@ -336,7 +343,7 @@ async function evaluatePositions(jobs) {
 			const missing = job.legal.filter((u) => !evals.some((e) => e.uci === u));
 			if (missing.length) console.warn(`  ${job.id}: ${missing.length} legal moves missing from engine output`);
 			evals.sort((a, b) => scoreKey(b) - scoreKey(a));
-			fs.writeFileSync(path.join(EVAL_CACHE, `${job.id}-d${DEPTH}.json`), JSON.stringify({ depth: DEPTH, evals }));
+			fs.writeFileSync(cachePath(job.id), JSON.stringify({ depth: DEPTH, evals }));
 			done++;
 			const per = (Date.now() - t0) / done;
 			console.log(
@@ -353,7 +360,7 @@ function writeOutput(jobs) {
 	fs.rmSync(OUT, { recursive: true, force: true });
 	fs.mkdirSync(OUT, { recursive: true });
 	const positions = jobs.map((j) => {
-		const { evals } = JSON.parse(fs.readFileSync(path.join(EVAL_CACHE, `${j.id}-d${DEPTH}.json`), "utf8"));
+		const { evals } = JSON.parse(fs.readFileSync(cachePath(j.id), "utf8"));
 		return {
 			id: j.id,
 			fen: j.fen,

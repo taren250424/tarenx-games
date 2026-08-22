@@ -195,12 +195,40 @@ wordGuess.lose = silence(0.7);
 	tone(wordGuess.lose, { freq: f, start: i * 0.12, dur: 0.28, amp: 0.75, tau: 0.09, harmonics: [[2, 0.15]] });
 });
 
+// --- passant ---
+const passant = {};
+
+// piece set down: dry wooden knock
+passant.move = silence(0.1);
+noise(passant.move, { dur: 0.04, amp: 0.5, tau: 0.01, lowpass: 0.3 });
+tone(passant.move, { freq: 420, endFreq: 260, dur: 0.08, amp: 0.8, tau: 0.022 });
+
+// capture: heavier knock with a second piece clacking off the board
+passant.capture = silence(0.16);
+noise(passant.capture, { dur: 0.06, amp: 0.7, tau: 0.014, lowpass: 0.35 });
+tone(passant.capture, { freq: 360, endFreq: 200, dur: 0.1, amp: 0.9, tau: 0.03 });
+tone(passant.capture, { freq: 560, endFreq: 380, start: 0.05, dur: 0.08, amp: 0.5, tau: 0.02 });
+
+// best or excellent move: bright rising two-note chime
+passant.best = silence(0.45);
+tone(passant.best, { freq: G5, dur: 0.14, amp: 0.7, tau: 0.05, harmonics: [[2, 0.25]] });
+tone(passant.best, { freq: C6, start: 0.1, dur: 0.32, amp: 0.9, tau: 0.1, harmonics: [[2, 0.25], [3, 0.1]] });
+
+// good move or inaccuracy: single neutral ding
+passant.good = silence(0.3);
+tone(passant.good, { freq: E5, dur: 0.26, amp: 0.8, tau: 0.08, harmonics: [[2, 0.2]] });
+
+// mistake or blunder: flat low buzz
+passant.bad = silence(0.25);
+tone(passant.bad, { freq: 160, dur: 0.22, amp: 0.9, tau: 0.09, harmonics: [[2, 0.5], [3, 0.3]] });
+
 const games = [
 	["blockdrop", blockdrop],
 	["sokoban", sokoban],
 	["minesweeper", minesweeper],
 	["2048", twenty48],
 	["word-guess", wordGuess],
+	["passant", passant],
 ];
 const only = process.argv.slice(2);
 for (const [game, sounds] of games) {

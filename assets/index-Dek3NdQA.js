@@ -1,4 +1,189 @@
-(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel="modulepreload"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),e.crossOrigin===`use-credentials`?t.credentials=`include`:e.crossOrigin===`anonymous`?t.credentials=`omit`:t.credentials=`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})();var e=Object.entries(Object.assign({"../../blockdrop/index.html":`<!doctype html>
+(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel="modulepreload"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),e.crossOrigin===`use-credentials`?t.credentials=`include`:e.crossOrigin===`anonymous`?t.credentials=`omit`:t.credentials=`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})();var e=Object.entries(Object.assign({"../../2048/index.html":`<!doctype html>
+<html lang="en">
+	<head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-NLCK842B");
+    <\/script>
+    <!-- End Google Tag Manager -->
+
+		<meta charset="UTF-8" />
+		<meta
+			name="description"
+			content="Play 2048 free in your browser. Slide the tiles, merge matching numbers, and reach 2048 — with undo, three board sizes, and your game saved between visits."
+		/>
+
+		<link rel="canonical" href="https://games.tarenx.com/2048/" />
+		<link rel="icon" type="image/svg+xml" href="shared/2048/favicon.svg" />
+
+		<meta property="og:title" content="2048" />
+		<meta
+			property="og:description"
+			content="Slide, merge, and reach the 2048 tile. Free number puzzle with undo and three board sizes."
+		/>
+		<meta property="og:image" content="shared/2048/og.svg" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>2048</title>
+	</head>
+
+	<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-NLCK842B"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+		<header>
+			<div class="header-brand">
+				<img class="header-logo" src="shared/2048/logo.svg" alt="2048 Logo" />
+				<span class="header-title">2048</span>
+			</div>
+			<a class="header-home" href="/">← All games</a>
+		</header>
+
+		<main>
+			<aside class="ad"></aside>
+			<section class="game-column">
+			<div class="controls">
+				<select id="size-select" aria-label="Select board size"></select>
+				<button id="new-btn" title="New game (R)">⟳ New Game</button>
+				<button id="undo-btn" title="Undo last move (U)">↶ Undo</button>
+				<button id="sound-btn" title="Toggle sound">🔊</button>
+			</div>
+
+			<div class="hud">
+				<span>Score <strong id="score">0</strong></span>
+				<span>Best <strong id="best">0</strong></span>
+				<span>Top tile <strong id="top-tile">—</strong></span>
+				<span id="gain" aria-hidden="true"></span>
+			</div>
+
+			<div class="board-wrap">
+				<div id="board" aria-label="2048 board">
+					<div id="cells"></div>
+					<div id="tiles"></div>
+				</div>
+				<div id="end-overlay" class="hidden">
+					<h2 id="end-title">2048!</h2>
+					<p id="end-stats"></p>
+					<div class="overlay-actions">
+						<button id="continue-btn">Keep Going</button>
+						<button id="again-btn" class="secondary">Play Again</button>
+					</div>
+				</div>
+			</div>
+
+			<article>
+				<section>
+					<h2>How to play</h2>
+					<p>
+						Every move slides all tiles as far as they go in one direction.
+						When two tiles carrying the same number collide they merge into
+						their sum, and that sum is added to your score. After each move a
+						new 2 or 4 appears in a random empty cell. Keep merging until a
+						2048 tile appears — then keep going for as long as the board lets
+						you. The game ends when the board is full and no two neighbours
+						match.
+					</p>
+				</section>
+
+				<section>
+					<h2>Controls</h2>
+					<ul>
+						<li><kbd>←</kbd> <kbd>↑</kbd> <kbd>→</kbd> <kbd>↓</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> — slide the tiles</li>
+						<li>Swipe — slide the tiles on a touch screen</li>
+						<li><kbd>U</kbd> or the ↶ button — take back the last move</li>
+						<li><kbd>R</kbd> — new game</li>
+					</ul>
+					<p>
+						Your game is saved in this browser, so you can close the tab
+						mid-run and pick it up later. Best scores are kept per board size.
+					</p>
+				</section>
+
+				<section>
+					<h2>Board sizes</h2>
+					<table>
+						<tr><th>Size</th><th>Board</th><th>Feel</th></tr>
+						<tr><td>Classic</td><td>4 × 4</td><td>The original — tight, tactical</td></tr>
+						<tr><td>Roomy</td><td>5 × 5</td><td>More space, longer runs</td></tr>
+						<tr><td>Sprawl</td><td>6 × 6</td><td>Forgiving; chase 4096 and beyond</td></tr>
+					</table>
+				</section>
+
+				<section>
+					<h2>Tips</h2>
+					<ul>
+						<li>
+							<strong>Pick a corner and never leave it.</strong> Keep your
+							largest tile pinned in one corner and only ever slide in the two
+							directions that hold it there. Almost every high score comes
+							from this one habit.
+						</li>
+						<li>
+							<strong>Build a staircase.</strong> Along the row holding your
+							biggest tile, keep values descending — 1024, 512, 256, 128. A
+							sorted row collapses in a chain reaction when the ends finally
+							match.
+						</li>
+						<li>
+							<strong>Avoid the fourth direction.</strong> If you anchor at the
+							bottom-left, sliding up is what breaks the anchor. Play left,
+							down and right; treat up as a last resort.
+						</li>
+						<li>
+							<strong>Merge small before you merge big.</strong> Clearing 2s
+							and 4s keeps empty cells available, and empty cells are what
+							keep you alive. A full board with no pairs is the only way to
+							lose.
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>About 2048</h2>
+					<p>
+						2048 was written in a weekend in March 2014 by Italian developer
+						Gabriele Cirulli, who released it as an open-source project and
+						watched it collect millions of players within a week. It drew on
+						two games that came just before it — Veewo's 1024 and the
+						Sirvo-made Threes! — and the sliding-and-merging idea has since
+						been rebuilt hundreds of times over. This version is an
+						independent implementation with undo, larger boards, and progress
+						that survives closing the tab.
+					</p>
+				</section>
+			</article>
+			</section>
+			<aside class="ad"></aside>
+		</main>
+
+		<footer>
+			<p>
+				Part of <a href="/">Tarenx Games</a> · free browser games, no install,
+				no sign-up
+			</p>
+		</footer>
+
+		<script type="module" src="/src/main.ts"><\/script>
+	</body>
+</html>
+`,"../../blockdrop/index.html":`<!doctype html>
 <html lang="en">
 	<head>
     <!-- Google Tag Manager -->
@@ -425,6 +610,228 @@
 		<script type="module" src="/src/main.ts"><\/script>
 	</body>
 </html>
+`,"../../passant/index.html":`<!doctype html>
+<html lang="en">
+	<head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-NLCK842B");
+    <\/script>
+    <!-- End Google Tag Manager -->
+
+		<meta charset="UTF-8" />
+		<meta
+			name="description"
+			content="Play Passant free in your browser: you get a fresh chess position, you make one move, and it is graded instantly against the engine's best. Quick play or the daily ten."
+		/>
+
+		<link rel="canonical" href="https://games.tarenx.com/passant/" />
+		<link rel="icon" type="image/svg+xml" href="shared/passant/favicon.svg" />
+
+		<meta property="og:title" content="Passant" />
+		<meta
+			property="og:description"
+			content="A fresh chess position, one move, instant grade. Free one-move chess puzzles."
+		/>
+		<meta property="og:image" content="shared/passant/og.svg" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Passant</title>
+	</head>
+
+	<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-NLCK842B"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+		<header>
+			<div class="header-brand">
+				<img class="header-logo" src="shared/passant/logo.svg" alt="Passant Logo" />
+				<span class="header-title">Passant</span>
+			</div>
+			<a class="header-home" href="/">← All games</a>
+		</header>
+
+		<main>
+			<aside class="ad"></aside>
+			<section class="game-column">
+			<div class="controls">
+				<div class="mode-tabs" role="tablist" aria-label="Game mode">
+					<button id="mode-quick" role="tab" aria-selected="true">Quick play</button>
+					<button id="mode-daily" role="tab" aria-selected="false">Daily 10</button>
+				</div>
+				<select id="difficulty-select" aria-label="Select difficulty"></select>
+				<button id="stats-btn" title="Your statistics">📊 Stats</button>
+				<button id="sound-btn" title="Toggle sound">🔊</button>
+			</div>
+
+			<div class="hud">
+				<span id="turn-label">—</span>
+				<span>Puzzle <strong id="pos-rating">—</strong></span>
+				<span>Session <strong id="session-score">—</strong></span>
+				<span id="daily-progress" class="hidden"></span>
+			</div>
+
+			<div class="play-area">
+				<div class="board-wrap">
+					<svg id="board" viewBox="0 0 360 360" aria-label="Chess board"></svg>
+					<div id="promo" class="hidden" role="dialog" aria-label="Choose promotion piece"></div>
+				</div>
+				<aside id="panel" class="panel"></aside>
+			</div>
+
+			<article>
+				<section>
+					<h2>How to play</h2>
+					<p>
+						Every visit hands you a chess position taken from a real game,
+						always with the side to move at the bottom of the board. Look
+						at it for as long as you like, then play the one move you think
+						is best: click a piece and click its destination, or drag it.
+						The move is graded at once against every other legal move in the
+						position, you see how much it cost or gained in winning chances,
+						and the best line is shown on the board. Then the next position
+						arrives. There is no clock, no opponent and no game to finish —
+						the only thing that counts is the quality of the move you just
+						made.
+					</p>
+				</section>
+
+				<section>
+					<h2>Grades</h2>
+					<p>
+						Each legal move in a position was evaluated in advance by the
+						Stockfish engine, and the evaluation is converted to a winning
+						percentage on the same scale Lichess uses for accuracy. Your
+						grade is how much winning chance your move gave up compared with
+						the best move.
+					</p>
+					<table>
+						<tr><th>Grade</th><th>Chance lost</th><th>Points</th></tr>
+						<tr><td>Best</td><td>none — the engine's first choice</td><td>100</td></tr>
+						<tr><td>Excellent</td><td>under 2%</td><td>90+</td></tr>
+						<tr><td>Good</td><td>under 5%</td><td>80+</td></tr>
+						<tr><td>Inaccuracy</td><td>under 10%</td><td>60+</td></tr>
+						<tr><td>Mistake</td><td>under 20%</td><td>20+</td></tr>
+						<tr><td>Blunder</td><td>20% or more</td><td>0+</td></tr>
+					</table>
+					<p>
+						A checkmate counts as a 100% winning chance, so missing a forced
+						mate is scored the same as throwing away a winning position.
+					</p>
+				</section>
+
+				<section>
+					<h2>Modes</h2>
+					<ul>
+						<li>
+							<strong>Quick play</strong> — an endless stream of random
+							positions. Pick a difficulty and keep going; your session
+							average is shown in the header and your lifetime statistics
+							are kept in this browser.
+						</li>
+						<li>
+							<strong>Daily 10</strong> — the same ten positions for everyone
+							each day, from easy to hard. Finish the set for a score out of
+							1000 and a result card you can copy and compare. Playing on
+							consecutive days builds a streak.
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Difficulty</h2>
+					<p>
+						Positions come from the Lichess puzzle database, which rates
+						every puzzle by how often real players find its solution. Easy
+						positions are rated up to 1200, medium ones between 1200 and
+						1800, and hard ones above 1800. The rating of the current
+						position is always shown above the board.
+					</p>
+				</section>
+
+				<section>
+					<h2>Tips</h2>
+					<ul>
+						<li>
+							<strong>Check the forcing moves first.</strong> Checks,
+							captures and threats — in that order. Most positions here
+							have a point, and it usually begins with a forcing move.
+						</li>
+						<li>
+							<strong>Ask what changed.</strong> The position is shown
+							right after your opponent's last move, which is highlighted.
+							That move left something behind — a loose piece, an open
+							file, an undefended square. Find it.
+						</li>
+						<li>
+							<strong>A safe move is not a free move.</strong> Quiet
+							developing moves often score as inaccuracies simply because a
+							stronger move was available. Aim for the best move, not the
+							safest one.
+						</li>
+						<li>
+							<strong>Read the result.</strong> The panel shows the best
+							line and the top alternatives with their evaluations. A minute
+							spent on why a move was better is worth more than the next
+							puzzle.
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>About Passant</h2>
+					<p>
+						Passant takes its name from <em>en passant</em>, the French for
+						"in passing" — a chess rule, and also how this game is meant to be
+						played: drop by, make one move, and move on. Positions are drawn
+						from the Lichess open puzzle database, released under the CC0
+						licence, and every legal move in each position was evaluated in
+						advance with Stockfish, so grading is instant and identical for
+						every player. The piece set and board were drawn for this game.
+					</p>
+				</section>
+			</article>
+			</section>
+			<aside class="ad"></aside>
+		</main>
+
+		<footer>
+			<p>
+				Part of <a href="/">Tarenx Games</a> · free browser games, no install,
+				no sign-up
+			</p>
+		</footer>
+
+		<div id="stats-overlay" class="overlay hidden" role="dialog" aria-label="Statistics">
+			<div class="overlay-card">
+				<h2>Your statistics</h2>
+				<div id="stats-body"></div>
+				<div class="overlay-actions">
+					<button id="stats-close">Close</button>
+				</div>
+			</div>
+		</div>
+
+		<script type="module" src="/src/main.ts"><\/script>
+	</body>
+</html>
 `,"../../sokoban/index.html":`<!doctype html>
 <html lang="en">
 	<head>
@@ -760,6 +1167,204 @@
 						puzzles fall to singles alone, Medium needs locked candidates and
 						pairs, and Hard calls for triples and X-wings. Nothing ever
 						requires trial and error.
+					</p>
+				</section>
+			</article>
+			</section>
+			<aside class="ad"></aside>
+		</main>
+
+		<footer>
+			<p>
+				Part of <a href="/">Tarenx Games</a> · free browser games, no install,
+				no sign-up
+			</p>
+		</footer>
+
+		<script type="module" src="/src/main.ts"><\/script>
+	</body>
+</html>
+`,"../../word-guess/index.html":`<!doctype html>
+<html lang="en">
+	<head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-NLCK842B");
+    <\/script>
+    <!-- End Google Tag Manager -->
+
+		<meta charset="UTF-8" />
+		<meta
+			name="description"
+			content="Free word guessing game — play as many rounds as you like, no daily limit. Pick 4, 5, or 6 letters, use the colour clues, and find the hidden word. Hard mode and colour-blind mode included."
+		/>
+
+		<link rel="canonical" href="https://games.tarenx.com/word-guess/" />
+		<link rel="icon" type="image/svg+xml" href="shared/word-guess/favicon.svg" />
+
+		<meta property="og:title" content="Word Guess" />
+		<meta
+			property="og:description"
+			content="Find the hidden word from colour clues. Unlimited rounds, 4 to 6 letters, no sign-up."
+		/>
+		<meta property="og:image" content="shared/word-guess/og.svg" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Word Guess</title>
+	</head>
+
+	<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-NLCK842B"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+		<header>
+			<div class="header-brand">
+				<img class="header-logo" src="shared/word-guess/logo.svg" alt="Word Guess Logo" />
+				<span class="header-title">Word Guess</span>
+			</div>
+			<a class="header-home" href="/">← All games</a>
+		</header>
+
+		<main>
+			<aside class="ad"></aside>
+			<section class="game-column">
+			<div class="controls">
+				<select id="length-select" aria-label="Select word length"></select>
+				<button id="new-btn" title="New word">⟳ New Word</button>
+				<button id="hard-btn" title="Hard mode: revealed clues must be reused" aria-pressed="false">Hard</button>
+				<button id="contrast-btn" title="Colour-blind friendly colours" aria-pressed="false">👁 Colours</button>
+				<button id="sound-btn" title="Toggle sound">🔊</button>
+			</div>
+
+			<div class="hud">
+				<span>Streak <strong id="streak">0</strong></span>
+				<span>Best <strong id="best">0</strong></span>
+				<span>Win rate <strong id="win-rate">—</strong></span>
+			</div>
+
+			<div class="board-wrap">
+				<div id="board" aria-label="Guess board"></div>
+				<div id="toast" role="status"></div>
+				<div id="end-overlay" class="hidden">
+					<h2 id="end-title">Got it!</h2>
+					<p id="end-word"></p>
+					<div id="end-stats"></div>
+					<button id="again-btn">Next Word</button>
+				</div>
+			</div>
+
+			<div id="keyboard" aria-label="On-screen keyboard"></div>
+
+			<article>
+				<section>
+					<h2>How to play</h2>
+					<p>
+						A word is hidden. Type any real word of the same length and press
+						Enter, and every letter is graded: green means the letter is
+						correct and in the right place, amber means the letter is in the
+						word but somewhere else, and grey means it is not in the word at
+						all. Use what each guess rules out to narrow things down. You get
+						one more guess than the word has letters — six tries at a
+						five-letter word.
+					</p>
+					<p>
+						There is no daily limit here. Every round draws a fresh word at
+						random, so you can play as long as you like, and the game
+						remembers where you were if you close the tab.
+					</p>
+				</section>
+
+				<section>
+					<h2>Controls</h2>
+					<ul>
+						<li>Type letters — on your keyboard or the one on screen</li>
+						<li><kbd>Enter</kbd> — submit the guess</li>
+						<li><kbd>Backspace</kbd> — delete a letter</li>
+						<li><strong>Hard</strong> — every clue you have uncovered must be reused in later guesses. Switches on at the start of a new word</li>
+						<li><strong>👁 Colours</strong> — swaps green and amber for blue and orange, which stay distinct with red-green colour blindness</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Word lengths</h2>
+					<table>
+						<tr><th>Length</th><th>Guesses</th><th>Possible answers</th></tr>
+						<tr><td>4 letters</td><td>5</td><td>1,443</td></tr>
+						<tr><td>5 letters</td><td>6</td><td>1,959</td></tr>
+						<tr><td>6 letters</td><td>7</td><td>2,544</td></tr>
+					</table>
+					<p>
+						Longer is not simply harder. A six-letter word gives you more
+						letters of feedback per guess and there are fewer words that fit a
+						given pattern, but you have to pull a longer word out of memory.
+						Four letters is the tightest squeeze: little feedback per guess,
+						and plenty of words left over at the end.
+					</p>
+				</section>
+
+				<section>
+					<h2>Tips</h2>
+					<ul>
+						<li>
+							<strong>Spend the first guess on vowels and common
+							consonants.</strong> Something like AROSE or CRANE tests five
+							high-frequency letters at once. Which word you start with
+							matters far less than covering ground.
+						</li>
+						<li>
+							<strong>Do not chase a single green letter.</strong> Early on,
+							ruling letters out is worth more than locking one in. A guess
+							made entirely of new letters often tells you more than a near
+							miss.
+						</li>
+						<li>
+							<strong>Watch for repeated letters.</strong> They are what
+							catches people out at the end — if four positions are settled and
+							nothing fits, a doubled letter is usually the answer.
+						</li>
+						<li>
+							<strong>Mind the endings.</strong> Answers here are never plurals
+							or simple past tenses, so a trailing S or ED is not the easy out
+							it looks like.
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>About this game</h2>
+					<p>
+						Guessing a hidden word from letter-by-letter clues is an old idea:
+						the pen-and-paper game Jotto dates to 1955, and Mastermind brought
+						the same deduction to coloured pegs in 1970. This is an
+						independent take on the format with a few things the classic
+						version does not have — a choice of word length, unlimited rounds
+						instead of one a day, and a colour-blind palette.
+					</p>
+					<p>
+						The word lists come from the
+						<a href="https://wordlist.aspell.net" rel="noopener">English Speller Database</a>
+						(formerly SCOWL), assembled by Kevin Atkinson and drawing on
+						12dicts and ENABLE2K. Answers are limited to words an ordinary
+						speaker would recognise, while the list of guesses the game will
+						accept is much wider — so a real word is never rejected just
+						because it would make an unfair answer.
 					</p>
 				</section>
 			</article>

@@ -372,7 +372,7 @@ function renderResult(score: MoveScore): void {
 		<p>${headline}</p>
 		<div class="move-line played"><span>You played <span class="san">${escapeHtml(playedSan)}</span></span><span class="eval">${formatScore(score.score)}</span></div>
 		${isBest ? "" : `<div class="move-line best"><span>Best was <span class="san">${escapeHtml(bestSan)}</span></span><span class="eval">${formatScore(score.bestScore)}</span></div>`}
-		<div class="win-bar" title="Winning chance for your side: bar after your move, line after the best move"><div class="fill" style="width:${score.winBest.toFixed(1)}%"></div><div class="mark" style="left:${score.winBest.toFixed(1)}%"></div></div>
+		<div class="win-bar" title="Winning chance for your side: bar after your move, line after the best move"><div class="fill" style="width:${score.winBest.toFixed(1)}%"></div><div class="mark" style="--at:${score.winBest.toFixed(1)}%"></div></div>
 		<div class="win-caption"><span>${ordinal(score.rank)} of ${score.total} legal moves</span><span>${isBest ? `${score.winPlayed.toFixed(0)}% winning chance` : `${score.winBest.toFixed(0)}% → ${score.winPlayed.toFixed(0)}% (−${score.loss.toFixed(1)})`}</span></div>
 		<ol class="top-moves" aria-label="Top moves">${rows.join("")}</ol>
 		<div class="pv" title="Best line">${escapeHtml(sanLine(pos.fen, pos.pv))}</div>

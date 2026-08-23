@@ -479,8 +479,12 @@ main .game-column {
 	position: absolute;
 	top: 0;
 	bottom: 0;
-	width: 2px;
+	width: 3px;
+	border-radius: 2px;
 	background-color: var(--accent);
+	/* --at is the best move's winning chance; clamped so the line stays inside
+	   the bar when that is 0% or 100% and would otherwise be clipped away. */
+	left: clamp(0px, calc(var(--at) - 1.5px), calc(100% - 3px));
 }
 
 .win-caption {

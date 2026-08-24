@@ -12,7 +12,8 @@ const hubDistDir = path.join(packagesDir, 'hub', 'dist');
 async function generateSitemap() {
   const baseUrl = 'https://games.tarenx.com';
   const urls = [
-    `${baseUrl}/`
+    `${baseUrl}/`,
+    `${baseUrl}/privacy/`
   ];
 
   const entries = await fs.readdir(packagesDir, { withFileTypes: true });

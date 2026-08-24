@@ -98,3 +98,14 @@ main a .game-desc {
     text-align: center;
   }
 }
+
+footer {
+  text-align: center;
+  padding: 24px;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+footer a {
+  color: inherit;
+}

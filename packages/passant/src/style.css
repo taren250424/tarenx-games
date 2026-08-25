@@ -323,6 +323,12 @@ main .game-column {
 }
 
 /* --- side panel --- */
+/*
+ * Holds both the prompt and the verdict, and the verdict is roughly twice the
+ * height of the prompt. Left to size itself the panel would grow and shrink by
+ * ~350px on every move, which walks the "Next position" button down the page
+ * and back. So it is given one height that fits the taller of the two.
+ */
 .panel {
 	background-color: var(--panel);
 	border: 1px solid var(--line);
@@ -333,6 +339,12 @@ main .game-column {
 	gap: 12px;
 	min-height: 200px;
 	font-size: 0.92rem;
+}
+
+@media (min-width: 901px) {
+	.panel {
+		height: 640px;
+	}
 }
 
 .panel h3 {
@@ -392,6 +404,22 @@ main .game-column {
 	flex-wrap: wrap;
 	gap: 8px;
 	margin-top: auto;
+}
+
+/*
+ * One column: the panel sits below the board, so its top — the grade, both
+ * moves and the win bar — is on screen, but its foot is not. Sticking the
+ * actions to the bottom of the viewport keeps "Next position" reachable
+ * without scrolling past the move list first.
+ */
+@media (max-width: 900px) {
+	.panel .actions {
+		position: sticky;
+		bottom: 0;
+		background-color: var(--panel);
+		padding: 10px 0;
+		box-shadow: 0 -8px 12px -8px rgba(15, 23, 42, 0.25);
+	}
 }
 
 /* result */

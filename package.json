@@ -26,6 +26,8 @@
     "build:word-guess": "pnpm --filter word-guess run build",
     "dev:passant": "pnpm --filter passant run dev",
     "build:passant": "pnpm --filter passant run build",
+    "dev:nonogram": "pnpm --filter nonogram run dev",
+    "build:nonogram": "pnpm --filter nonogram run build",
 
     "preview": "pnpm run build && node scripts/preview.mjs",
     "deploy": "pnpm run build && node scripts/deploy.mjs",

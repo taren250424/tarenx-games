@@ -1,0 +1,447 @@
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+:root {
+	--bg: #f8fafc;
+	--panel: #ffffff;
+	--line: #e2e8f0;
+	--text: #1e293b;
+	--muted: #64748b;
+	--accent: #3b82f6;
+	--accent-strong: #1d4ed8;
+	--grid-line: #cbd5e1;
+	--grid-box: #475569;
+	--fill: #334155;
+	--hover: rgba(59, 130, 246, 0.12);
+	--wrong: #dc2626;
+	--clue-done: #cbd5e1;
+}
+
+body {
+	font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+	background-color: var(--bg);
+	color: var(--text);
+	min-height: 100vh;
+}
+
+header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 20px;
+	border-bottom: 1px solid var(--line);
+}
+
+.header-brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.header-logo {
+	width: 32px;
+	height: 32px;
+}
+
+.header-title {
+	font-size: 1.2rem;
+	font-weight: 700;
+}
+
+.header-home {
+	color: var(--muted);
+	text-decoration: none;
+	font-size: 0.9rem;
+}
+
+.header-home:hover {
+	color: var(--text);
+}
+
+main {
+	display: grid;
+	grid-template-columns: var(--ad-slot-width) minmax(0, 900px) var(--ad-slot-width);
+	justify-content: center;
+	gap: 24px;
+	padding: 24px 16px 48px;
+}
+
+main .game-column {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+}
+
+@media (max-width: 1200px) {
+	main {
+		grid-template-columns: minmax(0, 900px);
+	}
+}
+
+/* --- controls bar --- */
+.controls {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+
+.controls select,
+.controls button {
+	background-color: var(--panel);
+	color: var(--text);
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	padding: 8px 14px;
+	font-size: 0.9rem;
+	cursor: pointer;
+}
+
+.controls select:hover,
+.controls button:hover {
+	border-color: var(--accent);
+}
+
+.controls .check-label {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 0.9rem;
+	color: var(--muted);
+	cursor: pointer;
+	user-select: none;
+}
+
+.controls .check-label input {
+	accent-color: var(--accent);
+}
+
+.hud {
+	display: flex;
+	gap: 18px;
+	font-size: 0.9rem;
+	color: var(--muted);
+}
+
+.hud strong {
+	color: var(--text);
+	font-variant-numeric: tabular-nums;
+}
+
+/* --- board --- */
+.board-wrap {
+	position: relative;
+}
+
+/* while the win card is up, grow the wrap so the card sits below the finished
+   picture instead of covering the rows the player just earned */
+.board-wrap:has(#win-overlay:not(.hidden)) {
+	padding-bottom: 62px;
+}
+
+#board {
+	/* the whole board scales off one cell size, which shrinks as the grid grows */
+	--cell: clamp(15px, calc(56vmin / var(--size)), 38px);
+	--clue-slot: calc(var(--cell) * 0.66);
+	--size: 10;
+	--row-clue-slots: 4;
+	--col-clue-slots: 4;
+	display: grid;
+	grid-template-columns:
+		calc(var(--row-clue-slots) * var(--clue-slot) + 8px)
+		auto;
+	grid-template-rows:
+		calc(var(--col-clue-slots) * var(--clue-slot) + 8px)
+		auto;
+	user-select: none;
+	touch-action: none;
+}
+
+#col-clues,
+#row-clues {
+	display: grid;
+	color: var(--muted);
+	font-size: calc(var(--cell) * 0.44);
+	font-variant-numeric: tabular-nums;
+	line-height: 1;
+}
+
+#col-clues {
+	grid-column: 2;
+	grid-row: 1;
+	grid-template-columns: repeat(var(--size), var(--cell));
+	padding-bottom: 4px;
+}
+
+#col-clues .clue {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+#col-clues .clue span {
+	height: var(--clue-slot);
+	display: flex;
+	align-items: center;
+}
+
+#row-clues {
+	grid-column: 1;
+	grid-row: 2;
+	grid-template-rows: repeat(var(--size), var(--cell));
+	padding-right: 6px;
+}
+
+#row-clues .clue {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+#row-clues .clue span {
+	width: var(--clue-slot);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* the same five-cell rhythm the grid uses, so the eye can count in blocks */
+#col-clues .clue:nth-child(5n + 1):not(:first-child) {
+	border-left: 1px solid var(--grid-line);
+}
+
+#row-clues .clue:nth-child(5n + 1):not(:first-child) {
+	border-top: 1px solid var(--grid-line);
+}
+
+.clue.done {
+	color: var(--clue-done);
+}
+
+#cells {
+	position: relative;
+	grid-column: 2;
+	grid-row: 2;
+	display: grid;
+	grid-template-columns: repeat(var(--size), var(--cell));
+	border: 2px solid var(--grid-box);
+	background-color: var(--panel);
+	cursor: crosshair;
+}
+
+.cell {
+	width: var(--cell);
+	height: var(--cell);
+	border-top: 1px solid var(--grid-line);
+	border-left: 1px solid var(--grid-line);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+}
+
+.cell.top {
+	border-top: none;
+}
+
+.cell.left {
+	border-left: none;
+}
+
+.cell.bt {
+	border-top: 1px solid var(--grid-box);
+}
+
+.cell.bl {
+	border-left: 1px solid var(--grid-box);
+}
+
+.cell.filled {
+	background-color: var(--fill);
+}
+
+.cell.wrong {
+	background-color: var(--wrong);
+}
+
+.cell.crossed::before {
+	content: "";
+	position: absolute;
+	inset: 30%;
+	background:
+		linear-gradient(to bottom right, transparent 44%, var(--muted) 44%, var(--muted) 56%, transparent 56%),
+		linear-gradient(to bottom left, transparent 44%, var(--muted) 44%, var(--muted) 56%, transparent 56%);
+}
+
+.cell.cursor {
+	box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+/* --- crosshair --- */
+#cells::before,
+#cells::after {
+	content: "";
+	position: absolute;
+	background-color: var(--hover);
+	pointer-events: none;
+	opacity: 0;
+}
+
+#cells::before {
+	left: 0;
+	right: 0;
+	height: var(--cell);
+	top: calc(var(--hover-row, 0) * var(--cell));
+}
+
+#cells::after {
+	top: 0;
+	bottom: 0;
+	width: var(--cell);
+	left: calc(var(--hover-col, 0) * var(--cell));
+}
+
+#cells.hovering::before,
+#cells.hovering::after {
+	opacity: 1;
+}
+
+/* --- solved picture --- */
+#board.solved .cell {
+	border-color: transparent;
+}
+
+#board.solved .cell.crossed::before {
+	display: none;
+}
+
+#board.solved #cells::before,
+#board.solved #cells::after {
+	opacity: 0;
+}
+
+#board.solved .cell.cursor {
+	box-shadow: none;
+}
+
+#board.solved .clue {
+	color: var(--clue-done);
+}
+
+/* --- toolbar --- */
+.toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+}
+
+.toolbar button {
+	background-color: var(--panel);
+	color: var(--text);
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	padding: 8px 14px;
+	font-size: 0.9rem;
+	cursor: pointer;
+}
+
+.toolbar button:hover {
+	border-color: var(--accent);
+}
+
+/* --- win overlay --- */
+/* A card below the grid rather than a curtain over it: the finished picture is
+   the reward, so nothing covers it. */
+#win-overlay {
+	position: absolute;
+	left: 50%;
+	bottom: 0;
+	transform: translateX(-50%);
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 12px 18px;
+	border-radius: 12px;
+	background-color: rgba(15, 23, 42, 0.9);
+	backdrop-filter: blur(2px);
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25);
+	white-space: nowrap;
+}
+
+#win-overlay.hidden {
+	display: none;
+}
+
+#win-overlay h2 {
+	font-size: 1.1rem;
+	color: #93c5fd;
+}
+
+#win-overlay p {
+	color: #e2e8f0;
+	font-size: 0.9rem;
+	font-variant-numeric: tabular-nums;
+}
+
+#win-overlay button {
+	background-color: var(--accent);
+	color: #ffffff;
+	font-weight: 700;
+	border: none;
+	border-radius: 8px;
+	padding: 8px 16px;
+	font-size: 0.9rem;
+	cursor: pointer;
+}
+
+/* --- article content --- */
+article {
+	max-width: 680px;
+	width: 100%;
+	margin-top: 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	color: var(--muted);
+	line-height: 1.7;
+	font-size: 0.95rem;
+}
+
+article h2 {
+	color: var(--text);
+	font-size: 1.2rem;
+	border-bottom: 1px solid var(--line);
+	padding-bottom: 6px;
+}
+
+article ul {
+	padding-left: 20px;
+}
+
+article kbd {
+	background-color: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: 4px;
+	padding: 1px 6px;
+	font-size: 0.85em;
+	color: var(--text);
+}
+
+footer {
+	text-align: center;
+	padding: 24px;
+	color: var(--muted);
+	font-size: 0.85rem;
+	border-top: 1px solid var(--line);
+}
+
+footer a {
+	color: var(--accent-strong);
+}

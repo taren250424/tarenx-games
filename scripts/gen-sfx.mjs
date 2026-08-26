@@ -222,6 +222,44 @@ tone(passant.good, { freq: E5, dur: 0.26, amp: 0.8, tau: 0.08, harmonics: [[2, 0
 passant.bad = silence(0.25);
 tone(passant.bad, { freq: 160, dur: 0.22, amp: 0.9, tau: 0.09, harmonics: [[2, 0.5], [3, 0.3]] });
 
+// --- nonogram ---
+const nonogram = {};
+
+// fill a square: soft pencil tick
+nonogram.fill = silence(0.07);
+tone(nonogram.fill, { freq: 700, endFreq: 560, dur: 0.05, amp: 0.9, tau: 0.014 });
+noise(nonogram.fill, { dur: 0.03, amp: 0.3, tau: 0.008, lowpass: 0.4 });
+
+// cross a square out: the same gesture, duller and lower
+nonogram.cross = silence(0.07);
+tone(nonogram.cross, { freq: 360, endFreq: 280, dur: 0.05, amp: 0.9, tau: 0.013 });
+noise(nonogram.cross, { dur: 0.03, amp: 0.35, tau: 0.008, lowpass: 0.25 });
+
+// clear a square: short downward swish
+nonogram.erase = silence(0.09);
+noise(nonogram.erase, { dur: 0.06, amp: 0.5, tau: 0.018, lowpass: 0.15 });
+tone(nonogram.erase, { freq: 380, endFreq: 210, dur: 0.06, amp: 0.4, tau: 0.02 });
+
+// out of hints: flat low buzz
+nonogram.error = silence(0.16);
+tone(nonogram.error, { freq: 150, dur: 0.14, amp: 0.9, tau: 0.09, harmonics: [[2, 0.5], [3, 0.3]] });
+
+// hint spent: bright rising two-note chime
+nonogram.hint = silence(0.4);
+tone(nonogram.hint, { freq: G5, dur: 0.12, amp: 0.7, tau: 0.045, harmonics: [[2, 0.25]] });
+tone(nonogram.hint, { freq: C6, start: 0.09, dur: 0.28, amp: 0.9, tau: 0.09, harmonics: [[2, 0.25]] });
+
+// toolbar press: crisp tick
+nonogram.button = silence(0.07);
+tone(nonogram.button, { freq: 760, dur: 0.05, amp: 1, tau: 0.014, harmonics: [[2, 0.2]] });
+
+// picture finished: rising jingle with a held final note
+nonogram.win = silence(0.9);
+[C5, E5, G5].forEach((f, i) => {
+	tone(nonogram.win, { freq: f, start: i * 0.11, dur: 0.2, amp: 0.7, tau: 0.06, harmonics: [[2, 0.2]] });
+});
+tone(nonogram.win, { freq: C6, start: 0.33, dur: 0.55, amp: 0.9, tau: 0.16, harmonics: [[2, 0.25], [3, 0.1]] });
+
 const games = [
 	["blockdrop", blockdrop],
 	["sokoban", sokoban],
@@ -229,6 +267,7 @@ const games = [
 	["2048", twenty48],
 	["word-guess", wordGuess],
 	["passant", passant],
+	["nonogram", nonogram],
 ];
 const only = process.argv.slice(2);
 for (const [game, sounds] of games) {

@@ -30,6 +30,8 @@
     "build:nonogram": "pnpm --filter nonogram run build",
     "dev:freecell": "pnpm --filter freecell run dev",
     "build:freecell": "pnpm --filter freecell run build",
+    "dev:klondike": "pnpm --filter klondike run dev",
+    "build:klondike": "pnpm --filter klondike run build",
 
     "preview": "pnpm run build && node scripts/preview.mjs",
     "deploy": "pnpm run build && node scripts/deploy.mjs",

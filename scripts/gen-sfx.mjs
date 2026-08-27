@@ -299,6 +299,23 @@ freecell.win = silence(0.9);
 });
 tone(freecell.win, { freq: C6, start: 0.33, dur: 0.55, amp: 0.9, tau: 0.16, harmonics: [[2, 0.25], [3, 0.1]] });
 
+// --- klondike ---
+// Shares FreeCell's vocabulary — same table, same gestures — with a card
+// turning over in place of a card parked in a cell.
+const klondike = {};
+
+klondike.move = freecell.move;
+klondike.foundation = freecell.foundation;
+klondike.nope = freecell.nope;
+klondike.button = freecell.button;
+klondike.deal = freecell.deal;
+klondike.win = freecell.win;
+
+// a card turns face up: a light flick with a touch of pitch rising
+klondike.flip = silence(0.1);
+noise(klondike.flip, { dur: 0.045, amp: 0.55, tau: 0.011, lowpass: 0.55 });
+tone(klondike.flip, { freq: 420, endFreq: 620, dur: 0.055, amp: 0.4, tau: 0.016 });
+
 const games = [
 	["blockdrop", blockdrop],
 	["sokoban", sokoban],
@@ -308,6 +325,7 @@ const games = [
 	["passant", passant],
 	["nonogram", nonogram],
 	["freecell", freecell],
+	["klondike", klondike],
 ];
 const only = process.argv.slice(2);
 for (const [game, sounds] of games) {

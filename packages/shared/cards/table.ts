@@ -45,7 +45,11 @@ export interface PlaceSpec {
 export interface TableHit {
 	/** The card under the pointer, or null if it landed on bare table. */
 	card: Card | null;
-	/** The slot under the pointer, or null. */
+	/**
+	 * The pile under the pointer. A card answers with the slot it was placed in,
+	 * so tapping the top of a pile and tapping the empty space beside it report
+	 * the same thing.
+	 */
 	slot: string | null;
 }
 
@@ -138,6 +142,8 @@ export function createTable(options: TableOptions): CardTable {
 	// --- rendering ---
 	let rows = minRows;
 	const placed = new Set<Card>();
+	// which pile each card was last placed in, so a tap on a card can report it
+	const cardSlot = new Map<Card, string>();
 
 	function render(draw: (place: (card: Card, spec: PlaceSpec) => void) => void) {
 		placed.clear();
@@ -165,6 +171,7 @@ export function createTable(options: TableOptions): CardTable {
 
 			filled.add(spec.slot);
 			placed.add(card);
+			cardSlot.set(card, spec.slot);
 			// The table is as tall as its longest column, and only ever grows
 			// within a game so the layout does not bounce as piles come and go.
 			if (slot.row === "tableau") rows = Math.max(rows, dy + 1);
@@ -203,11 +210,12 @@ export function createTable(options: TableOptions): CardTable {
 	function hitAt(x: number, y: number): TableHit {
 		const el = document.elementFromPoint(x, y) as HTMLElement | null;
 		const cardEl = el?.closest<HTMLElement>(".card");
+		if (cardEl) {
+			const card = Number(cardEl.dataset.card);
+			return { card, slot: cardSlot.get(card) ?? null };
+		}
 		const slotEl = el?.closest<HTMLElement>("[data-drop]");
-		return {
-			card: cardEl ? Number(cardEl.dataset.card) : null,
-			slot: slotEl ? String(slotEl.dataset.drop) : null,
-		};
+		return { card: null, slot: slotEl ? String(slotEl.dataset.drop) : null };
 	}
 
 	function highlight(slot: string | null) {
@@ -221,19 +229,23 @@ export function createTable(options: TableOptions): CardTable {
 	root.addEventListener("pointerdown", (e) => {
 		if (!enabled || press) return;
 		e.preventDefault();
-		const el = e.target as HTMLElement;
-		const cardEl = el.closest<HTMLElement>(".card");
-		const slotEl = el.closest<HTMLElement>("[data-drop]");
-		const card = cardEl ? Number(cardEl.dataset.card) : null;
+		const hit = hitAt(e.clientX, e.clientY);
 		press = {
 			pointerId: e.pointerId,
-			cards: card === null ? [] : handlers.grab(card) ?? [],
-			hit: { card, slot: slotEl ? String(slotEl.dataset.drop) : null },
+			cards: hit.card === null ? [] : handlers.grab(hit.card) ?? [],
+			hit,
 			startX: e.clientX,
 			startY: e.clientY,
 			dragging: false,
 		};
-		root.setPointerCapture(e.pointerId);
+		// Capture keeps the drag alive past the edge of the table. It throws for a
+		// pointer the browser no longer considers active, which is not worth losing
+		// the press over.
+		try {
+			root.setPointerCapture(e.pointerId);
+		} catch {
+			// no capture — the drag still works while the pointer stays over the table
+		}
 	});
 
 	root.addEventListener("pointermove", (e) => {
@@ -265,7 +277,11 @@ export function createTable(options: TableOptions): CardTable {
 		if (!press || e.pointerId !== press.pointerId) return;
 		const p = press;
 		press = null;
-		if (root.hasPointerCapture(e.pointerId)) root.releasePointerCapture(e.pointerId);
+		try {
+			if (root.hasPointerCapture(e.pointerId)) root.releasePointerCapture(e.pointerId);
+		} catch {
+			// nothing to release
+		}
 
 		if (!p.dragging) {
 			if (!cancelled && enabled) handlers.tap(p.hit);

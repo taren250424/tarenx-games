@@ -1,0 +1,221 @@
+/*
+ * Styles for the shared card table (see table.ts).
+ *
+ * Every measurement on the table derives from one card width, so the whole
+ * thing scales to the viewport with nothing to recalculate in script. A game
+ * can retune the felt and the card colours by redefining the custom properties
+ * on its own `#board` rule.
+ */
+
+.card-table {
+	--card-w: clamp(38px, min(8.4vw, 8.2vh), 86px);
+	--card-h: calc(var(--card-w) * 1.4);
+	--gap: calc(var(--card-w) * 0.14);
+	--col-step: calc(var(--card-w) + var(--gap));
+	--row-gap: calc(var(--card-h) * 0.34);
+	--tab-top: calc(var(--card-h) + var(--row-gap));
+	--pad: calc(var(--card-w) * 0.22);
+	--radius: calc(var(--card-w) * 0.09);
+
+	--felt: #15703f;
+	--felt-deep: #0d4d2b;
+	--slot-line: rgba(255, 255, 255, 0.3);
+	--card-face: #ffffff;
+	--card-edge: #94a3b8;
+	--card-red: #dc2626;
+	--card-black: #1e293b;
+	--card-back: #1d4ed8;
+	--card-back-line: #3b82f6;
+	--select: #facc15;
+
+	--columns: 8;
+	--rows: 3.8;
+
+	position: relative;
+	width: calc(var(--columns) * var(--col-step) - var(--gap) + 2 * var(--pad));
+	height: calc(var(--tab-top) + var(--card-h) * var(--rows) + 2 * var(--pad));
+	padding: var(--pad);
+	border-radius: 14px;
+	background: linear-gradient(160deg, var(--felt), var(--felt-deep));
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 6px 20px rgba(15, 23, 42, 0.18);
+	transition: height 0.16s ease-out;
+	user-select: none;
+	touch-action: none;
+	/* keeps the cards' stacking order to themselves, so a win card placed over
+	   the table lands on top of it instead of behind whatever is in the middle */
+	isolation: isolate;
+}
+
+.card-slots,
+.card-layer {
+	position: absolute;
+	inset: var(--pad);
+}
+
+/* --- slots --- */
+/* Empty landing places. They stay visible under the cards, which is what makes
+   an empty column read as somewhere a card can go. */
+.card-slot {
+	position: absolute;
+	width: var(--card-w);
+	height: var(--card-h);
+	border: 2px dashed var(--slot-line);
+	border-radius: var(--radius);
+	transform: translate(calc(var(--cx) * var(--col-step)), var(--row-y, 0px));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(var(--card-w) * 0.45);
+	color: rgba(255, 255, 255, 0.25);
+	line-height: 1;
+}
+
+.card-slot.row-tableau {
+	--row-y: var(--tab-top);
+}
+
+/* a tall zone reaches the bottom of the table, so a card can be let go anywhere
+   over the pile rather than only on its head */
+.card-slot.tall {
+	height: calc(var(--card-h) * var(--rows));
+	border-bottom: none;
+	border-radius: var(--radius) var(--radius) 0 0;
+	align-items: flex-start;
+	padding-top: calc(var(--card-h) * 0.28);
+}
+
+.card-slot.solid {
+	border-style: solid;
+}
+
+.card-slot.filled {
+	border-color: transparent;
+}
+
+.card-slot.target {
+	border-color: var(--select);
+	border-style: solid;
+	background-color: rgba(250, 204, 21, 0.12);
+}
+
+/* --- cards --- */
+.card {
+	position: absolute;
+	width: var(--card-w);
+	height: var(--card-h);
+	border-radius: var(--radius);
+	background-color: var(--card-face);
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.45), inset 0 0 0 1px var(--card-edge);
+	transform: translate(
+		calc((var(--cx) + var(--ox, 0)) * var(--col-step) + var(--drag-x, 0px)),
+		calc(var(--row-y, 0px) + var(--oy, 0) * var(--card-h) + var(--drag-y, 0px))
+	);
+	transition: transform 0.16s ease-out;
+	cursor: default;
+	overflow: hidden;
+}
+
+.card.row-tableau {
+	--row-y: var(--tab-top);
+}
+
+.card.red {
+	color: var(--card-red);
+}
+
+.card.black {
+	color: var(--card-black);
+}
+
+.card.gone {
+	display: none;
+}
+
+.card.grabbable {
+	cursor: grab;
+}
+
+.card.selected {
+	box-shadow: 0 0 0 3px var(--select), 0 2px 6px rgba(15, 23, 42, 0.5);
+}
+
+.card.dragging {
+	transition: none;
+	cursor: grabbing;
+	box-shadow: 0 10px 22px rgba(15, 23, 42, 0.5), inset 0 0 0 1px var(--card-edge);
+}
+
+/* While cards are in hand the pointer has to be able to see the table under
+   them — the whole layer steps aside, container included, so the slot under the
+   cursor is what a drop hit-tests to. */
+.card-layer.dragging {
+	pointer-events: none;
+}
+
+.card-face,
+.card-back {
+	position: absolute;
+	inset: 0;
+}
+
+/* Rank and suit sit side by side, not stacked: in a fanned column only the top
+   sliver of a card is visible and both have to fit inside it. */
+.card .corner {
+	position: absolute;
+	display: flex;
+	align-items: baseline;
+	gap: calc(var(--card-w) * 0.05);
+	line-height: 1;
+	font-weight: 700;
+	font-size: calc(var(--card-w) * 0.3);
+	font-variant-numeric: tabular-nums;
+}
+
+.card .corner.tl {
+	top: calc(var(--card-w) * 0.07);
+	left: calc(var(--card-w) * 0.07);
+}
+
+.card .corner.br {
+	bottom: calc(var(--card-w) * 0.07);
+	right: calc(var(--card-w) * 0.07);
+	transform: rotate(180deg);
+}
+
+.card .corner i {
+	font-style: normal;
+	font-size: 0.82em;
+}
+
+.card .pip {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(var(--card-w) * 0.62);
+	opacity: 0.9;
+}
+
+/* --- face down --- */
+.card-back {
+	display: none;
+	background-color: var(--card-back);
+	background-image: repeating-linear-gradient(
+		45deg,
+		transparent 0,
+		transparent calc(var(--card-w) * 0.06),
+		var(--card-back-line) calc(var(--card-w) * 0.06),
+		var(--card-back-line) calc(var(--card-w) * 0.1)
+	);
+	border-radius: var(--radius);
+	box-shadow: inset 0 0 0 calc(var(--card-w) * 0.05) var(--card-face);
+}
+
+.card.down .card-face {
+	display: none;
+}
+
+.card.down .card-back {
+	display: block;
+}

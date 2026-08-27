@@ -1,20 +1,9 @@
 import "../../shared/ads/ad-slot.css";
 import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
-import {
-	DEAL_MAX,
-	DEAL_MIN,
-	IMPOSSIBLE_DEAL,
-	RANKS,
-	SUITS,
-	cardName,
-	clampDeal,
-	deal,
-	isRed,
-	randomDeal,
-	rank,
-	suit,
-} from "./deal.ts";
+import { type Card, SUITS, isRed, orderedDeck, rank, suit } from "../../shared/cards/deck.ts";
+import { type SlotSpec, createTable } from "../../shared/cards/table.ts";
+import { DEAL_MAX, DEAL_MIN, IMPOSSIBLE_DEAL, clampDeal, deal, randomDeal } from "./deal.ts";
 
 const EMPTY = -1;
 const STORAGE_KEY = "tarenx.freecell.progress";
@@ -62,8 +51,6 @@ let sweeping = false;
 
 // --- elements ---
 const boardEl = document.getElementById("board") as HTMLElement;
-const slotsEl = document.getElementById("slots") as HTMLElement;
-const cardsEl = document.getElementById("cards") as HTMLElement;
 const dealInput = document.getElementById("deal-input") as HTMLInputElement;
 const dealNoteEl = document.getElementById("deal-note") as HTMLElement;
 const timeEl = document.getElementById("time") as HTMLElement;
@@ -80,10 +67,29 @@ const overlayStatsEl = document.getElementById("overlay-stats") as HTMLElement;
 const overlayUndoBtn = document.getElementById("overlay-undo") as HTMLButtonElement;
 const overlayNextBtn = document.getElementById("overlay-next") as HTMLButtonElement;
 
-let cardEls: HTMLElement[] = [];
-let freeSlots: HTMLElement[] = [];
-let foundationSlots: HTMLElement[] = [];
-let columnSlots: HTMLElement[] = [];
+/*
+ * Cards in a column overlap by a fixed fraction of their height. Tightening it
+ * up for long columns would cover the rank in the corner, which is the one
+ * thing that has to stay readable, so the table grows instead.
+ */
+const FAN = 0.28;
+
+const SLOTS: SlotSpec[] = [
+	...Array.from({ length: 4 }, (_, i): SlotSpec => ({ id: `free:${i}`, col: i, row: "top" })),
+	...SUITS.map((glyph, i): SlotSpec => ({
+		id: `foundation:${i}`,
+		col: 4 + i,
+		row: "top",
+		glyph,
+		className: "solid",
+	})),
+	...Array.from({ length: 8 }, (_, c): SlotSpec => ({
+		id: `tableau:${c}`,
+		col: c,
+		row: "tableau",
+		tall: true,
+	})),
+];
 
 // --- audio ---
 const play = createSfx(
@@ -379,90 +385,35 @@ function canSweep(): boolean {
 	);
 }
 
-// --- board construction (built once, then repositioned) ---
-function buildCards() {
-	cardsEl.innerHTML = Array.from({ length: 52 }, (_, card) => {
-		const corner = `<b>${RANKS[rank(card)]}</b><i>${SUITS[suit(card)]}</i>`;
-		return `<div class="card" data-card="${card}" aria-label="${cardName(card)}">
-			<span class="corner tl">${corner}</span>
-			<span class="pip">${SUITS[suit(card)]}</span>
-			<span class="corner br">${corner}</span>
-		</div>`;
-	}).join("");
-	cardEls = [...cardsEl.children] as HTMLElement[];
-}
-
-function buildSlots() {
-	const free = Array.from(
-		{ length: 4 },
-		(_, i) => `<div class="slot free" data-drop="free:${i}" style="--cx:${i}"></div>`
-	);
-	const foundations = SUITS.map(
-		(glyph, i) =>
-			`<div class="slot foundation" data-drop="foundation:${i}" style="--cx:${4 + i}">${glyph}</div>`
-	);
-	const columns = Array.from(
-		{ length: 8 },
-		(_, c) => `<div class="slot column" data-drop="tableau:${c}" style="--cx:${c}"></div>`
-	);
-	slotsEl.innerHTML = [...free, ...foundations, ...columns].join("");
-	const all = [...slotsEl.children] as HTMLElement[];
-	freeSlots = all.slice(0, 4);
-	foundationSlots = all.slice(4, 8);
-	columnSlots = all.slice(8);
-}
-
 // --- rendering ---
-function place(card: number, row: "top" | "tab", cx: number, cy: number, z: number, extra: string) {
-	const el = cardEls[card];
-	el.className = `card ${isRed(card) ? "red" : "black"} ${row === "top" ? "top" : "tab"}${extra}`;
-	el.style.setProperty("--cx", String(cx));
-	el.style.setProperty("--cy", String(cy));
-	el.style.removeProperty("--dx");
-	el.style.removeProperty("--dy");
-	el.style.zIndex = String(z);
-}
-
-/*
- * Cards in a column overlap by a fixed fraction of their height — tightening it
- * up for long columns would cover the rank in the corner, which is the one
- * thing that has to stay readable. Instead the table grows a little, and it
- * only ever grows within a deal so the layout does not bounce as piles come
- * and go.
- */
-const FAN = 0.28;
-const MIN_ROWS = 3.8;
-let boardRows = MIN_ROWS;
-
 function render() {
 	const selected = selection ? cardsOf(selection) : [];
 
-	for (let cell = 0; cell < 4; cell++) {
-		const card = board.free[cell];
-		freeSlots[cell].classList.toggle("filled", card !== EMPTY);
-		if (card === EMPTY) continue;
-		place(card, "top", cell, 0, 10, ` movable${selected.includes(card) ? " selected" : ""}`);
-	}
-
-	for (let s = 0; s < 4; s++) {
-		const count = board.foundations[s];
-		foundationSlots[s].classList.toggle("filled", count > 0);
-		for (let k = 0; k < count; k++) place(k * 4 + s, "top", 4 + s, 0, k + 1, "");
-	}
-
-	for (let col = 0; col < 8; col++) {
-		const column = board.tableau[col];
-		columnSlots[col].classList.toggle("filled", column.length > 0);
-		boardRows = Math.max(boardRows, 1 + (column.length - 1) * FAN);
-		for (let index = 0; index < column.length; index++) {
-			const card = column[index];
-			const movable = grabbable({ type: "tableau", col, index });
-			const extra = `${movable ? " movable" : ""}${selected.includes(card) ? " selected" : ""}`;
-			place(card, "tab", col, index, index + 1, extra);
+	table.render((place) => {
+		for (let cell = 0; cell < 4; cell++) {
+			const card = board.free[cell];
+			if (card === EMPTY) continue;
+			place(card, { slot: `free:${cell}`, grabbable: true, selected: selected.includes(card) });
 		}
-	}
 
-	boardEl.style.setProperty("--rows", boardRows.toFixed(2));
+		for (let s = 0; s < 4; s++) {
+			for (let k = 0; k < board.foundations[s]; k++) {
+				place(k * 4 + s, { slot: `foundation:${s}` });
+			}
+		}
+
+		for (let col = 0; col < 8; col++) {
+			board.tableau[col].forEach((card, index) => {
+				place(card, {
+					slot: `tableau:${col}`,
+					dy: index * FAN,
+					grabbable: grabbable({ type: "tableau", col, index }),
+					selected: selected.includes(card),
+				});
+			});
+		}
+	});
+
 	renderStatus();
 }
 
@@ -479,6 +430,7 @@ function renderStatus() {
 	bestEl.textContent = best ? `${formatTime(best.time)} · ${best.moves}` : "—";
 	solvedEl.textContent = String(progress.solved.length);
 	soundBtn.textContent = progress.settings.sound ? "🔊" : "🔇";
+	table.setEnabled(!finished && !sweeping);
 	undoBtn.disabled = !undoStack.length || finished || sweeping;
 	finishBtn.classList.toggle("hidden", !canSweep());
 }
@@ -617,8 +569,8 @@ function showStuck() {
 }
 
 // --- clicks ---
-function parseDrop(el: HTMLElement): Target {
-	const [kind, index] = String(el.dataset.drop).split(":");
+function parseSlot(id: string): Target {
+	const [kind, index] = id.split(":");
 	const n = Number(index);
 	if (kind === "free") return { type: "free", cell: n };
 	if (kind === "foundation") return { type: "foundation", suit: n };
@@ -636,7 +588,7 @@ function clickTarget(dst: Target) {
 	clearSelection();
 }
 
-function clickCard(card: number) {
+function clickCard(card: Card) {
 	const src = locate(card);
 	// a card already on a foundation can only be somewhere to drop onto
 	if (!src) {
@@ -666,108 +618,36 @@ function clickCard(card: number) {
 	render();
 }
 
-/*
- * Pointer handling. A press on the table is only known to be a click or a drag
- * once the pointer has moved (or not), so both live in one pipeline: press,
- * maybe pick up, release. Nothing listens for `click`, which keeps a drag that
- * ends over the card it started on from also counting as a tap.
- */
-interface Press {
-	pointerId: number;
-	src: Source | null; // set only when the press landed on a stack that can move
-	cards: number[];
-	target: Target | null; // where a plain click would drop the selection
-	card: number; // the pressed card, or -1
-	startX: number;
-	startY: number;
-	dragging: boolean;
-}
-
-let press: Press | null = null;
-let highlighted: HTMLElement | null = null;
-
-function dropZoneAt(x: number, y: number): { target: Target; el: HTMLElement } | null {
-	const el = document.elementFromPoint(x, y)?.closest<HTMLElement>("[data-drop]");
-	if (!el) return null;
-	return { target: parseDrop(el), el };
-}
-
-function highlight(el: HTMLElement | null) {
-	if (highlighted === el) return;
-	highlighted?.classList.remove("target");
-	highlighted = el;
-	highlighted?.classList.add("target");
-}
-
-boardEl.addEventListener("pointerdown", (e) => {
-	if (finished || sweeping || press) return;
-	e.preventDefault();
-	const el = e.target as HTMLElement;
-	const cardEl = el.closest<HTMLElement>(".card");
-	const zoneEl = el.closest<HTMLElement>("[data-drop]");
-	const card = cardEl ? Number(cardEl.dataset.card) : -1;
-	const src = card >= 0 ? locate(card) : null;
-	press = {
-		pointerId: e.pointerId,
-		src: src && grabbable(src) ? src : null,
-		cards: src ? cardsOf(src) : [],
-		target: zoneEl ? parseDrop(zoneEl) : null,
-		card,
-		startX: e.clientX,
-		startY: e.clientY,
-		dragging: false,
-	};
-	boardEl.setPointerCapture(e.pointerId);
+// --- table ---
+// The shared card table owns the DOM and the pointer work; the four handlers
+// below are the whole of what FreeCell has to say about it.
+const table = createTable({
+	root: boardEl,
+	cards: orderedDeck(),
+	slots: SLOTS,
+	columns: 8,
+	handlers: {
+		grab(card) {
+			const src = locate(card);
+			return src && grabbable(src) ? cardsOf(src) : null;
+		},
+		canDrop(cards, slot) {
+			const src = locate(cards[0]);
+			return !!src && canMove(src, parseSlot(slot));
+		},
+		drop(cards, slot) {
+			const src = locate(cards[0]);
+			if (slot && src && doMove(src, parseSlot(slot))) return;
+			if (slot) play("nope");
+			render(); // nothing legal under the pointer: the cards slide home
+		},
+		tap(hit) {
+			if (hit.card !== null) clickCard(hit.card);
+			else if (hit.slot) clickTarget(parseSlot(hit.slot));
+			else clearSelection();
+		},
+	},
 });
-
-boardEl.addEventListener("pointermove", (e) => {
-	if (!press || e.pointerId !== press.pointerId || !press.src) return;
-	const dx = e.clientX - press.startX;
-	const dy = e.clientY - press.startY;
-	if (!press.dragging) {
-		if (Math.hypot(dx, dy) < 5) return;
-		press.dragging = true;
-		cardsEl.classList.add("dragging");
-		press.cards.forEach((card, i) => {
-			cardEls[card].classList.add("dragging");
-			cardEls[card].style.zIndex = String(900 + i);
-		});
-	}
-	for (const card of press.cards) {
-		cardEls[card].style.setProperty("--dx", `${dx}px`);
-		cardEls[card].style.setProperty("--dy", `${dy}px`);
-	}
-	const hit = dropZoneAt(e.clientX, e.clientY);
-	highlight(hit && canMove(press.src, hit.target) ? hit.el : null);
-});
-
-function endPress(e: PointerEvent, cancelled: boolean) {
-	if (!press || e.pointerId !== press.pointerId) return;
-	const p = press;
-	press = null;
-	if (boardEl.hasPointerCapture(e.pointerId)) boardEl.releasePointerCapture(e.pointerId);
-
-	if (p.dragging) {
-		// Hit-test while the card layer is still transparent to the pointer:
-		// the cards in hand sit right under the cursor and would answer first.
-		const hit = cancelled ? null : dropZoneAt(e.clientX, e.clientY);
-		cardsEl.classList.remove("dragging");
-		for (const card of p.cards) cardEls[card].classList.remove("dragging");
-		highlight(null);
-		if (hit && p.src && doMove(p.src, hit.target)) return;
-		if (hit) play("nope");
-		render(); // nothing legal under the pointer: the cards slide home
-		return;
-	}
-	if (cancelled || finished || sweeping) return;
-	if (p.card >= 0) clickCard(p.card);
-	else if (p.target) clickTarget(p.target);
-	else clearSelection();
-}
-
-boardEl.addEventListener("pointerup", (e) => endPress(e, false));
-boardEl.addEventListener("pointercancel", (e) => endPress(e, true));
-boardEl.addEventListener("contextmenu", (e) => e.preventDefault());
 
 // --- keyboard ---
 document.addEventListener("keydown", (e) => {
@@ -804,7 +684,7 @@ function startDeal(number: number, session?: Session) {
 	selection = null;
 	finished = false;
 	sweeping = false;
-	boardRows = MIN_ROWS;
+	table.reset();
 	overlayEl.classList.add("hidden");
 	overlayEl.classList.remove("stuck");
 	dealInput.value = String(dealNumber);
@@ -900,8 +780,6 @@ window.addEventListener("pagehide", saveSession);
 
 // --- init ---
 function init() {
-	buildSlots();
-	buildCards();
 	autoCheck.checked = progress.settings.autoplay;
 
 	const requested = new URLSearchParams(location.search).get("deal");

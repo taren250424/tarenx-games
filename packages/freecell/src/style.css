@@ -1,0 +1,520 @@
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+:root {
+	--bg: #f8fafc;
+	--panel: #ffffff;
+	--line: #e2e8f0;
+	--text: #1e293b;
+	--muted: #64748b;
+	--accent: #3b82f6;
+	--accent-strong: #1d4ed8;
+	--felt: #15703f;
+	--felt-deep: #0d4d2b;
+	--slot-line: rgba(255, 255, 255, 0.3);
+	--card-face: #ffffff;
+	--card-edge: #94a3b8;
+	--red: #dc2626;
+	--black: #1e293b;
+	--select: #facc15;
+}
+
+body {
+	font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+	background-color: var(--bg);
+	color: var(--text);
+	min-height: 100vh;
+}
+
+header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 20px;
+	border-bottom: 1px solid var(--line);
+}
+
+.header-brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.header-logo {
+	width: 32px;
+	height: 32px;
+}
+
+.header-title {
+	font-size: 1.2rem;
+	font-weight: 700;
+}
+
+.header-home {
+	color: var(--muted);
+	text-decoration: none;
+	font-size: 0.9rem;
+}
+
+.header-home:hover {
+	color: var(--text);
+}
+
+main {
+	display: grid;
+	grid-template-columns: var(--ad-slot-width) minmax(0, 900px) var(--ad-slot-width);
+	justify-content: center;
+	gap: 24px;
+	padding: 24px 16px 48px;
+}
+
+main .game-column {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+}
+
+@media (max-width: 1200px) {
+	main {
+		grid-template-columns: minmax(0, 900px);
+	}
+}
+
+/* --- controls bar --- */
+.controls {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+.controls button,
+.controls .deal-picker {
+	background-color: var(--panel);
+	color: var(--text);
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	padding: 8px 14px;
+	font-size: 0.9rem;
+	font-family: inherit;
+	cursor: pointer;
+}
+
+.controls button:hover,
+.controls .deal-picker:focus-within {
+	border-color: var(--accent);
+}
+
+/* Step buttons, label and field read as one control rather than three: the
+   pill carries the border, everything inside it is flat. */
+.controls .deal-picker {
+	display: flex;
+	align-items: stretch;
+	padding: 0;
+	overflow: hidden;
+}
+
+.controls .deal-picker button {
+	border: none;
+	border-radius: 0;
+	background: none;
+	padding: 8px 12px;
+	font-size: 1rem;
+	line-height: 1;
+	color: var(--muted);
+}
+
+.controls .deal-picker button:hover {
+	background-color: var(--bg);
+	color: var(--text);
+}
+
+.controls .deal-picker label {
+	display: flex;
+	align-items: center;
+	padding-left: 12px;
+	color: var(--muted);
+	cursor: text;
+}
+
+.controls .deal-picker input {
+	border: none;
+	background: none;
+	/* just wide enough for the longest deal number, so short ones do not leave
+	   a hole between the field and the step button */
+	width: 3.5em;
+	padding: 8px 4px;
+	font-size: 0.9rem;
+	font-family: inherit;
+	color: var(--text);
+	font-variant-numeric: tabular-nums;
+	cursor: text;
+}
+
+.controls .deal-picker input:focus {
+	outline: none;
+}
+
+.controls .check-label {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 0.9rem;
+	color: var(--muted);
+	cursor: pointer;
+	user-select: none;
+}
+
+.controls .check-label input {
+	accent-color: var(--accent);
+}
+
+.hud {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 18px;
+	font-size: 0.9rem;
+	color: var(--muted);
+}
+
+.hud strong {
+	color: var(--text);
+	font-variant-numeric: tabular-nums;
+}
+
+#deal-note {
+	color: var(--red);
+	font-size: 0.85rem;
+	text-align: center;
+}
+
+#deal-note:empty {
+	display: none;
+}
+
+/* --- board --- */
+.board-wrap {
+	position: relative;
+}
+
+#board {
+	/* every measurement on the table derives from one card width */
+	--card-w: clamp(38px, min(8.4vw, 8.2vh), 86px);
+	--card-h: calc(var(--card-w) * 1.4);
+	--gap: calc(var(--card-w) * 0.14);
+	--col-step: calc(var(--card-w) + var(--gap));
+	--row-gap: calc(var(--card-h) * 0.34);
+	--tab-top: calc(var(--card-h) + var(--row-gap));
+	--pad: calc(var(--card-w) * 0.22);
+	/* how many card heights the tableau needs; set by the renderer so the table
+	   only grows when a column outgrows the usual four and a bit */
+	--rows: 4.4;
+	position: relative;
+	width: calc(8 * var(--col-step) - var(--gap) + 2 * var(--pad));
+	height: calc(var(--tab-top) + var(--card-h) * var(--rows) + 2 * var(--pad));
+	transition: height 0.16s ease-out;
+	padding: var(--pad);
+	border-radius: 14px;
+	background: linear-gradient(160deg, var(--felt), var(--felt-deep));
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 6px 20px rgba(15, 23, 42, 0.18);
+	user-select: none;
+	touch-action: none;
+	/* keeps the cards' stacking order to themselves, so the win card always
+	   lands on top of the table instead of behind whatever is in the middle */
+	isolation: isolate;
+}
+
+#slots,
+#cards {
+	position: absolute;
+	inset: var(--pad);
+}
+
+/* Empty landing places. They stay visible under the cards, which is what makes
+   an empty column read as somewhere a card can go. */
+.slot {
+	position: absolute;
+	width: var(--card-w);
+	height: var(--card-h);
+	border: 2px dashed var(--slot-line);
+	border-radius: calc(var(--card-w) * 0.09);
+	transform: translate(calc(var(--cx) * var(--col-step)), var(--sy, 0px));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(var(--card-w) * 0.45);
+	color: rgba(255, 255, 255, 0.25);
+	line-height: 1;
+}
+
+.slot.foundation {
+	border-style: solid;
+}
+
+/* the column zone reaches the bottom of the table so a card can be let go
+   anywhere over the pile, not only on its head */
+.slot.column {
+	--sy: var(--tab-top);
+	height: calc(var(--card-h) * var(--rows));
+	border-bottom: none;
+	border-radius: calc(var(--card-w) * 0.09) calc(var(--card-w) * 0.09) 0 0;
+	align-items: flex-start;
+	padding-top: calc(var(--card-h) * 0.28);
+}
+
+.slot.filled {
+	border-color: transparent;
+}
+
+.slot.target {
+	border-color: var(--select);
+	border-style: solid;
+	background-color: rgba(250, 204, 21, 0.12);
+}
+
+/* --- cards --- */
+.card {
+	position: absolute;
+	width: var(--card-w);
+	height: var(--card-h);
+	border-radius: calc(var(--card-w) * 0.09);
+	background-color: var(--card-face);
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.45), inset 0 0 0 1px var(--card-edge);
+	transition: transform 0.16s ease-out;
+	cursor: default;
+	overflow: hidden;
+}
+
+.card.red {
+	color: var(--red);
+}
+
+.card.black {
+	color: var(--black);
+}
+
+.card.top {
+	transform: translate(
+		calc(var(--cx) * var(--col-step) + var(--dx, 0px)),
+		var(--dy, 0px)
+	);
+}
+
+.card.tab {
+	transform: translate(
+		calc(var(--cx) * var(--col-step) + var(--dx, 0px)),
+		calc(var(--tab-top) + var(--cy) * var(--fan, 0.28) * var(--card-h) + var(--dy, 0px))
+	);
+}
+
+.card.movable {
+	cursor: grab;
+}
+
+.card.selected {
+	box-shadow: 0 0 0 3px var(--select), 0 2px 6px rgba(15, 23, 42, 0.5);
+}
+
+.card.dragging {
+	transition: none;
+	cursor: grabbing;
+	box-shadow: 0 10px 22px rgba(15, 23, 42, 0.5), inset 0 0 0 1px var(--card-edge);
+}
+
+/* While cards are in hand the pointer has to be able to see the table under
+   them — the whole layer steps aside, container included, so the slot under the
+   cursor is what a drop hit-tests to. */
+#cards.dragging {
+	pointer-events: none;
+}
+
+/* Rank and suit sit side by side, not stacked: in a fanned column only the top
+   sliver of a card is visible and both have to fit inside it. */
+.card .corner {
+	position: absolute;
+	display: flex;
+	align-items: baseline;
+	gap: calc(var(--card-w) * 0.05);
+	line-height: 1;
+	font-weight: 700;
+	font-size: calc(var(--card-w) * 0.3);
+	font-variant-numeric: tabular-nums;
+}
+
+.card .corner.tl {
+	top: calc(var(--card-w) * 0.07);
+	left: calc(var(--card-w) * 0.07);
+}
+
+.card .corner.br {
+	bottom: calc(var(--card-w) * 0.07);
+	right: calc(var(--card-w) * 0.07);
+	transform: rotate(180deg);
+}
+
+.card .corner i {
+	font-style: normal;
+	font-size: 0.82em;
+}
+
+.card .pip {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(var(--card-w) * 0.62);
+	opacity: 0.9;
+}
+
+/* --- toolbar --- */
+.toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+}
+
+.toolbar button {
+	background-color: var(--panel);
+	color: var(--text);
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	padding: 8px 14px;
+	font-size: 0.9rem;
+	cursor: pointer;
+}
+
+.toolbar button:hover:not(:disabled) {
+	border-color: var(--accent);
+}
+
+.toolbar button:disabled {
+	opacity: 0.45;
+	cursor: default;
+}
+
+.toolbar button.hidden {
+	display: none;
+}
+
+.toolbar button.primary {
+	background-color: var(--accent);
+	border-color: var(--accent);
+	color: #ffffff;
+	font-weight: 700;
+}
+
+/* --- overlay --- */
+#overlay {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	padding: 20px 26px;
+	border-radius: 14px;
+	background-color: rgba(15, 23, 42, 0.92);
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.45);
+	text-align: center;
+}
+
+#overlay.hidden {
+	display: none;
+}
+
+#overlay h2 {
+	font-size: 1.3rem;
+	color: #86efac;
+}
+
+#overlay.stuck h2 {
+	color: #fca5a5;
+}
+
+#overlay p {
+	color: #e2e8f0;
+	font-size: 0.9rem;
+	font-variant-numeric: tabular-nums;
+}
+
+#overlay .overlay-buttons {
+	display: flex;
+	gap: 10px;
+	margin-top: 4px;
+}
+
+#overlay button {
+	white-space: nowrap;
+	background-color: rgba(255, 255, 255, 0.12);
+	color: #e2e8f0;
+	border: none;
+	border-radius: 8px;
+	padding: 8px 16px;
+	font-size: 0.9rem;
+	cursor: pointer;
+}
+
+#overlay button.hidden {
+	display: none;
+}
+
+#overlay button.primary {
+	background-color: var(--accent);
+	color: #ffffff;
+	font-weight: 700;
+}
+
+/* --- article content --- */
+article {
+	max-width: 680px;
+	width: 100%;
+	margin-top: 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	color: var(--muted);
+	line-height: 1.7;
+	font-size: 0.95rem;
+}
+
+article h2 {
+	color: var(--text);
+	font-size: 1.2rem;
+	border-bottom: 1px solid var(--line);
+	padding-bottom: 6px;
+}
+
+article ul {
+	padding-left: 20px;
+}
+
+article kbd {
+	background-color: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: 4px;
+	padding: 1px 6px;
+	font-size: 0.85em;
+	color: var(--text);
+}
+
+footer {
+	text-align: center;
+	padding: 24px;
+	color: var(--muted);
+	font-size: 0.85rem;
+	border-top: 1px solid var(--line);
+}
+
+footer a {
+	color: var(--accent-strong);
+}

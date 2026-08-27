@@ -28,6 +28,8 @@
     "build:passant": "pnpm --filter passant run build",
     "dev:nonogram": "pnpm --filter nonogram run dev",
     "build:nonogram": "pnpm --filter nonogram run build",
+    "dev:freecell": "pnpm --filter freecell run dev",
+    "build:freecell": "pnpm --filter freecell run build",
 
     "preview": "pnpm run build && node scripts/preview.mjs",
     "deploy": "pnpm run build && node scripts/deploy.mjs",

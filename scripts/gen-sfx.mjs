@@ -260,6 +260,45 @@ nonogram.win = silence(0.9);
 });
 tone(nonogram.win, { freq: C6, start: 0.33, dur: 0.55, amp: 0.9, tau: 0.16, harmonics: [[2, 0.25], [3, 0.1]] });
 
+// --- freecell ---
+const freecell = {};
+
+// a card is set down on the tableau: soft paper slap
+freecell.move = silence(0.1);
+noise(freecell.move, { dur: 0.05, amp: 0.6, tau: 0.012, lowpass: 0.45 });
+tone(freecell.move, { freq: 300, endFreq: 190, dur: 0.06, amp: 0.35, tau: 0.018 });
+
+// a card is parked in a free cell: the same slap, a touch higher and drier
+freecell.cell = silence(0.09);
+noise(freecell.cell, { dur: 0.04, amp: 0.5, tau: 0.01, lowpass: 0.6 });
+tone(freecell.cell, { freq: 520, endFreq: 380, dur: 0.05, amp: 0.4, tau: 0.015 });
+
+// a card goes up to a foundation: bright confirming blip
+freecell.foundation = silence(0.2);
+tone(freecell.foundation, { freq: G5, dur: 0.08, amp: 0.7, tau: 0.03, harmonics: [[2, 0.25]] });
+tone(freecell.foundation, { freq: C6, start: 0.06, dur: 0.13, amp: 0.85, tau: 0.045, harmonics: [[2, 0.2]] });
+
+// illegal move: flat low buzz
+freecell.nope = silence(0.16);
+tone(freecell.nope, { freq: 150, dur: 0.14, amp: 0.9, tau: 0.09, harmonics: [[2, 0.5], [3, 0.3]] });
+
+// picking a card up / pressing a button: crisp tick
+freecell.button = silence(0.07);
+tone(freecell.button, { freq: 760, dur: 0.05, amp: 1, tau: 0.014, harmonics: [[2, 0.2]] });
+
+// a new deal is thrown: four quick riffling slaps
+freecell.deal = silence(0.4);
+for (let i = 0; i < 5; i++) {
+	noise(freecell.deal, { start: i * 0.055, dur: 0.05, amp: 0.55 - i * 0.05, tau: 0.012, lowpass: 0.5 });
+}
+
+// deal solved: rising jingle with a held final note
+freecell.win = silence(0.9);
+[C5, E5, G5].forEach((f, i) => {
+	tone(freecell.win, { freq: f, start: i * 0.11, dur: 0.2, amp: 0.7, tau: 0.06, harmonics: [[2, 0.2]] });
+});
+tone(freecell.win, { freq: C6, start: 0.33, dur: 0.55, amp: 0.9, tau: 0.16, harmonics: [[2, 0.25], [3, 0.1]] });
+
 const games = [
 	["blockdrop", blockdrop],
 	["sokoban", sokoban],
@@ -268,6 +307,7 @@ const games = [
 	["word-guess", wordGuess],
 	["passant", passant],
 	["nonogram", nonogram],
+	["freecell", freecell],
 ];
 const only = process.argv.slice(2);
 for (const [game, sounds] of games) {

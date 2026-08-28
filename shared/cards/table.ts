@@ -287,8 +287,8 @@ export function createTable(options: TableOptions): CardTable {
 			if (!cancelled && enabled) handlers.tap(p.hit);
 			return;
 		}
-		// Hit-test while the card layer is still transparent to the pointer: the
-		// cards in hand sit right under the cursor and would answer first.
+		// Hit-test while the cards are still transparent to the pointer: the ones
+		// in hand sit right under the cursor and would answer first.
 		const target = cancelled ? null : hitAt(e.clientX, e.clientY).slot;
 		cardsEl.classList.remove("dragging");
 		for (const card of p.cards) cardEls.get(card)?.classList.remove("dragging");

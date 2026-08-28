@@ -52,6 +52,13 @@
 	inset: var(--pad);
 }
 
+/* The card layer is only a box holding the cards, and it covers the whole
+   table: were it to answer the pointer itself it would bury every slot behind
+   it, and an empty pile would take no tap. The cards answer for themselves. */
+.card-layer {
+	pointer-events: none;
+}
+
 /* --- slots --- */
 /* Empty landing places. They stay visible under the cards, which is what makes
    an empty column read as somewhere a card can go. */
@@ -113,6 +120,7 @@
 	transition: transform 0.16s ease-out;
 	cursor: default;
 	overflow: hidden;
+	pointer-events: auto;
 }
 
 .card.row-tableau {
@@ -146,9 +154,9 @@
 }
 
 /* While cards are in hand the pointer has to be able to see the table under
-   them — the whole layer steps aside, container included, so the slot under the
-   cursor is what a drop hit-tests to. */
-.card-layer.dragging {
+   them — the cards step aside, so the slot under the cursor is what a drop
+   hit-tests to. */
+.card-layer.dragging .card {
 	pointer-events: none;
 }
 

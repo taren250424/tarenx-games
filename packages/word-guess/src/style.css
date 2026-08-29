@@ -1,12 +1,17 @@
 :root {
 	--accent: #10b981;
 	--accent-strong: #047857;
-	/* the board keeps its dark "screen" look, matching the other games */
-	--board: #1e293b;
-	--slot: #334155;
+	--board: #ffffff;
+	--slot: #e2e8f0;
+	--slot-filled: #94a3b8;
 	--mark-correct: #059669;
 	--mark-present: #d97706;
-	--mark-absent: #475569;
+	--mark-absent: #cbd5e1;
+	--mark-absent-fg: #475569;
+	--key: #e2e8f0;
+	--key-hover: #cbd5e1;
+	--key-spent: #f1f5f9;
+	--key-spent-fg: #94a3b8;
 }
 
 /* Green next to amber is the one pairing red-green colour blindness cannot
@@ -40,6 +45,7 @@ body.high-contrast {
 	padding: 10px;
 	border-radius: 10px;
 	background-color: var(--board);
+	border: 1px solid var(--line);
 }
 
 #board[data-length="6"] {
@@ -63,9 +69,9 @@ body.high-contrast {
 	align-items: center;
 	justify-content: center;
 	border-radius: 6px;
-	border: 2px solid #3f4c60;
+	border: 2px solid var(--slot);
 	background-color: transparent;
-	color: #f8fafc;
+	color: var(--text);
 	font-size: calc(var(--tile) * 0.5);
 	font-weight: 700;
 	line-height: 1;
@@ -74,22 +80,26 @@ body.high-contrast {
 }
 
 .tile.filled {
-	border-color: #64748b;
+	border-color: var(--slot-filled);
 }
 
 .tile[data-mark="correct"] {
 	background-color: var(--mark-correct);
 	border-color: var(--mark-correct);
+	color: #ffffff;
 }
 
 .tile[data-mark="present"] {
 	background-color: var(--mark-present);
 	border-color: var(--mark-present);
+	color: #ffffff;
 }
 
+/* a letter that is not in the word fades rather than darkens */
 .tile[data-mark="absent"] {
 	background-color: var(--mark-absent);
 	border-color: var(--mark-absent);
+	color: var(--mark-absent-fg);
 }
 
 /* Flip is on the tile, so the letter inside has to be un-flipped or it reads
@@ -167,8 +177,8 @@ body.high-contrast {
 	transform: translateX(-50%);
 	padding: 8px 16px;
 	border-radius: 8px;
-	background-color: #f8fafc;
-	color: #0f172a;
+	background-color: var(--text);
+	color: #ffffff;
 	font-size: 0.9rem;
 	font-weight: 600;
 	white-space: nowrap;
@@ -205,8 +215,8 @@ body.high-contrast {
 	height: 52px;
 	border: none;
 	border-radius: 6px;
-	background-color: #cbd5e1;
-	color: #0f172a;
+	background-color: var(--key);
+	color: var(--text);
 	font-size: 0.85rem;
 	font-weight: 700;
 	text-transform: uppercase;
@@ -220,22 +230,22 @@ body.high-contrast {
 }
 
 .key:hover {
-	background-color: #b6c2d2;
+	background-color: var(--key-hover);
 }
 
 .key[data-mark="correct"] {
 	background-color: var(--mark-correct);
-	color: #f8fafc;
+	color: #ffffff;
 }
 
 .key[data-mark="present"] {
 	background-color: var(--mark-present);
-	color: #f8fafc;
+	color: #ffffff;
 }
 
 .key[data-mark="absent"] {
-	background-color: #64748b;
-	color: #cbd5e1;
+	background-color: var(--key-spent);
+	color: var(--key-spent-fg);
 }
 
 /* --- end overlay --- */

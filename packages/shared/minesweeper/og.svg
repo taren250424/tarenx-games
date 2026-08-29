@@ -1,41 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
-  <defs>
-    <linearGradient id="msOgBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0F172A" />
-      <stop offset="60%" stop-color="#1E293B" />
-      <stop offset="100%" stop-color="#450A0A" />
-    </linearGradient>
-    <linearGradient id="msOgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#F87171" />
-      <stop offset="100%" stop-color="#B91C1C" />
-    </linearGradient>
-  </defs>
-
-  <rect width="1200" height="630" fill="url(#msOgBg)" />
-
-  <circle cx="1060" cy="110" r="190" fill="#EF4444" opacity="0.12" />
-  <circle cx="110" cy="550" r="150" fill="#F87171" opacity="0.08" />
-
-  <g transform="translate(120, 190) scale(3.75)">
-    <rect width="32" height="32" rx="4" fill="#1E293B" stroke="#475569" stroke-width="0.8"/>
-    <rect x="4" y="4" width="11" height="11" rx="2" fill="#475569"/>
-    <rect x="17" y="4" width="11" height="11" rx="2" fill="#0F172A"/>
-    <text x="22.5" y="9.8" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="8" font-weight="700" fill="#60A5FA" text-anchor="middle" dominant-baseline="central">1</text>
-    <rect x="4" y="17" width="11" height="11" rx="2" fill="#475569"/>
-    <path d="M8.6 19.5v6.5" stroke="#E2E8F0" stroke-width="1.2" stroke-linecap="round"/>
-    <path d="M8.6 19.5l5 2.1-5 2.1z" fill="url(#msOgGrad)"/>
-    <rect x="17" y="17" width="11" height="11" rx="2" fill="#0F172A"/>
-    <g stroke="#CBD5E1" stroke-width="1.1" stroke-linecap="round">
-      <path d="M22.5 18.7v7.6M18.7 22.5h7.6M19.8 19.8l5.4 5.4M25.2 19.8l-5.4 5.4"/>
-    </g>
-    <circle cx="22.5" cy="22.5" r="2.9" fill="#CBD5E1"/>
-    <circle cx="21.5" cy="21.5" r="0.8" fill="#F8FAFC"/>
-  </g>
-
-  <text x="300" y="270" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="76" font-weight="800" fill="#F8FAFC">Minesweeper</text>
-  <text x="300" y="340" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="34" font-weight="400" fill="#94A3B8">Clear the field without hitting a mine. Free classic puzzle.</text>
-
-  <rect x="300" y="380" width="360" height="6" rx="3" fill="url(#msOgGrad)" />
-
-  <text x="300" y="470" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="26" fill="#CBD5E1">games.tarenx.com/minesweeper</text>
+  <rect width="1200" height="630" fill="#F8FAFC"/>
+  <g transform="translate(120, 190) scale(3.75)"><rect x="0.5" y="0.5" width="31" height="31" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/><rect x="4" y="4" width="11" height="11" rx="2" fill="#E2E8F0"/><rect x="17.5" y="4.5" width="10" height="10" rx="2" fill="#FFFFFF" stroke="#E2E8F0"/><text x="22.5" y="9.8" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="8" font-weight="700" fill="#2563EB" text-anchor="middle" dominant-baseline="central">1</text><rect x="4" y="17" width="11" height="11" rx="2" fill="#E2E8F0"/><path d="M8.6 19.5v6.5" stroke="#1E293B" stroke-width="1.2" stroke-linecap="round"/><path d="M8.6 19.5l5 2.1-5 2.1z" fill="#DC2626"/><rect x="17.5" y="17.5" width="10" height="10" rx="2" fill="#FFFFFF" stroke="#E2E8F0"/><g stroke="#1E293B" stroke-width="1.1" stroke-linecap="round"><path d="M22.5 18.7v7.6M18.7 22.5h7.6M19.8 19.8l5.4 5.4M25.2 19.8l-5.4 5.4"/></g><circle cx="22.5" cy="22.5" r="2.9" fill="#1E293B"/></g>
+  <text x="300" y="270" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="76" font-weight="800" fill="#1E293B">Minesweeper</text>
+  <text x="300" y="340" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="34" font-weight="400" fill="#64748B">Clear the field without hitting a mine. Free classic puzzle.</text>
+  <text x="300" y="470" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="26" font-weight="400" fill="#94A3B8">games.tarenx.com/minesweeper</text>
+  <rect x="300" y="380" width="360" height="4" rx="2" fill="#E2E8F0"/>
 </svg>

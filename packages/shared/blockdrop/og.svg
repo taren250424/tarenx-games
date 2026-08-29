@@ -1,35 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
-  <defs>
-    <linearGradient id="bdOgBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0F172A" />
-      <stop offset="60%" stop-color="#1E293B" />
-      <stop offset="100%" stop-color="#164E63" />
-    </linearGradient>
-    <linearGradient id="bdAccent" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#22D3EE" />
-      <stop offset="100%" stop-color="#A78BFA" />
-    </linearGradient>
-  </defs>
-
-  <rect width="1200" height="630" fill="url(#bdOgBg)" />
-
-  <circle cx="1060" cy="120" r="190" fill="#22D3EE" opacity="0.10" />
-  <circle cx="110" cy="540" r="150" fill="#A78BFA" opacity="0.10" />
-
-  <g transform="translate(120, 190)">
-    <rect x="0" y="0" width="38" height="38" rx="7" fill="#22D3EE"/>
-    <rect x="42" y="0" width="38" height="38" rx="7" fill="#22D3EE"/>
-    <rect x="84" y="0" width="38" height="38" rx="7" fill="#22D3EE"/>
-    <rect x="42" y="42" width="38" height="38" rx="7" fill="#A78BFA"/>
-    <rect x="0" y="84" width="38" height="38" rx="7" fill="#F472B6"/>
-    <rect x="42" y="84" width="38" height="38" rx="7" fill="#F472B6"/>
-    <rect x="84" y="84" width="38" height="38" rx="7" fill="#FBBF24"/>
-  </g>
-
-  <text x="300" y="270" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="76" font-weight="800" fill="#F8FAFC">Block Drop</text>
-  <text x="300" y="340" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="34" font-weight="400" fill="#94A3B8">Stack falling blocks, clear lines, chase the high score.</text>
-
-  <rect x="300" y="380" width="360" height="6" rx="3" fill="url(#bdAccent)" />
-
-  <text x="300" y="470" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="26" fill="#CBD5E1">games.tarenx.com/blockdrop</text>
+  <rect width="1200" height="630" fill="#F8FAFC"/>
+  <g transform="translate(120, 190) scale(3.75)"><rect x="0.5" y="0.5" width="31" height="31" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/><g fill="#0EA5E9"><rect x="7" y="7" width="6" height="6" rx="1"/><rect x="13" y="7" width="6" height="6" rx="1"/><rect x="19" y="7" width="6" height="6" rx="1"/><rect x="13" y="13" width="6" height="6" rx="1"/></g><rect x="7" y="19" width="6" height="6" rx="1" fill="#1E293B"/><rect x="13" y="19" width="6" height="6" rx="1" fill="#1E293B"/><rect x="19" y="19" width="6" height="6" rx="1" fill="#CBD5E1"/></g>
+  <text x="300" y="270" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="76" font-weight="800" fill="#1E293B">Block Drop</text>
+  <text x="300" y="340" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="34" font-weight="400" fill="#64748B">Stack falling blocks, clear lines, chase the high score.</text>
+  <text x="300" y="470" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="26" font-weight="400" fill="#94A3B8">games.tarenx.com/blockdrop</text>
+  <rect x="300" y="380" width="360" height="4" rx="2" fill="#E2E8F0"/>
 </svg>

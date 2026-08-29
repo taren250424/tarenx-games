@@ -1,4 +1,5 @@
 import "../../shared/ads/ad-slot.css";
+import "../../shared/theme/base.css";
 import "./style.css";
 import { Chess } from "chess.js";
 import { createSfx } from "../../shared/audio/sfx.ts";

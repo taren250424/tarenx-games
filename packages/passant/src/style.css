@@ -1,15 +1,5 @@
-* {
-	padding: 0;
-	margin: 0;
-	box-sizing: border-box;
-}
-
 :root {
-	--bg: #f8fafc;
-	--panel: #ffffff;
-	--line: #e2e8f0;
-	--text: #1e293b;
-	--muted: #64748b;
+	--column-max: 960px;
 	--accent: #f59e0b;
 	--accent-strong: #b45309;
 	--light-sq: #f0d9b5;
@@ -22,103 +12,6 @@
 	--grade-inaccuracy: #eab308;
 	--grade-mistake: #f97316;
 	--grade-blunder: #dc2626;
-}
-
-body {
-	font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-	background-color: var(--bg);
-	color: var(--text);
-	min-height: 100vh;
-}
-
-.hidden {
-	display: none !important;
-}
-
-header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 12px 20px;
-	border-bottom: 1px solid var(--line);
-}
-
-.header-brand {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-}
-
-.header-logo {
-	width: 32px;
-	height: 32px;
-}
-
-.header-title {
-	font-size: 1.2rem;
-	font-weight: 700;
-}
-
-.header-home {
-	color: var(--muted);
-	text-decoration: none;
-	font-size: 0.9rem;
-}
-
-.header-home:hover {
-	color: var(--text);
-}
-
-main {
-	display: grid;
-	grid-template-columns: var(--ad-slot-width) minmax(0, 960px) var(--ad-slot-width);
-	justify-content: center;
-	gap: 24px;
-	padding: 24px 16px 48px;
-}
-
-main .game-column {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 16px;
-}
-
-@media (max-width: 1200px) {
-	main {
-		grid-template-columns: minmax(0, 960px);
-	}
-}
-
-/* --- controls bar --- */
-.controls {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: center;
-	gap: 10px;
-}
-
-.controls select,
-.controls button {
-	background-color: var(--panel);
-	color: var(--text);
-	border: 1px solid var(--line);
-	border-radius: 8px;
-	padding: 8px 14px;
-	font-size: 0.9rem;
-	cursor: pointer;
-}
-
-.controls select:hover,
-.controls button:hover {
-	border-color: var(--accent);
-}
-
-.controls button:disabled {
-	color: var(--muted);
-	cursor: default;
-	opacity: 0.55;
 }
 
 .mode-tabs {
@@ -137,20 +30,6 @@ main .game-column {
 	background-color: var(--accent);
 	color: #0f172a;
 	font-weight: 700;
-}
-
-.hud {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 18px;
-	font-size: 0.9rem;
-	color: var(--muted);
-}
-
-.hud strong {
-	color: var(--text);
-	font-variant-numeric: tabular-nums;
 }
 
 #turn-label {
@@ -607,21 +486,20 @@ main .game-column {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background-color: rgba(15, 23, 42, 0.6);
+	background-color: rgba(15, 23, 42, 0.4);
 	z-index: 10;
 	padding: 20px;
 }
 
+/* the stats card is a sheet of figures, not a message: left-aligned and as
+   wide as the column allows */
 .overlay-card {
-	background-color: var(--panel);
-	border-radius: 12px;
-	padding: 24px;
+	align-items: stretch;
+	text-align: left;
 	width: 100%;
 	max-width: 440px;
-	display: flex;
-	flex-direction: column;
+	padding: 24px;
 	gap: 14px;
-	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
 .overlay-card h2 {
@@ -677,81 +555,4 @@ main .game-column {
 	text-align: right;
 	color: var(--muted);
 	font-variant-numeric: tabular-nums;
-}
-
-.overlay-actions {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 10px;
-}
-
-.overlay-actions button {
-	background-color: var(--accent);
-	color: #0f172a;
-	font-weight: 700;
-	border: none;
-	border-radius: 8px;
-	padding: 10px 20px;
-	font-size: 1rem;
-	cursor: pointer;
-}
-
-.overlay-actions button.secondary {
-	background-color: transparent;
-	color: var(--text);
-	border: 1px solid var(--line);
-}
-
-/* --- article content --- */
-article {
-	max-width: 680px;
-	width: 100%;
-	margin-top: 24px;
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-	color: var(--muted);
-	line-height: 1.7;
-	font-size: 0.95rem;
-}
-
-article h2 {
-	color: var(--text);
-	font-size: 1.2rem;
-	border-bottom: 1px solid var(--line);
-	padding-bottom: 6px;
-}
-
-article ul {
-	padding-left: 20px;
-}
-
-article table {
-	border-collapse: collapse;
-	width: 100%;
-	max-width: 440px;
-}
-
-article td,
-article th {
-	border: 1px solid var(--line);
-	padding: 6px 12px;
-	text-align: left;
-}
-
-article a {
-	color: var(--accent-strong);
-}
-
-footer {
-	text-align: center;
-	padding: 24px;
-	color: var(--muted);
-	font-size: 0.85rem;
-	border-top: 1px solid var(--line);
-}
-
-footer a {
-	color: var(--accent-strong);
 }

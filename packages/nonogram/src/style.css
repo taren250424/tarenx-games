@@ -1,15 +1,4 @@
-* {
-	padding: 0;
-	margin: 0;
-	box-sizing: border-box;
-}
-
 :root {
-	--bg: #f8fafc;
-	--panel: #ffffff;
-	--line: #e2e8f0;
-	--text: #1e293b;
-	--muted: #64748b;
 	--accent: #3b82f6;
 	--accent-strong: #1d4ed8;
 	--grid-line: #cbd5e1;
@@ -18,119 +7,6 @@
 	--hover: rgba(59, 130, 246, 0.12);
 	--wrong: #dc2626;
 	--clue-done: #cbd5e1;
-}
-
-body {
-	font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-	background-color: var(--bg);
-	color: var(--text);
-	min-height: 100vh;
-}
-
-header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 12px 20px;
-	border-bottom: 1px solid var(--line);
-}
-
-.header-brand {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-}
-
-.header-logo {
-	width: 32px;
-	height: 32px;
-}
-
-.header-title {
-	font-size: 1.2rem;
-	font-weight: 700;
-}
-
-.header-home {
-	color: var(--muted);
-	text-decoration: none;
-	font-size: 0.9rem;
-}
-
-.header-home:hover {
-	color: var(--text);
-}
-
-main {
-	display: grid;
-	grid-template-columns: var(--ad-slot-width) minmax(0, 900px) var(--ad-slot-width);
-	justify-content: center;
-	gap: 24px;
-	padding: 24px 16px 48px;
-}
-
-main .game-column {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 16px;
-}
-
-@media (max-width: 1200px) {
-	main {
-		grid-template-columns: minmax(0, 900px);
-	}
-}
-
-/* --- controls bar --- */
-.controls {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: center;
-	gap: 10px;
-}
-
-.controls select,
-.controls button {
-	background-color: var(--panel);
-	color: var(--text);
-	border: 1px solid var(--line);
-	border-radius: 8px;
-	padding: 8px 14px;
-	font-size: 0.9rem;
-	cursor: pointer;
-}
-
-.controls select:hover,
-.controls button:hover {
-	border-color: var(--accent);
-}
-
-.controls .check-label {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-	font-size: 0.9rem;
-	color: var(--muted);
-	cursor: pointer;
-	user-select: none;
-}
-
-.controls .check-label input {
-	accent-color: var(--accent);
-}
-
-.hud {
-	display: flex;
-	gap: 18px;
-	font-size: 0.9rem;
-	color: var(--muted);
-}
-
-.hud strong {
-	color: var(--text);
-	font-variant-numeric: tabular-nums;
 }
 
 /* --- board --- */
@@ -334,28 +210,6 @@ main .game-column {
 	color: var(--clue-done);
 }
 
-/* --- toolbar --- */
-.toolbar {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 10px;
-}
-
-.toolbar button {
-	background-color: var(--panel);
-	color: var(--text);
-	border: 1px solid var(--line);
-	border-radius: 8px;
-	padding: 8px 14px;
-	font-size: 0.9rem;
-	cursor: pointer;
-}
-
-.toolbar button:hover {
-	border-color: var(--accent);
-}
-
 /* --- win overlay --- */
 /* A card below the grid rather than a curtain over it: the finished picture is
    the reward, so nothing covers it. */
@@ -364,84 +218,21 @@ main .game-column {
 	left: 50%;
 	bottom: 0;
 	transform: translateX(-50%);
-	display: flex;
-	align-items: center;
+	flex-direction: row;
 	gap: 14px;
 	padding: 12px 18px;
-	border-radius: 12px;
-	background-color: rgba(15, 23, 42, 0.9);
-	backdrop-filter: blur(2px);
-	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25);
 	white-space: nowrap;
-}
-
-#win-overlay.hidden {
-	display: none;
 }
 
 #win-overlay h2 {
 	font-size: 1.1rem;
-	color: #93c5fd;
 }
 
 #win-overlay p {
-	color: #e2e8f0;
 	font-size: 0.9rem;
-	font-variant-numeric: tabular-nums;
 }
 
 #win-overlay button {
-	background-color: var(--accent);
-	color: #ffffff;
-	font-weight: 700;
-	border: none;
-	border-radius: 8px;
 	padding: 8px 16px;
 	font-size: 0.9rem;
-	cursor: pointer;
-}
-
-/* --- article content --- */
-article {
-	max-width: 680px;
-	width: 100%;
-	margin-top: 24px;
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-	color: var(--muted);
-	line-height: 1.7;
-	font-size: 0.95rem;
-}
-
-article h2 {
-	color: var(--text);
-	font-size: 1.2rem;
-	border-bottom: 1px solid var(--line);
-	padding-bottom: 6px;
-}
-
-article ul {
-	padding-left: 20px;
-}
-
-article kbd {
-	background-color: var(--panel);
-	border: 1px solid var(--line);
-	border-radius: 4px;
-	padding: 1px 6px;
-	font-size: 0.85em;
-	color: var(--text);
-}
-
-footer {
-	text-align: center;
-	padding: 24px;
-	color: var(--muted);
-	font-size: 0.85rem;
-	border-top: 1px solid var(--line);
-}
-
-footer a {
-	color: var(--accent-strong);
 }

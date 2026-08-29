@@ -1,115 +1,27 @@
-* {
-	padding: 0;
-	margin: 0;
-	box-sizing: border-box;
-}
-
 :root {
-	--bg: #f8fafc;
-	--panel: #ffffff;
-	--line: #e2e8f0;
-	--text: #1e293b;
-	--muted: #64748b;
 	--accent: #3b82f6;
 	--accent-strong: #1d4ed8;
 	--red: #dc2626;
 }
 
-body {
-	font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-	background-color: var(--bg);
-	color: var(--text);
-	min-height: 100vh;
-}
-
-header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 12px 20px;
-	border-bottom: 1px solid var(--line);
-}
-
-.header-brand {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-}
-
-.header-logo {
-	width: 32px;
-	height: 32px;
-}
-
-.header-title {
-	font-size: 1.2rem;
-	font-weight: 700;
-}
-
-.header-home {
-	color: var(--muted);
-	text-decoration: none;
-	font-size: 0.9rem;
-}
-
-.header-home:hover {
-	color: var(--text);
-}
-
-main {
-	display: grid;
-	grid-template-columns: var(--ad-slot-width) minmax(0, 900px) var(--ad-slot-width);
-	justify-content: center;
-	gap: 24px;
-	padding: 24px 16px 48px;
-}
-
-main .game-column {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 16px;
-}
-
-@media (max-width: 1200px) {
-	main {
-		grid-template-columns: minmax(0, 900px);
-	}
-}
-
-/* --- controls bar --- */
 .controls {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: center;
 	gap: 8px;
-}
-
-.controls button,
-.controls .deal-picker {
-	background-color: var(--panel);
-	color: var(--text);
-	border: 1px solid var(--line);
-	border-radius: 8px;
-	padding: 8px 14px;
-	font-size: 0.9rem;
-	font-family: inherit;
-	cursor: pointer;
-}
-
-.controls button:hover,
-.controls .deal-picker:focus-within {
-	border-color: var(--accent);
 }
 
 /* Step buttons, label and field read as one control rather than three: the
    pill carries the border, everything inside it is flat. */
 .controls .deal-picker {
 	display: flex;
+	background-color: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
 	align-items: stretch;
 	padding: 0;
 	overflow: hidden;
+}
+
+.controls .deal-picker:focus-within {
+	border-color: var(--accent);
 }
 
 .controls .deal-picker button {
@@ -153,34 +65,6 @@ main .game-column {
 	outline: none;
 }
 
-.controls .check-label {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-	font-size: 0.9rem;
-	color: var(--muted);
-	cursor: pointer;
-	user-select: none;
-}
-
-.controls .check-label input {
-	accent-color: var(--accent);
-}
-
-.hud {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 18px;
-	font-size: 0.9rem;
-	color: var(--muted);
-}
-
-.hud strong {
-	color: var(--text);
-	font-variant-numeric: tabular-nums;
-}
-
 #deal-note {
 	color: var(--red);
 	font-size: 0.85rem;
@@ -199,37 +83,6 @@ main .game-column {
 	position: relative;
 }
 
-/* --- toolbar --- */
-.toolbar {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 10px;
-}
-
-.toolbar button {
-	background-color: var(--panel);
-	color: var(--text);
-	border: 1px solid var(--line);
-	border-radius: 8px;
-	padding: 8px 14px;
-	font-size: 0.9rem;
-	cursor: pointer;
-}
-
-.toolbar button:hover:not(:disabled) {
-	border-color: var(--accent);
-}
-
-.toolbar button:disabled {
-	opacity: 0.45;
-	cursor: default;
-}
-
-.toolbar button.hidden {
-	display: none;
-}
-
 .toolbar button.primary {
 	background-color: var(--accent);
 	border-color: var(--accent);
@@ -243,104 +96,11 @@ main .game-column {
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 10px;
-	padding: 20px 26px;
-	border-radius: 14px;
-	background-color: rgba(15, 23, 42, 0.92);
-	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.45);
-	text-align: center;
-}
-
-#overlay.hidden {
-	display: none;
-}
-
-#overlay h2 {
-	font-size: 1.3rem;
-	color: #86efac;
+	/* absolute positioning would size the card to the half of the table right of
+	   its centre and wrap the buttons; it should be as wide as they need */
+	width: max-content;
 }
 
 #overlay.stuck h2 {
-	color: #fca5a5;
-}
-
-#overlay p {
-	color: #e2e8f0;
-	font-size: 0.9rem;
-	font-variant-numeric: tabular-nums;
-}
-
-#overlay .overlay-buttons {
-	display: flex;
-	gap: 10px;
-	margin-top: 4px;
-}
-
-#overlay button {
-	white-space: nowrap;
-	background-color: rgba(255, 255, 255, 0.12);
-	color: #e2e8f0;
-	border: none;
-	border-radius: 8px;
-	padding: 8px 16px;
-	font-size: 0.9rem;
-	cursor: pointer;
-}
-
-#overlay button.hidden {
-	display: none;
-}
-
-#overlay button.primary {
-	background-color: var(--accent);
-	color: #ffffff;
-	font-weight: 700;
-}
-
-/* --- article content --- */
-article {
-	max-width: 680px;
-	width: 100%;
-	margin-top: 24px;
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-	color: var(--muted);
-	line-height: 1.7;
-	font-size: 0.95rem;
-}
-
-article h2 {
-	color: var(--text);
-	font-size: 1.2rem;
-	border-bottom: 1px solid var(--line);
-	padding-bottom: 6px;
-}
-
-article ul {
-	padding-left: 20px;
-}
-
-article kbd {
-	background-color: var(--panel);
-	border: 1px solid var(--line);
-	border-radius: 4px;
-	padding: 1px 6px;
-	font-size: 0.85em;
-	color: var(--text);
-}
-
-footer {
-	text-align: center;
-	padding: 24px;
-	color: var(--muted);
-	font-size: 0.85rem;
-	border-top: 1px solid var(--line);
-}
-
-footer a {
-	color: var(--accent-strong);
+	color: var(--red);
 }

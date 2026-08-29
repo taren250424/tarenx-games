@@ -13,15 +13,23 @@ const SOUND_KEY = "tarenx.blockdrop.sound";
 
 type PieceType = "I" | "O" | "T" | "S" | "Z" | "J" | "L";
 
+// flat, mid-weight hues that hold their own on the white well
 const COLORS: Record<PieceType, string> = {
-	I: "#22d3ee",
-	O: "#fbbf24",
-	T: "#a78bfa",
-	S: "#4ade80",
-	Z: "#f87171",
-	J: "#60a5fa",
-	L: "#fb923c",
+	I: "#0ea5e9",
+	O: "#f59e0b",
+	T: "#8b5cf6",
+	S: "#22c55e",
+	Z: "#ef4444",
+	J: "#3b82f6",
+	L: "#f97316",
 };
+
+// the well's own colours live in style.css with the rest of the page
+const cssVar = (name: string) =>
+	getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const WELL = cssVar("--board");
+const GRID_LINE = cssVar("--grid-line");
+const GHOST = cssVar("--ghost");
 
 const SHAPES: Record<PieceType, number[][]> = {
 	I: [
@@ -369,18 +377,14 @@ function drawCell(
 	}
 	context.fillStyle = color;
 	context.fillRect(x + 1, y + 1, size - 2, size - 2);
-	context.fillStyle = "rgba(255, 255, 255, 0.18)";
-	context.fillRect(x + 1, y + 1, size - 2, 4);
-	context.fillStyle = "rgba(0, 0, 0, 0.18)";
-	context.fillRect(x + 1, y + size - 5, size - 2, 4);
 }
 
 function draw() {
-	ctx.fillStyle = "#0b1120";
+	ctx.fillStyle = WELL;
 	ctx.fillRect(0, 0, COLS * CELL, ROWS * CELL);
 
 	// grid
-	ctx.strokeStyle = "rgba(148, 163, 184, 0.08)";
+	ctx.strokeStyle = GRID_LINE;
 	ctx.lineWidth = 1;
 	for (let c = 1; c < COLS; c++) {
 		ctx.beginPath();
@@ -417,7 +421,7 @@ function draw() {
 							(current.col + c) * CELL,
 							(gr + r - HIDDEN) * CELL,
 							CELL,
-							"rgba(148, 163, 184, 0.5)",
+							GHOST,
 							true
 						);
 					}

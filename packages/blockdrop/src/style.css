@@ -1,8 +1,10 @@
 :root {
 	--accent: #22d3ee;
 	--accent-strong: #0e7490;
-	/* the well keeps its dark "screen" look — piece colors are tuned for it */
-	--board: #0b1120;
+	/* read by main.ts when it paints the well */
+	--board: #ffffff;
+	--grid-line: #f1f5f9;
+	--ghost: #94a3b8;
 }
 
 .game-layout {
@@ -53,7 +55,7 @@
 .panel canvas {
 	display: block;
 	margin: 0 auto;
-	background-color: var(--board);
+	background-color: var(--bg);
 	border-radius: 8px;
 	padding: 4px;
 }

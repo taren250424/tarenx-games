@@ -185,6 +185,9 @@ main .game-column {
 	background-color: var(--veil);
 	backdrop-filter: blur(3px);
 	border-radius: var(--radius-lg);
+	/* keeps the board's edge visible through the curtain, which would otherwise
+	   erase a white board against the page */
+	box-shadow: inset 0 0 0 1px var(--line);
 	z-index: 2;
 }
 

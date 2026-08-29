@@ -1,9 +1,8 @@
 :root {
 	--accent: #a855f7;
 	--accent-strong: #7e22ce;
-	/* the board keeps its dark "screen" look, matching the other games */
-	--board: #1e293b;
-	--slot: rgba(255, 255, 255, 0.05);
+	--board: #ffffff;
+	--slot: #f1f5f9;
 }
 
 .hud {
@@ -46,13 +45,15 @@
 	--n: 4;
 	--gap: clamp(6px, 1.7vmin, 12px);
 	--board-px: min(460px, calc(100vw - 40px));
-	--tile-size: calc((var(--board-px) - (var(--n) + 1) * var(--gap)) / var(--n));
+	/* the 2px is the border, which the width includes */
+	--tile-size: calc((var(--board-px) - 2px - (var(--n) + 1) * var(--gap)) / var(--n));
 	position: relative;
 	width: var(--board-px);
 	height: var(--board-px);
 	padding: var(--gap);
-	border-radius: 12px;
+	border-radius: var(--radius-lg);
 	background-color: var(--board);
+	border: 1px solid var(--line);
 	/* swipes drive the game, so the browser must not scroll or zoom on them */
 	touch-action: none;
 	user-select: none;
@@ -99,9 +100,8 @@
 	align-items: center;
 	justify-content: center;
 	border-radius: 8px;
-	background-color: var(--tile-bg, #475569);
-	color: var(--tile-fg, #f8fafc);
-	box-shadow: var(--tile-glow, none);
+	background-color: var(--tile-bg, #64748b);
+	color: var(--tile-fg, #ffffff);
 	font-weight: 700;
 	font-variant-numeric: tabular-nums;
 	line-height: 1;
@@ -148,28 +148,19 @@
 	--tile-font: 0.23;
 }
 
-/* Value ramp: cool slate at the bottom, warming through the mid tiles,
-   then violet once the board is past the target. */
-.tile[data-value="2"] { --tile-bg: #475569; --tile-fg: #e2e8f0; }
-.tile[data-value="4"] { --tile-bg: #64748b; --tile-fg: #f1f5f9; }
-.tile[data-value="8"] { --tile-bg: #0284c7; }
-.tile[data-value="16"] { --tile-bg: #0891b2; }
-.tile[data-value="32"] { --tile-bg: #0d9488; }
-.tile[data-value="64"] { --tile-bg: #16a34a; }
-.tile[data-value="128"] { --tile-bg: #ca8a04; }
-.tile[data-value="256"] { --tile-bg: #ea580c; }
-.tile[data-value="512"] { --tile-bg: #dc2626; }
-.tile[data-value="1024"] { --tile-bg: #db2777; }
-.tile[data-value="2048"] {
-	--tile-bg: #a855f7;
-	--tile-glow: 0 0 0 2px rgba(216, 180, 254, 0.7), 0 0 18px rgba(168, 85, 247, 0.55);
-}
-.tile[data-value="4096"] {
-	--tile-bg: #7c3aed;
-	--tile-glow: 0 0 0 2px rgba(196, 181, 253, 0.7), 0 0 18px rgba(124, 58, 237, 0.55);
-}
+/* Value ramp: a grey scale that deepens with the number, so the board reads
+   as one material, then violet once the board is past the target. */
+.tile[data-value="2"] { --tile-bg: #e2e8f0; --tile-fg: #334155; }
+.tile[data-value="4"] { --tile-bg: #cbd5e1; --tile-fg: #1e293b; }
+.tile[data-value="8"] { --tile-bg: #94a3b8; --tile-fg: #0f172a; }
+.tile[data-value="16"] { --tile-bg: #64748b; }
+.tile[data-value="32"] { --tile-bg: #475569; }
+.tile[data-value="64"] { --tile-bg: #334155; }
+.tile[data-value="128"] { --tile-bg: #1e293b; }
+.tile[data-value="256"] { --tile-bg: #0f172a; }
+.tile[data-value="512"] { --tile-bg: #a855f7; }
+.tile[data-value="1024"] { --tile-bg: #9333ea; }
+.tile[data-value="2048"] { --tile-bg: #7e22ce; }
+.tile[data-value="4096"] { --tile-bg: #6b21a8; }
 .tile[data-value="8192"],
-.tile[data-value="max"] {
-	--tile-bg: #4f46e5;
-	--tile-glow: 0 0 0 2px rgba(165, 180, 252, 0.75), 0 0 22px rgba(79, 70, 229, 0.6);
-}
+.tile[data-value="max"] { --tile-bg: #581c87; }

@@ -1,7 +1,7 @@
 :root {
 	--column-max: 960px;
-	--accent: #f59e0b;
-	--accent-strong: #b45309;
+	/* the best move's mark on the black-and-white win bar */
+	--win-mark: #3b82f6;
 	--light-sq: #f0d9b5;
 	--dark-sq: #b58863;
 	--board-frame: #1e293b;
@@ -27,8 +27,6 @@
 }
 
 .mode-tabs button[aria-selected="true"] {
-	background-color: var(--accent);
-	color: #0f172a;
 	font-weight: 700;
 }
 
@@ -257,25 +255,31 @@
 }
 
 .panel button {
-	background-color: var(--accent);
-	color: #0f172a;
-	font-weight: 700;
-	border: none;
+	background-color: var(--text);
+	color: var(--panel);
+	font-weight: 600;
+	border: 1px solid var(--text);
 	border-radius: 8px;
 	padding: 10px 18px;
 	font-size: 0.95rem;
 	cursor: pointer;
 }
 
+.panel button:hover {
+	background-color: var(--accent-strong);
+	border-color: var(--accent-strong);
+}
+
 .panel button.secondary {
 	background-color: transparent;
 	color: var(--text);
-	border: 1px solid var(--line);
+	border-color: var(--line);
 	font-weight: 500;
 }
 
 .panel button.secondary:hover {
-	border-color: var(--accent);
+	background-color: transparent;
+	border-color: var(--text);
 }
 
 .panel .actions {
@@ -388,7 +392,7 @@
 	bottom: 0;
 	width: 3px;
 	border-radius: 2px;
-	background-color: var(--accent);
+	background-color: var(--win-mark);
 	/* --at is the best move's winning chance; clamped so the line stays inside
 	   the bar when that is 0% or 100% and would otherwise be clipped away. */
 	left: clamp(0px, calc(var(--at) - 1.5px), calc(100% - 3px));
@@ -458,7 +462,7 @@
 }
 
 .daily-dots span.current {
-	outline: 2px solid var(--accent);
+	outline: 2px solid var(--text);
 	outline-offset: 1px;
 }
 
@@ -475,7 +479,7 @@
 .big-score {
 	font-size: 2rem;
 	font-weight: 800;
-	color: var(--accent-strong);
+	color: var(--text);
 	font-variant-numeric: tabular-nums;
 }
 

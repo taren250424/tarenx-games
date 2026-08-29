@@ -1,6 +1,4 @@
 :root {
-	--accent: #a855f7;
-	--accent-strong: #7e22ce;
 	--board: #ffffff;
 	--slot: #f1f5f9;
 }
@@ -16,7 +14,7 @@
 	top: -4px;
 	transform: translateX(-50%);
 	font-weight: 700;
-	color: var(--accent-strong);
+	color: var(--text);
 	opacity: 0;
 	pointer-events: none;
 }

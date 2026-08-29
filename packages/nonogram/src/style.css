@@ -1,6 +1,6 @@
 :root {
-	--accent: #3b82f6;
-	--accent-strong: #1d4ed8;
+	/* the keyboard cursor and the pointer crosshair */
+	--cursor: #3b82f6;
 	--grid-line: #cbd5e1;
 	--grid-box: #475569;
 	--fill: #334155;
@@ -156,7 +156,7 @@
 }
 
 .cell.cursor {
-	box-shadow: inset 0 0 0 2px var(--accent);
+	box-shadow: inset 0 0 0 2px var(--cursor);
 }
 
 /* --- crosshair --- */

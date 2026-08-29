@@ -1,6 +1,4 @@
 :root {
-	--accent: #10b981;
-	--accent-strong: #047857;
 	--board: #ffffff;
 	--slot: #e2e8f0;
 	--slot-filled: #94a3b8;
@@ -19,12 +17,6 @@
 body.high-contrast {
 	--mark-correct: #0284c7;
 	--mark-present: #ea580c;
-}
-
-.controls button[aria-pressed="true"] {
-	border-color: var(--accent);
-	color: var(--accent-strong);
-	background-color: #ecfdf5;
 }
 
 /* --- board --- */

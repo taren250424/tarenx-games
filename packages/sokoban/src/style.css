@@ -1,7 +1,5 @@
 :root {
 	--tile: clamp(28px, 5.4vmin, 48px);
-	--accent: #f59e0b;
-	--accent-strong: #b45309;
 	--board: #ffffff;
 	--board-wall: #e2e8f0;
 	--box: #f59e0b;

@@ -1,17 +1,10 @@
 :root {
 	--tile: clamp(22px, 4.6vmin, 34px);
-	--accent: #ef4444;
-	--accent-strong: #b91c1c;
 	--board: #ffffff;
 	--cell: #e2e8f0;
 	--cell-hover: #cbd5e1;
 	--cell-open: #f8fafc;
-}
-
-.controls button[aria-pressed="true"] {
-	border-color: var(--accent);
-	color: var(--accent-strong);
-	background-color: #fef2f2;
+	--boom: #dc2626;
 }
 
 /* --- board --- */
@@ -69,7 +62,7 @@
 }
 
 .cell.exploded {
-	background-color: var(--accent-strong);
+	background-color: var(--boom);
 }
 
 /* the classic hue order, at weights that read on a light cell */

@@ -1,7 +1,7 @@
 :root {
 	--cell: clamp(32px, 9.6vmin, 52px);
-	--accent: #6366f1;
-	--accent-strong: #4338ca;
+	/* the player's own digits, and the numpad that enters them */
+	--entry: #4338ca;
 	--grid-line: #cbd5e1;
 	--grid-box: #475569;
 	--cell-peer: #f1f5f9;
@@ -39,7 +39,7 @@
 	background-color: var(--panel);
 	font-family: inherit;
 	font-size: calc(var(--cell) * 0.5);
-	color: var(--accent-strong);
+	color: var(--entry);
 	cursor: pointer;
 	padding: 0;
 }
@@ -105,12 +105,6 @@
 }
 
 /* --- toolbar & numpad --- */
-.toolbar button.active {
-	background-color: var(--accent);
-	border-color: var(--accent);
-	color: #ffffff;
-}
-
 .numpad {
 	display: grid;
 	grid-template-columns: repeat(9, minmax(34px, 52px));
@@ -145,7 +139,7 @@
 .numpad .digit {
 	font-size: 1.25rem;
 	font-weight: 600;
-	color: var(--accent-strong);
+	color: var(--entry);
 	line-height: 1;
 }
 

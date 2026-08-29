@@ -1,6 +1,4 @@
 :root {
-	--accent: #3b82f6;
-	--accent-strong: #1d4ed8;
 	--red: #dc2626;
 }
 
@@ -71,13 +69,6 @@
    here. */
 .board-wrap {
 	position: relative;
-}
-
-.toolbar button.primary {
-	background-color: var(--accent);
-	border-color: var(--accent);
-	color: #ffffff;
-	font-weight: 700;
 }
 
 /* --- overlay --- */

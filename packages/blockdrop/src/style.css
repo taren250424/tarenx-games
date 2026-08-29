@@ -1,6 +1,4 @@
 :root {
-	--accent: #22d3ee;
-	--accent-strong: #0e7490;
 	/* read by main.ts when it paints the well */
 	--board: #ffffff;
 	--grid-line: #f1f5f9;

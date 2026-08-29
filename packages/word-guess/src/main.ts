@@ -2,6 +2,9 @@ import "../../shared/ads/ad-slot.css";
 import "../../shared/theme/base.css";
 import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
+import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
+
+mountIcons();
 
 type Mark = "correct" | "present" | "absent";
 type Status = "playing" | "won" | "lost";
@@ -378,7 +381,7 @@ function hideOverlay() {
 }
 
 function updateToggles() {
-	soundBtn.textContent = progress.settings.sound ? "🔊" : "🔇";
+	setSoundIcon(soundBtn, progress.settings.sound);
 	hardBtn.setAttribute("aria-pressed", String(progress.settings.hard));
 	contrastBtn.setAttribute("aria-pressed", String(progress.settings.contrast));
 	document.body.classList.toggle("high-contrast", progress.settings.contrast);

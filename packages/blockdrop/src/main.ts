@@ -2,6 +2,9 @@ import "../../shared/ads/ad-slot.css";
 import "../../shared/theme/base.css";
 import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
+import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
+
+mountIcons();
 
 // --- constants ---
 const COLS = 10;
@@ -116,7 +119,7 @@ let soundOn = localStorage.getItem(SOUND_KEY) !== "0";
 const play = createSfx(["drop", "clear", "levelup", "gameover"] as const, () => soundOn);
 
 function updateSoundBtn() {
-	soundBtn.textContent = soundOn ? "🔊" : "🔇";
+	setSoundIcon(soundBtn, soundOn);
 }
 
 soundBtn.addEventListener("click", () => {

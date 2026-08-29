@@ -2,7 +2,10 @@ import "../../shared/ads/ad-slot.css";
 import "../../shared/theme/base.css";
 import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
+import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { PUZZLES, type Difficulty } from "./puzzles.ts";
+
+mountIcons();
 
 const UNKNOWN = 0;
 const FILLED = 1;
@@ -275,7 +278,7 @@ function renderStatus() {
 		if (solution[i] === FILLED && cells[i] !== FILLED) remaining++;
 	}
 	leftEl.textContent = String(remaining);
-	soundBtn.textContent = progress.settings.sound ? "🔊" : "🔇";
+	setSoundIcon(soundBtn, progress.settings.sound);
 }
 
 // --- actions ---

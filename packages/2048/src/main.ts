@@ -2,6 +2,9 @@ import "../../shared/ads/ad-slot.css";
 import "../../shared/theme/base.css";
 import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
+import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
+
+mountIcons();
 
 interface BoardSize {
 	key: string;
@@ -116,7 +119,7 @@ function saveSession() {
 const play = createSfx(["move", "merge", "win", "gameover"] as const, () => progress.settings.sound);
 
 function updateSoundBtn() {
-	soundBtn.textContent = progress.settings.sound ? "🔊" : "🔇";
+	setSoundIcon(soundBtn, progress.settings.sound);
 }
 
 // --- grid helpers ---

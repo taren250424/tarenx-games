@@ -2,6 +2,9 @@ import "../../shared/ads/ad-slot.css";
 import "../../shared/theme/base.css";
 import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
+import { icon, mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
+
+mountIcons();
 
 interface Difficulty {
 	key: string;
@@ -86,7 +89,7 @@ const progress = loadProgress();
 const play = createSfx(["reveal", "flag", "boom", "win"] as const, () => progress.settings.sound);
 
 function updateSoundBtn() {
-	soundBtn.textContent = progress.settings.sound ? "🔊" : "🔇";
+	setSoundIcon(soundBtn, progress.settings.sound);
 }
 
 soundBtn.addEventListener("click", () => {
@@ -246,7 +249,7 @@ function lose(i: number) {
 	revealed.add(i); // the hit mine renders as the exploded cell
 	stopTimer();
 	play("boom");
-	endTitleEl.textContent = "Boom! 💥";
+	endTitleEl.textContent = "Boom!";
 	endStatsEl.textContent = `Survived ${formatTime(seconds)} — better luck next field`;
 	againBtn.textContent = "Try Again";
 	overlayEl.classList.remove("hidden");
@@ -286,7 +289,7 @@ function render() {
 			cls += " open";
 			if (mines.has(i)) {
 				cls += " exploded";
-				content = "💣";
+				content = icon("mine");
 			} else if (counts[i] > 0) {
 				cls += ` n${counts[i]}`;
 				content = String(counts[i]);
@@ -294,14 +297,14 @@ function render() {
 		} else if (flagged.has(i)) {
 			if (!alive && !mines.has(i)) {
 				cls += " wrong";
-				content = "❌";
+				content = icon("cross");
 			} else {
 				cls += " flag";
-				content = "🚩";
+				content = icon("flag");
 			}
 		} else if (!alive && mines.has(i)) {
 			cls += " open";
-			content = "💣";
+			content = icon("mine");
 		}
 		tiles.push(`<div class="${cls}" data-i="${i}">${content}</div>`);
 	}

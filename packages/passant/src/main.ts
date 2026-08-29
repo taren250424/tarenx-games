@@ -3,6 +3,7 @@ import "../../shared/theme/base.css";
 import "./style.css";
 import { Chess } from "chess.js";
 import { createSfx } from "../../shared/audio/sfx.ts";
+import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { pieceSprite } from "./pieces.ts";
 import { Board, type UserMove } from "./board.ts";
 import {
@@ -28,6 +29,8 @@ import {
 	type Grade,
 	type MoveScore,
 } from "./scoring.ts";
+
+mountIcons();
 
 type Mode = "quick" | "daily";
 
@@ -570,7 +573,7 @@ function renderStats(): void {
 }
 
 function updateSoundBtn(): void {
-	soundBtn.textContent = progress.settings.sound ? "🔊" : "🔇";
+	setSoundIcon(soundBtn, progress.settings.sound);
 	soundBtn.title = progress.settings.sound ? "Sound on" : "Sound off";
 }
 

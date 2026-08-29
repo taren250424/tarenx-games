@@ -56,13 +56,20 @@
 	}
 }
 
+.cell .icon {
+	width: 62%;
+	height: 62%;
+	vertical-align: 0;
+}
+
 .cell.flag,
 .cell.wrong {
-	font-size: calc(var(--tile) * 0.55);
+	color: var(--boom);
 }
 
 .cell.exploded {
 	background-color: var(--boom);
+	color: #ffffff;
 }
 
 /* the classic hue order, at weights that read on a light cell */

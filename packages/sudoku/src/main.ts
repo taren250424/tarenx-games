@@ -2,7 +2,10 @@ import "../../shared/ads/ad-slot.css";
 import "../../shared/theme/base.css";
 import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
+import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { PUZZLES, type Difficulty } from "./puzzles.ts";
+
+mountIcons();
 
 interface Snapshot {
 	values: number[];
@@ -284,7 +287,7 @@ function render() {
 	hintsEl.textContent = String(hintsLeft);
 	notesBtn.classList.toggle("active", notesMode);
 	notesBtn.setAttribute("aria-pressed", String(notesMode));
-	soundBtn.textContent = progress.settings.sound ? "🔊" : "🔇";
+	setSoundIcon(soundBtn, progress.settings.sound);
 }
 
 // --- actions ---

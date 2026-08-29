@@ -2,9 +2,12 @@ import "../../shared/ads/ad-slot.css";
 import "../../shared/theme/base.css";
 import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
+import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { type Card, SUITS, isRed, orderedDeck, rank, suit } from "../../shared/cards/deck.ts";
 import { type SlotSpec, createTable } from "../../shared/cards/table.ts";
 import { DEAL_MAX, DEAL_MIN, IMPOSSIBLE_DEAL, clampDeal, deal, randomDeal } from "./deal.ts";
+
+mountIcons();
 
 const EMPTY = -1;
 const STORAGE_KEY = "tarenx.freecell.progress";
@@ -430,7 +433,7 @@ function renderStatus() {
 	const best = progress.best[String(dealNumber)];
 	bestEl.textContent = best ? `${formatTime(best.time)} · ${best.moves}` : "—";
 	solvedEl.textContent = String(progress.solved.length);
-	soundBtn.textContent = progress.settings.sound ? "🔊" : "🔇";
+	setSoundIcon(soundBtn, progress.settings.sound);
 	table.setEnabled(!finished && !sweeping);
 	undoBtn.disabled = !undoStack.length || finished || sweeping;
 	finishBtn.classList.toggle("hidden", !canSweep());

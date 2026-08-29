@@ -2,7 +2,10 @@ import "../../shared/ads/ad-slot.css";
 import "../../shared/theme/base.css";
 import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
+import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { COLLECTIONS } from "./levels.ts";
+
+mountIcons();
 
 type Dir = "up" | "down" | "left" | "right";
 
@@ -91,7 +94,7 @@ const progress = loadProgress();
 const play = createSfx(["bump", "goal", "clear"] as const, () => progress.settings.sound);
 
 function updateSoundBtn() {
-	soundBtn.textContent = progress.settings.sound ? "🔊" : "🔇";
+	setSoundIcon(soundBtn, progress.settings.sound);
 }
 
 soundBtn.addEventListener("click", () => {

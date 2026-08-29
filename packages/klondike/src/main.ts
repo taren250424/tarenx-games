@@ -2,6 +2,7 @@ import "../../shared/ads/ad-slot.css";
 import "../../shared/theme/base.css";
 import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
+import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { type Card, SUITS, orderedDeck, suit } from "../../shared/cards/deck.ts";
 import { type SlotSpec, createTable } from "../../shared/cards/table.ts";
 import { GAME_MAX, GAME_MIN, clampGame, randomGame, seedOf } from "./bank.ts";
@@ -26,6 +27,8 @@ import {
 	playableSources,
 	sameSource,
 } from "./rules.ts";
+
+mountIcons();
 
 const STORAGE_KEY = "tarenx.klondike.progress";
 const MAX_UNDO = 500;
@@ -246,7 +249,7 @@ function renderStatus() {
 	const best = progress.best[scoreKey()];
 	bestEl.textContent = best ? `${formatTime(best.time)} · ${best.moves}` : "—";
 	solvedEl.textContent = String(progress.solved.length);
-	soundBtn.textContent = progress.settings.sound ? "🔊" : "🔇";
+	setSoundIcon(soundBtn, progress.settings.sound);
 	table.setEnabled(!finished && !sweeping);
 	undoBtn.disabled = !undoStack.length || finished || sweeping;
 	finishBtn.classList.toggle("hidden", !canSweep(board));

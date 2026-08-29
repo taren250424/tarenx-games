@@ -2,15 +2,19 @@
 	--column-max: 960px;
 	/* the best move's mark on the black-and-white win bar */
 	--win-mark: #3b82f6;
+	/* the board keeps its wood: the one warm surface on the site, by choice */
 	--light-sq: #f0d9b5;
 	--dark-sq: #b58863;
 	--board-frame: #1e293b;
+	--hl-last: rgba(250, 204, 21, 0.45);
+	--hl-selected: rgba(20, 85, 30, 0.45);
+	--hl-dot: rgba(20, 30, 20, 0.28);
 	/* grade colours, shared by badges, bars and the daily result card */
-	--grade-best: #16a34a;
-	--grade-excellent: #22c55e;
-	--grade-good: #84cc16;
-	--grade-inaccuracy: #eab308;
-	--grade-mistake: #f97316;
+	--grade-best: #15803d;
+	--grade-excellent: #16a34a;
+	--grade-good: #65a30d;
+	--grade-inaccuracy: #ca8a04;
+	--grade-mistake: #ea580c;
 	--grade-blunder: #dc2626;
 }
 
@@ -110,11 +114,11 @@
 }
 
 #board .hl-last {
-	fill: rgba(250, 204, 21, 0.45);
+	fill: var(--hl-last);
 }
 
 #board .hl-selected {
-	fill: rgba(20, 85, 30, 0.45);
+	fill: var(--hl-selected);
 }
 
 #board .hl-check {
@@ -122,13 +126,13 @@
 }
 
 #board .dot {
-	fill: rgba(20, 30, 20, 0.28);
+	fill: var(--hl-dot);
 	pointer-events: none;
 }
 
 #board .dot.capture {
 	fill: none;
-	stroke: rgba(20, 30, 20, 0.28);
+	stroke: var(--hl-dot);
 	stroke-width: 6;
 }
 
@@ -312,10 +316,11 @@
 	gap: 10px;
 	font-size: 1.35rem;
 	font-weight: 800;
-	color: #fff;
+	color: var(--grade-color, var(--muted));
 	border-radius: 10px;
 	padding: 8px 14px;
-	background-color: var(--grade-color, var(--muted));
+	/* a tint of the grade colour, so the word carries the colour */
+	background-color: color-mix(in srgb, var(--grade-color, var(--muted)) 12%, var(--panel));
 }
 
 .grade-badge .pts {
@@ -372,7 +377,7 @@
 	position: relative;
 	height: 14px;
 	border-radius: 7px;
-	background-color: #1e293b;
+	background-color: var(--text);
 	overflow: hidden;
 	border: 1px solid var(--line);
 }
@@ -382,7 +387,7 @@
 	left: 0;
 	top: 0;
 	bottom: 0;
-	background-color: #f8fafc;
+	background-color: var(--panel);
 	transition: width 500ms ease-out;
 }
 

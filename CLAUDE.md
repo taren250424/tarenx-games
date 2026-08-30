@@ -1,0 +1,8 @@
+- Follow the existing codebase, using the root file as the primary reference.
+- Make atomic commits.
+- Use standard Conventional Commits types (e.g. feat, fix, refactor, docs, test, build, ci, chore, perf, revert, style).
+- The style type means code formatting (whitespace, blank lines, etc. — no logic change), not CSS/visual styling.
+- Avoid comments by default. Add a concise comment only when the code's intent or non-obvious reasoning would otherwise be misunderstood. Do not comment on obvious behavior or restate what the code already expresses.
+- When implementing a new package, reference packages/hub, packages/shared, and two or three other existing packages to keep the implementation consistent with them.
+- Default to a minimal, light design, and add a dark theme option alongside it where feasible.
+- For sound effects, use `scripts/gen-sfx.mjs` (`node scripts/gen-sfx.mjs [game ...]`) rather than adding audio files by hand.

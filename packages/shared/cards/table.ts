@@ -7,6 +7,10 @@
  * elements once, positioning them off a single card width so every move
  * animates for free, telling a click from a drag, and hit-testing the drop.
  *
+ * A card is addressed by its index into `cards`, not by its face value, so a
+ * game dealing more than one deck can repeat values. A single-deck game that
+ * passes `orderedDeck()` never notices: there, index and value are the same.
+ *
  *   const table = createTable({ root, cards: orderedDeck(), slots, columns: 8, handlers })
  *   table.render((place) => {
  *     place(card, { slot: "tableau:0", dy: 0.28 * depth })
@@ -43,7 +47,7 @@ export interface PlaceSpec {
 }
 
 export interface TableHit {
-	/** The card under the pointer, or null if it landed on bare table. */
+	/** The index of the card under the pointer, or null on bare table. */
 	card: Card | null;
 	/**
 	 * The pile under the pointer. A card answers with the slot it was placed in,
@@ -69,7 +73,7 @@ export interface TableHandlers {
 
 export interface TableOptions {
 	root: HTMLElement;
-	/** Face value per card element, in element order. */
+	/** Face value per card element — placements and handlers use the index. */
 	cards: Card[];
 	slots: SlotSpec[];
 	/** Width of the table, in card columns. */
@@ -121,23 +125,23 @@ export function createTable(options: TableOptions): CardTable {
 
 	// --- cards ---
 	// One element per card, built once and then only ever repositioned, so the
-	// browser animates every move without the game asking it to.
-	const cardEls = new Map<Card, HTMLElement>();
-	for (const card of cards) {
-		const corner = `<b>${RANKS[rank(card)]}</b><i>${SUITS[suit(card)]}</i>`;
+	// browser animates every move without the game asking it to. Elements are
+	// keyed by index, letting the face values repeat across a double deck.
+	const cardEls = cards.map((value, index) => {
+		const corner = `<b>${RANKS[rank(value)]}</b><i>${SUITS[suit(value)]}</i>`;
 		const el = document.createElement("div");
 		el.className = "card";
-		el.dataset.card = String(card);
-		el.setAttribute("aria-label", cardName(card));
+		el.dataset.card = String(index);
+		el.setAttribute("aria-label", cardName(value));
 		el.innerHTML =
 			`<span class="card-face">` +
 			`<span class="corner tl">${corner}</span>` +
-			`<span class="pip">${SUITS[suit(card)]}</span>` +
+			`<span class="pip">${SUITS[suit(value)]}</span>` +
 			`<span class="corner br">${corner}</span>` +
 			`</span><span class="card-back"></span>`;
-		cardEls.set(card, el);
 		cardsEl.append(el);
-	}
+		return el;
+	});
 
 	// --- rendering ---
 	let rows = minRows;
@@ -151,14 +155,14 @@ export function createTable(options: TableOptions): CardTable {
 		let order = 0;
 
 		const place = (card: Card, spec: PlaceSpec) => {
-			const el = cardEls.get(card);
+			const el = cardEls[card];
 			const slot = slotById.get(spec.slot);
 			if (!el || !slot) return;
 			const dx = spec.dx ?? 0;
 			const dy = spec.dy ?? 0;
 
 			el.className =
-				`card row-${slot.row} ${isRed(card) ? "red" : "black"}` +
+				`card row-${slot.row} ${isRed(cards[card]) ? "red" : "black"}` +
 				`${spec.faceDown ? " down" : ""}` +
 				`${spec.grabbable ? " grabbable" : ""}` +
 				`${spec.selected ? " selected" : ""}`;
@@ -179,7 +183,7 @@ export function createTable(options: TableOptions): CardTable {
 
 		draw(place);
 
-		for (const [card, el] of cardEls) el.classList.toggle("gone", !placed.has(card));
+		cardEls.forEach((el, card) => el.classList.toggle("gone", !placed.has(card)));
 		for (const [id, el] of slotEls) el.classList.toggle("filled", filled.has(id));
 		root.style.setProperty("--rows", rows.toFixed(2));
 	}
@@ -257,14 +261,14 @@ export function createTable(options: TableOptions): CardTable {
 			press.dragging = true;
 			cardsEl.classList.add("dragging");
 			press.cards.forEach((card, i) => {
-				const el = cardEls.get(card);
+				const el = cardEls[card];
 				if (!el) return;
 				el.classList.add("dragging");
 				el.style.zIndex = String(900 + i);
 			});
 		}
 		for (const card of press.cards) {
-			const el = cardEls.get(card);
+			const el = cardEls[card];
 			if (!el) continue;
 			el.style.setProperty("--drag-x", `${dx}px`);
 			el.style.setProperty("--drag-y", `${dy}px`);
@@ -291,7 +295,7 @@ export function createTable(options: TableOptions): CardTable {
 		// in hand sit right under the cursor and would answer first.
 		const target = cancelled ? null : hitAt(e.clientX, e.clientY).slot;
 		cardsEl.classList.remove("dragging");
-		for (const card of p.cards) cardEls.get(card)?.classList.remove("dragging");
+		for (const card of p.cards) cardEls[card]?.classList.remove("dragging");
 		highlight(null);
 		handlers.drop(p.cards, target);
 	}
@@ -307,7 +311,7 @@ export function createTable(options: TableOptions): CardTable {
 			enabled = value;
 		},
 		element(card: Card) {
-			return cardEls.get(card) as HTMLElement;
+			return cardEls[card] as HTMLElement;
 		},
 	};
 }

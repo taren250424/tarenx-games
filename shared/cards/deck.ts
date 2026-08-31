@@ -45,7 +45,7 @@ export function orderedDeck(): Card[] {
  * distributed, and above all fixed: changing it would renumber every deal on
  * the site, so it must not be "improved" later.
  */
-export function shuffled(seed: number): Card[] {
+export function shuffle<T>(items: T[], seed: number): T[] {
 	let state = seed >>> 0;
 	const next = () => {
 		state = (state + 0x6d2b79f5) >>> 0;
@@ -55,10 +55,13 @@ export function shuffled(seed: number): Card[] {
 		return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 	};
 
-	const deck = orderedDeck();
-	for (let i = deck.length - 1; i > 0; i--) {
+	for (let i = items.length - 1; i > 0; i--) {
 		const j = Math.floor(next() * (i + 1));
-		[deck[i], deck[j]] = [deck[j], deck[i]];
+		[items[i], items[j]] = [items[j], items[i]];
 	}
-	return deck;
+	return items;
+}
+
+export function shuffled(seed: number): Card[] {
+	return shuffle(orderedDeck(), seed);
 }

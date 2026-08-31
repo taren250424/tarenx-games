@@ -32,7 +32,7 @@
 		<link rel="canonical" href="https://games.tarenx.com/freecell/" />
 		<link rel="icon" type="image/svg+xml" href="shared/freecell/favicon.svg" />
 
-		<meta property="og:title" content="FreeCell" />
+		<meta property="og:title" content="FreeCell Solitaire" />
 		<meta
 			property="og:description"
 			content="Classic FreeCell solitaire. 32,000 deals by number, unlimited undo, no install."
@@ -40,9 +40,9 @@
 		<meta property="og:image" content="shared/freecell/og.svg" />
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>FreeCell</title>
-		<script type="module" crossorigin src="/freecell/assets/index-CNrbcQg4.js"></script>
-		<link rel="stylesheet" crossorigin href="/freecell/assets/index-CJy7thwx.css">
+		<title>FreeCell Solitaire</title>
+		<script type="module" crossorigin src="/freecell/assets/index-BURI9XW3.js"></script>
+		<link rel="stylesheet" crossorigin href="/freecell/assets/index-rT-PsQQ6.css">
 	</head>
 
 	<body>
@@ -59,8 +59,8 @@
 
 		<header>
 			<div class="header-brand">
-				<img class="header-logo" src="shared/freecell/logo.svg" alt="FreeCell Logo" />
-				<span class="header-title">FreeCell</span>
+				<img class="header-logo" src="shared/freecell/logo.svg" alt="FreeCell Solitaire Logo" />
+				<span class="header-title">FreeCell Solitaire</span>
 			</div>
 			<a class="header-home" href="/">← All games</a>
 		</header>
@@ -75,12 +75,12 @@
 						<input id="deal-input" type="text" inputmode="numeric" maxlength="5" aria-label="Deal number" />
 						<button id="next-deal-btn" aria-label="Next deal">›</button>
 					</div>
-					<button id="random-btn" title="Jump to a random deal">🎲 Random</button>
+					<button id="random-btn" title="Jump to a random deal"><i data-icon="dice"></i> Random</button>
 					<button id="restart-btn" title="Restart this deal (R)">⟳ Restart</button>
 					<label class="check-label" title="Send cards to the foundations as soon as they cannot be needed">
 						<input type="checkbox" id="auto-check" checked /> Auto-play
 					</label>
-					<button id="sound-btn" title="Toggle sound">🔊</button>
+					<button id="sound-btn" title="Toggle sound"></button>
 				</div>
 
 				<div class="hud">
@@ -94,7 +94,7 @@
 
 				<div class="board-wrap">
 					<div id="board" aria-label="FreeCell table"></div>
-					<div id="overlay" class="hidden">
+					<div id="overlay" class="overlay-card hidden">
 						<h2 id="overlay-title">Solved!</h2>
 						<p id="overlay-stats"></p>
 						<div class="overlay-buttons">
@@ -223,6 +223,6 @@
 				no sign-up · <a href="/privacy/">Privacy</a>
 			</p>
 		</footer>
-
+
 	</body>
 </html>

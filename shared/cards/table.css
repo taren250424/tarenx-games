@@ -17,27 +17,30 @@
 	--pad: calc(var(--card-w) * 0.22);
 	--radius: calc(var(--card-w) * 0.09);
 
-	--felt: #15703f;
-	--felt-deep: #0d4d2b;
-	--slot-line: rgba(255, 255, 255, 0.3);
+	/* a pale grey cloth rather than green felt; the page tokens set its edge */
+	--felt: #f1f5f9;
+	--slot-line: #cbd5e1;
+	--slot-mark: #cbd5e1;
 	--card-face: #ffffff;
-	--card-edge: #94a3b8;
+	--card-edge: #cbd5e1;
 	--card-red: #dc2626;
 	--card-black: #1e293b;
-	--card-back: #1d4ed8;
-	--card-back-line: #3b82f6;
-	--select: #facc15;
+	--card-back: #cbd5e1;
+	--card-back-line: #b4bfcd;
+	--select: #3b82f6;
+	--select-wash: rgba(59, 130, 246, 0.1);
 
 	--columns: 8;
 	--rows: 3.8;
 
 	position: relative;
-	width: calc(var(--columns) * var(--col-step) - var(--gap) + 2 * var(--pad));
-	height: calc(var(--tab-top) + var(--card-h) * var(--rows) + 2 * var(--pad));
+	/* the 2px on each is the border, which the box includes */
+	width: calc(var(--columns) * var(--col-step) - var(--gap) + 2 * var(--pad) + 2px);
+	height: calc(var(--tab-top) + var(--card-h) * var(--rows) + 2 * var(--pad) + 2px);
 	padding: var(--pad);
 	border-radius: 14px;
-	background: linear-gradient(160deg, var(--felt), var(--felt-deep));
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 6px 20px rgba(15, 23, 42, 0.18);
+	background-color: var(--felt);
+	border: 1px solid var(--line, #e2e8f0);
 	transition: height 0.16s ease-out;
 	user-select: none;
 	touch-action: none;
@@ -73,7 +76,7 @@
 	align-items: center;
 	justify-content: center;
 	font-size: calc(var(--card-w) * 0.45);
-	color: rgba(255, 255, 255, 0.25);
+	color: var(--slot-mark);
 	line-height: 1;
 }
 
@@ -102,7 +105,7 @@
 .card-slot.target {
 	border-color: var(--select);
 	border-style: solid;
-	background-color: rgba(250, 204, 21, 0.12);
+	background-color: var(--select-wash);
 }
 
 /* --- cards --- */
@@ -112,7 +115,7 @@
 	height: var(--card-h);
 	border-radius: var(--radius);
 	background-color: var(--card-face);
-	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.45), inset 0 0 0 1px var(--card-edge);
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12), inset 0 0 0 1px var(--card-edge);
 	transform: translate(
 		calc((var(--cx) + var(--ox, 0)) * var(--col-step) + var(--drag-x, 0px)),
 		calc(var(--row-y, 0px) + var(--oy, 0) * var(--card-h) + var(--drag-y, 0px))
@@ -144,13 +147,13 @@
 }
 
 .card.selected {
-	box-shadow: 0 0 0 3px var(--select), 0 2px 6px rgba(15, 23, 42, 0.5);
+	box-shadow: 0 0 0 2px var(--select), 0 2px 6px rgba(15, 23, 42, 0.16);
 }
 
 .card.dragging {
 	transition: none;
 	cursor: grabbing;
-	box-shadow: 0 10px 22px rgba(15, 23, 42, 0.5), inset 0 0 0 1px var(--card-edge);
+	box-shadow: 0 10px 22px rgba(15, 23, 42, 0.2), inset 0 0 0 1px var(--card-edge);
 }
 
 /* While cards are in hand the pointer has to be able to see the table under

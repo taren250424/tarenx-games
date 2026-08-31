@@ -1,33 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
-  <defs>
-    <linearGradient id="ogBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0F172A" />
-      <stop offset="60%" stop-color="#1E293B" />
-      <stop offset="100%" stop-color="#4C1D95" />
-    </linearGradient>
-    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#A78BFA" />
-      <stop offset="100%" stop-color="#F472B6" />
-    </linearGradient>
-  </defs>
-
-  <rect width="1200" height="630" fill="url(#ogBg)" />
-
-  <circle cx="1050" cy="120" r="200" fill="#7C3AED" opacity="0.15" />
-  <circle cx="120" cy="540" r="160" fill="#EC4899" opacity="0.12" />
-
-  <g transform="translate(120, 180)">
-    <rect width="140" height="140" rx="32" fill="url(#accentGrad)" />
-    <path d="M45 62h50a24 24 0 0 1 23.5 28.8l-4.3 21.7a13 13 0 0 1-22.4 6.2L81 107h-22l-10.8 11.7a13 13 0 0 1-22.4-6.2l-4.3-21.7A24 24 0 0 1 45 62Z" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linejoin="round" transform="translate(0,-10)"/>
-    <path d="M50 68v18M41 77h18" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
-    <circle cx="91" cy="72" r="5.5" fill="#FFFFFF"/>
-    <circle cx="103" cy="81" r="5.5" fill="#FFFFFF"/>
-  </g>
-
-  <text x="300" y="270" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="76" font-weight="800" fill="#F8FAFC">Tarenx Games</text>
-  <text x="300" y="340" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="34" font-weight="400" fill="#94A3B8">Free browser games. No install, no sign-up.</text>
-
-  <rect x="300" y="380" width="360" height="6" rx="3" fill="url(#accentGrad)" />
-
-  <text x="300" y="470" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="26" fill="#CBD5E1">games.tarenx.com</text>
+  <rect width="1200" height="630" fill="#F8FAFC"/>
+  <g transform="translate(120, 190) scale(3.75)"><rect x="0.5" y="0.5" width="31" height="31" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/><path d="M10.5 10h11a5.5 5.5 0 0 1 5.4 6.6l-1 5a3.2 3.2 0 0 1-5.5 1.5L18 20.5h-4l-2.4 2.6a3.2 3.2 0 0 1-5.5-1.5l-1-5A5.5 5.5 0 0 1 10.5 10Z" fill="none" stroke="#1E293B" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 13.5v4M9.5 15.5h4" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round"/><circle cx="20.5" cy="14.5" r="1.2" fill="#1E293B"/><circle cx="23.5" cy="16.5" r="1.2" fill="#1E293B"/></g>
+  <text x="300" y="270" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="76" font-weight="800" fill="#1E293B">Tarenx Games</text>
+  <text x="300" y="340" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="34" font-weight="400" fill="#64748B">Free browser games. No install, no sign-up.</text>
+  <text x="300" y="470" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="26" font-weight="400" fill="#94A3B8">games.tarenx.com</text>
+  <rect x="300" y="380" width="360" height="4" rx="2" fill="#E2E8F0"/>
 </svg>

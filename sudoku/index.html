@@ -41,8 +41,8 @@
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Sudoku</title>
-		<script type="module" crossorigin src="/sudoku/assets/index-DoB1iAd6.js"></script>
-		<link rel="stylesheet" crossorigin href="/sudoku/assets/index-BcEsUk6d.css">
+		<script type="module" crossorigin src="/sudoku/assets/index-DHAOBXvp.js"></script>
+		<link rel="stylesheet" crossorigin href="/sudoku/assets/index-DujDGIr2.css">
 	</head>
 
 	<body>
@@ -74,7 +74,7 @@
 				<label class="check-label" title="Highlight digits that don't match the solution">
 					<input type="checkbox" id="mistakes-check" checked /> Show mistakes
 				</label>
-				<button id="sound-btn" title="Toggle sound">🔊</button>
+				<button id="sound-btn" title="Toggle sound"></button>
 			</div>
 
 			<div class="hud">
@@ -85,10 +85,10 @@
 
 			<div class="board-wrap">
 				<div id="board" aria-label="Sudoku board"></div>
-				<div id="win-overlay" class="hidden">
+				<div id="win-overlay" class="overlay-veil hidden">
 					<h2>Puzzle Complete!</h2>
 					<p id="win-stats"></p>
-					<button id="next-btn">Next Puzzle →</button>
+					<button id="next-btn" class="primary">Next Puzzle →</button>
 				</div>
 			</div>
 
@@ -96,7 +96,7 @@
 				<button id="undo-btn" title="Undo (Z)">↩ Undo</button>
 				<button id="erase-btn" title="Erase (Delete)">⌫ Erase</button>
 				<button id="notes-btn" title="Notes (N)" aria-pressed="false">✎ Notes</button>
-				<button id="hint-btn" title="Hint (H)">💡 Hint</button>
+				<button id="hint-btn" title="Hint (H)"><i data-icon="bulb"></i> Hint</button>
 			</div>
 
 			<div class="numpad" aria-label="Number pad"></div>
@@ -183,6 +183,6 @@
 				no sign-up · <a href="/privacy/">Privacy</a>
 			</p>
 		</footer>
-
+
 	</body>
 </html>

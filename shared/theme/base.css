@@ -1,0 +1,349 @@
+/*
+ * The page around every game: tokens, header, the ad-flanked column, the
+ * controls bar, the HUD, the article and the footer, plus the two end-of-game
+ * surfaces. One place to edit, every game picks the change up.
+ *
+ * Usage
+ *   1. Import from the app entry, after ad-slot.css and before the game's own
+ *      style.css: `import "../../shared/theme/base.css";`
+ *   2. A game redefines the tokens it wants on its own `:root` — usually only
+ *      `--accent` and `--accent-strong`.
+ *   3. End-of-game surfaces: `.overlay-veil` covers the board (a frosted
+ *      curtain), `.overlay-card` floats a card over or beside it. Inside
+ *      either, `button.primary` is the one action the player most likely
+ *      wants next; the rest stay quiet.
+ */
+
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+:root {
+	--bg: #f8fafc;
+	--panel: #ffffff;
+	--line: #e2e8f0;
+	--text: #1e293b;
+	--muted: #64748b;
+	--accent: #1e293b;
+	--accent-strong: #0f172a;
+
+	--radius: 8px;
+	--radius-lg: 12px;
+	--shadow-card: 0 12px 32px rgba(15, 23, 42, 0.12);
+	/* frosted curtain over a finished board */
+	--veil: rgba(248, 250, 252, 0.9);
+
+	/* the game column between the two ad slots */
+	--column-max: 900px;
+}
+
+body {
+	font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+	background-color: var(--bg);
+	color: var(--text);
+	min-height: 100vh;
+}
+
+.hidden {
+	display: none !important;
+}
+
+/* --- header --- */
+header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 20px;
+	border-bottom: 1px solid var(--line);
+}
+
+.header-brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.header-logo {
+	width: 32px;
+	height: 32px;
+}
+
+.header-title {
+	font-size: 1.2rem;
+	font-weight: 700;
+}
+
+.header-home {
+	color: var(--muted);
+	text-decoration: none;
+	font-size: 0.9rem;
+}
+
+.header-home:hover {
+	color: var(--text);
+}
+
+/* --- page column --- */
+main {
+	display: grid;
+	grid-template-columns: var(--ad-slot-width) minmax(0, var(--column-max)) var(--ad-slot-width);
+	justify-content: center;
+	gap: 24px;
+	padding: 24px 16px 48px;
+}
+
+main .game-column {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+}
+
+@media (max-width: 1200px) {
+	main {
+		grid-template-columns: minmax(0, var(--column-max));
+	}
+}
+
+/* --- controls bar, toolbar --- */
+.controls,
+.toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+
+.controls select,
+.controls button,
+.toolbar button {
+	background-color: var(--panel);
+	color: var(--text);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	padding: 8px 14px;
+	font-size: 0.9rem;
+	font-family: inherit;
+	cursor: pointer;
+}
+
+.controls select:hover,
+.controls button:hover:not(:disabled),
+.toolbar button:hover:not(:disabled) {
+	border-color: var(--accent);
+}
+
+.controls button:disabled,
+.toolbar button:disabled {
+	color: var(--muted);
+	cursor: default;
+	opacity: 0.55;
+}
+
+/* a toggle that is on: a quiet tint with the text-colour edge */
+.controls button[aria-pressed="true"],
+.toolbar button.active,
+.mode-tabs button[aria-selected="true"] {
+	background-color: #f1f5f9;
+	border-color: var(--text);
+}
+
+/* the one action the player most likely wants next */
+.controls button.primary,
+.toolbar button.primary {
+	background-color: var(--text);
+	border-color: var(--text);
+	color: var(--panel);
+	font-weight: 600;
+}
+
+.controls button.primary:hover:not(:disabled),
+.toolbar button.primary:hover:not(:disabled) {
+	background-color: var(--accent-strong);
+	border-color: var(--accent-strong);
+}
+
+.icon {
+	width: 1em;
+	height: 1em;
+	vertical-align: -0.15em;
+}
+
+.controls .check-label {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 0.9rem;
+	color: var(--muted);
+	cursor: pointer;
+	user-select: none;
+}
+
+.controls .check-label input {
+	accent-color: var(--accent);
+}
+
+.hud {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 18px;
+	font-size: 0.9rem;
+	color: var(--muted);
+}
+
+.hud strong {
+	color: var(--text);
+	font-variant-numeric: tabular-nums;
+}
+
+/* --- end-of-game surfaces --- */
+.overlay-veil {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	padding: 20px;
+	text-align: center;
+	background-color: var(--veil);
+	backdrop-filter: blur(3px);
+	border-radius: var(--radius-lg);
+	/* keeps the board's edge visible through the curtain, which would otherwise
+	   erase a white board against the page */
+	box-shadow: inset 0 0 0 1px var(--line);
+	z-index: 2;
+}
+
+.overlay-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	padding: 20px 26px;
+	text-align: center;
+	background-color: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: 14px;
+	box-shadow: var(--shadow-card);
+	z-index: 2;
+}
+
+.overlay-veil h2,
+.overlay-card h2 {
+	font-size: 1.5rem;
+	color: var(--text);
+}
+
+.overlay-veil p,
+.overlay-card p {
+	color: var(--muted);
+	font-variant-numeric: tabular-nums;
+}
+
+.overlay-actions,
+.overlay-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+	margin-top: 4px;
+}
+
+.overlay-veil button,
+.overlay-card button {
+	background-color: var(--panel);
+	color: var(--text);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	padding: 9px 18px;
+	font-size: 0.95rem;
+	font-family: inherit;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.overlay-veil button:hover,
+.overlay-card button:hover {
+	border-color: var(--text);
+}
+
+.overlay-veil button.primary,
+.overlay-card button.primary {
+	background-color: var(--text);
+	border-color: var(--text);
+	color: var(--panel);
+	font-weight: 600;
+}
+
+.overlay-veil button.primary:hover,
+.overlay-card button.primary:hover {
+	background-color: var(--accent-strong);
+}
+
+/* --- article content --- */
+article {
+	max-width: 680px;
+	width: 100%;
+	margin-top: 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	color: var(--muted);
+	line-height: 1.7;
+	font-size: 0.95rem;
+}
+
+article h2 {
+	color: var(--text);
+	font-size: 1.2rem;
+	border-bottom: 1px solid var(--line);
+	padding-bottom: 6px;
+}
+
+article ul {
+	padding-left: 20px;
+}
+
+article table {
+	border-collapse: collapse;
+	width: 100%;
+	max-width: 440px;
+}
+
+article td,
+article th {
+	border: 1px solid var(--line);
+	padding: 6px 12px;
+	text-align: left;
+}
+
+article kbd {
+	background-color: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: 4px;
+	padding: 1px 6px;
+	font-size: 0.85em;
+	color: var(--text);
+}
+
+article a {
+	color: var(--accent-strong);
+}
+
+footer {
+	text-align: center;
+	padding: 24px;
+	color: var(--muted);
+	font-size: 0.85rem;
+	border-top: 1px solid var(--line);
+}
+
+footer a {
+	color: var(--accent-strong);
+}

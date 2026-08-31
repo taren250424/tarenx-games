@@ -1,41 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
-  <defs>
-    <linearGradient id="fcOgBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0F172A" />
-      <stop offset="55%" stop-color="#14532D" />
-      <stop offset="100%" stop-color="#0D4D2B" />
-    </linearGradient>
-    <linearGradient id="fcOgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#22C55E" />
-      <stop offset="100%" stop-color="#0D4D2B" />
-    </linearGradient>
-  </defs>
-
-  <rect width="1200" height="630" fill="url(#fcOgBg)" />
-
-  <circle cx="1060" cy="110" r="190" fill="#22C55E" opacity="0.10" />
-  <circle cx="110" cy="550" r="150" fill="#4ADE80" opacity="0.07" />
-
-  <g transform="translate(120, 190) scale(3.75)">
-    <rect width="32" height="32" rx="8" fill="url(#fcOgGrad)" />
-      <g fill="none" stroke="#BBF7D0" stroke-width="1" opacity="0.55">
-        <rect x="4.5" y="4.5" width="5" height="6.5" rx="1.2"/>
-        <rect x="11" y="4.5" width="5" height="6.5" rx="1.2"/>
-      </g>
-      <g transform="rotate(-12 12 20)">
-        <rect x="4" y="13" width="11" height="15" rx="2" fill="#F8FAFC" stroke="#0D4D2B" stroke-width="0.8"/>
-        <path d="M9.5 17.4c1.5-1.8 3.6-0.4 3.6 1.2 0 1.8-2.4 3.3-3.6 4.6-1.2-1.3-3.6-2.8-3.6-4.6 0-1.6 2.1-3 3.6-1.2z" fill="#DC2626"/>
-      </g>
-      <g transform="rotate(9 22 19)">
-        <rect x="17" y="12" width="11" height="15" rx="2" fill="#F8FAFC" stroke="#0D4D2B" stroke-width="0.8"/>
-        <path d="M22.5 15.6c1 2 3.4 3.2 3.4 5 0 1.4-1.1 2.2-2.2 2.2-0.5 0-0.9-0.2-1.2-0.5l0.5 2.3h-1l0.5-2.3c-0.3 0.3-0.7 0.5-1.2 0.5-1.1 0-2.2-0.8-2.2-2.2 0-1.8 2.4-3 3.4-5z" fill="#1E293B"/>
-      </g>
-  </g>
-
-  <text x="300" y="270" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="76" font-weight="800" fill="#F8FAFC">FreeCell</text>
-  <text x="300" y="340" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="34" font-weight="400" fill="#86EFAC">Every card in front of you. Every deal winnable.</text>
-
-  <rect x="300" y="380" width="360" height="6" rx="3" fill="url(#fcOgGrad)" />
-
-  <text x="300" y="470" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="26" fill="#CBD5E1">games.tarenx.com/freecell</text>
+  <rect width="1200" height="630" fill="#F8FAFC"/>
+  <g transform="translate(120, 190) scale(3.75)"><rect x="0.5" y="0.5" width="31" height="31" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/><g fill="none" stroke="#CBD5E1" stroke-width="1"><rect x="4.5" y="4.5" width="5" height="6.5" rx="1.2"/><rect x="11" y="4.5" width="5" height="6.5" rx="1.2"/></g><g transform="rotate(-12 12 20)"><rect x="4" y="13" width="11" height="15" rx="2" fill="#FFFFFF" stroke="#94A3B8" stroke-width="0.8"/><path d="M9.5 17.4c1.5-1.8 3.6-0.4 3.6 1.2 0 1.8-2.4 3.3-3.6 4.6-1.2-1.3-3.6-2.8-3.6-4.6 0-1.6 2.1-3 3.6-1.2z" fill="#DC2626"/></g><g transform="rotate(9 22 19)"><rect x="17" y="12" width="11" height="15" rx="2" fill="#FFFFFF" stroke="#94A3B8" stroke-width="0.8"/><path d="M22.5 15.6c1 2 3.4 3.2 3.4 5 0 1.4-1.1 2.2-2.2 2.2-0.5 0-0.9-0.2-1.2-0.5l0.5 2.3h-1l0.5-2.3c-0.3 0.3-0.7 0.5-1.2 0.5-1.1 0-2.2-0.8-2.2-2.2 0-1.8 2.4-3 3.4-5z" fill="#1E293B"/></g></g>
+  <text x="300" y="270" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="66" font-weight="800" fill="#1E293B">FreeCell Solitaire</text>
+  <text x="300" y="340" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="34" font-weight="400" fill="#64748B">Every card in front of you. Every deal winnable.</text>
+  <text x="300" y="470" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="26" font-weight="400" fill="#94A3B8">games.tarenx.com/freecell</text>
+  <rect x="300" y="380" width="360" height="4" rx="2" fill="#E2E8F0"/>
 </svg>

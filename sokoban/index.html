@@ -41,8 +41,8 @@
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Sokoban</title>
-		<script type="module" crossorigin src="/sokoban/assets/index-D0-xTGil.js"></script>
-		<link rel="stylesheet" crossorigin href="/sokoban/assets/index-CVmcvE6V.css">
+		<script type="module" crossorigin src="/sokoban/assets/index-48RTFODv.js"></script>
+		<link rel="stylesheet" crossorigin href="/sokoban/assets/index-674vZyF6.css">
 	</head>
 
 	<body>
@@ -72,7 +72,7 @@
 				<select id="level-select" aria-label="Select level"></select>
 				<button id="undo-btn" title="Undo (Z)">↩ Undo</button>
 				<button id="restart-btn" title="Restart (R)">⟳ Restart</button>
-				<button id="sound-btn" title="Toggle sound">🔊</button>
+				<button id="sound-btn" title="Toggle sound"></button>
 			</div>
 
 			<div class="hud">
@@ -83,10 +83,10 @@
 
 			<div class="board-wrap">
 				<div id="board" aria-label="Sokoban board"></div>
-				<div id="win-overlay" class="hidden">
+				<div id="win-overlay" class="overlay-veil hidden">
 					<h2>Level Complete!</h2>
 					<p id="win-stats"></p>
-					<button id="next-btn">Next Level →</button>
+					<button id="next-btn" class="primary">Next Level →</button>
 				</div>
 			</div>
 
@@ -175,6 +175,6 @@
 				no sign-up · <a href="/privacy/">Privacy</a>
 			</p>
 		</footer>
-
+
 	</body>
 </html>

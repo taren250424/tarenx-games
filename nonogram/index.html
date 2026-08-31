@@ -41,8 +41,8 @@
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Nonogram</title>
-		<script type="module" crossorigin src="/nonogram/assets/index-BgMNkR7p.js"></script>
-		<link rel="stylesheet" crossorigin href="/nonogram/assets/index-DT1SDFoO.css">
+		<script type="module" crossorigin src="/nonogram/assets/index-CvwEIdHa.js"></script>
+		<link rel="stylesheet" crossorigin href="/nonogram/assets/index-B966wHre.css">
 	</head>
 
 	<body>
@@ -70,12 +70,12 @@
 			<section class="game-column">
 			<div class="controls">
 				<select id="puzzle-select" aria-label="Select puzzle"></select>
-				<button id="random-btn" title="Jump to a random puzzle of this size">🎲 Random</button>
+				<button id="random-btn" title="Jump to a random puzzle of this size"><i data-icon="dice"></i> Random</button>
 				<button id="restart-btn" title="Restart (R)">⟳ Restart</button>
 				<label class="check-label" title="Highlight squares filled in by mistake">
 					<input type="checkbox" id="mistakes-check" checked /> Show mistakes
 				</label>
-				<button id="sound-btn" title="Toggle sound">🔊</button>
+				<button id="sound-btn" title="Toggle sound"></button>
 			</div>
 
 			<div class="hud">
@@ -91,16 +91,16 @@
 					<div id="row-clues" aria-hidden="true"></div>
 					<div id="cells"></div>
 				</div>
-				<div id="win-overlay" class="hidden">
+				<div id="win-overlay" class="overlay-card hidden">
 					<h2>Solved!</h2>
 					<p id="win-stats"></p>
-					<button id="next-btn">Next Puzzle →</button>
+					<button id="next-btn" class="primary">Next Puzzle →</button>
 				</div>
 			</div>
 
 			<div class="toolbar" aria-label="Tools">
 				<button id="undo-btn" title="Undo (Z)">↩ Undo</button>
-				<button id="hint-btn" title="Hint (H)">💡 Hint</button>
+				<button id="hint-btn" title="Hint (H)"><i data-icon="bulb"></i> Hint</button>
 			</div>
 
 			<article>
@@ -200,6 +200,6 @@
 				no sign-up · <a href="/privacy/">Privacy</a>
 			</p>
 		</footer>
-
+
 	</body>
 </html>

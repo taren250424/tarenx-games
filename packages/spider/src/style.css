@@ -1,0 +1,111 @@
+:root {
+	--red: #dc2626;
+}
+
+.controls {
+	gap: 8px;
+}
+
+/* Step buttons, label and field read as one control rather than three: the
+   pill carries the border, everything inside it is flat. */
+.controls .game-picker {
+	display: flex;
+	background-color: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	align-items: stretch;
+	padding: 0;
+	overflow: hidden;
+}
+
+.controls .game-picker:focus-within {
+	border-color: var(--accent);
+}
+
+.controls .game-picker button {
+	border: none;
+	border-radius: 0;
+	background: none;
+	padding: 8px 12px;
+	font-size: 1rem;
+	line-height: 1;
+	color: var(--muted);
+}
+
+.controls .game-picker button:hover {
+	background-color: var(--bg);
+	color: var(--text);
+}
+
+.controls .game-picker label {
+	display: flex;
+	align-items: center;
+	padding-left: 12px;
+	color: var(--muted);
+	cursor: text;
+}
+
+.controls .game-picker input {
+	border: none;
+	background: none;
+	/* just wide enough for the longest deal number, so short ones do not leave
+	   a hole between the field and the step button */
+	width: 3.5em;
+	padding: 8px 4px;
+	font-size: 0.9rem;
+	font-family: inherit;
+	color: var(--text);
+	font-variant-numeric: tabular-nums;
+	cursor: text;
+}
+
+.controls .game-picker input:focus {
+	outline: none;
+}
+
+/* --- board --- */
+/* The table itself — felt, slots, cards, drag behaviour — comes from the
+   shared card layer in shared/cards/table.css. Only the page around it lives
+   here. Ten columns is three more than Klondike, so the cards run a little
+   narrower to keep the table on the screen. */
+.board-wrap {
+	position: relative;
+}
+
+#board {
+	--card-w: clamp(34px, min(7vw, 8.2vh), 78px);
+}
+
+/* dealing over an empty column is against the rules — the hole says so */
+#board .card-slot.nudge {
+	animation: nudge 0.4s ease-out;
+	border-color: var(--red);
+}
+
+@keyframes nudge {
+	0%,
+	100% {
+		transform: translate(calc(var(--cx) * var(--col-step)), var(--row-y, 0px));
+	}
+	25% {
+		transform: translate(calc(var(--cx) * var(--col-step) - 4px), var(--row-y, 0px));
+	}
+	75% {
+		transform: translate(calc(var(--cx) * var(--col-step) + 4px), var(--row-y, 0px));
+	}
+}
+
+/* --- overlay --- */
+#overlay {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	/* absolute positioning would size the card to the half of the table right of
+	   its centre and wrap the buttons; it should be as wide as they need */
+	width: max-content;
+}
+
+#overlay.stuck h2 {
+	color: var(--red);
+}

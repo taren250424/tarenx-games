@@ -13,6 +13,7 @@ when you mean to change what the game ships.
 - `packages/passant` — chess positions, built with a local Stockfish
 - `packages/word-guess` — word lists, built from a cached dictionary download
 - `packages/klondike` — the bank of Klondike games proved winnable; see below
+- `packages/spider` — the same idea per suit count; see below
 
 ### Extending the Klondike bank
 
@@ -39,3 +40,21 @@ Scanning further seeds only appends games, so existing numbers keep pointing at
 the same cards. Changing the search settings would not: it would prove seeds
 that were skipped before and shift every number after them. See the header of
 `tools/solve.mjs`.
+
+### Extending the Spider banks
+
+`packages/spider` works the same way, except each suit count is a bank of its
+own (`src/winnable-1.ts` and friends) and every solver run takes `--suits`:
+
+```sh
+cd packages/spider
+for i in 0 1 2 3 4; do
+  node tools/solve.mjs --suits 2 --stride 5 --offset $i --to 2000 --partial &
+done
+wait
+node tools/solve.mjs --suits 2 --merge
+```
+
+Spider seeds are much slower to settle than Klondike's — seconds each at one
+suit, tens of seconds at two — and the same renumbering rule applies per bank:
+raise `--to` freely, but leave the search settings alone once a bank exists.

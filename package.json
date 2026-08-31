@@ -32,6 +32,8 @@
     "build:freecell": "pnpm --filter freecell run build",
     "dev:klondike": "pnpm --filter klondike run dev",
     "build:klondike": "pnpm --filter klondike run build",
+    "dev:spider": "pnpm --filter spider run dev",
+    "build:spider": "pnpm --filter spider run build",
 
     "preview": "pnpm run build && node scripts/preview.mjs",
     "deploy": "pnpm run build && node scripts/deploy.mjs",

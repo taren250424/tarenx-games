@@ -35,6 +35,7 @@ import {
 	legalMoves,
 } from "../src/rules.ts";
 import { rankOf, suitOf } from "../src/shuffle.ts";
+import { solveFour } from "./search4.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DEPTH_CAP = 400;
@@ -373,8 +374,10 @@ const saveShard = () => {
 
 const first = upTo > OFFSET ? upTo + STRIDE : OFFSET + 1;
 console.log(
-	`seeds ${first}-${TO} step ${STRIDE} at ${SUITS} suit(s), beams ${WIDTHS.join("/")}, ` +
-		`up to ${NODE_CAP || `width×${DEPTH_CAP}`} positions each`
+	SUITS === 4
+		? `seeds ${first}-${TO} step ${STRIDE} at 4 suits, two-level search`
+		: `seeds ${first}-${TO} step ${STRIDE} at ${SUITS} suit(s), beams ${WIDTHS.join("/")}, ` +
+			`up to ${NODE_CAP || `width×${DEPTH_CAP}`} positions each`
 );
 let scanned = 0;
 let gaveUp = 0;
@@ -383,9 +386,14 @@ const started = Date.now();
 
 for (let seed = first; seed <= TO; seed += STRIDE) {
 	let path = null;
-	for (const width of WIDTHS) {
-		path = solve(dealBoard(seed, SUITS), NODE_CAP || width * DEPTH_CAP, width);
-		if (path) break;
+	// four suits outgrew the flat beam — search4.mjs explains what replaced it
+	if (SUITS === 4) {
+		path = solveFour(seed);
+	} else {
+		for (const width of WIDTHS) {
+			path = solve(dealBoard(seed, SUITS), NODE_CAP || width * DEPTH_CAP, width);
+			if (path) break;
+		}
 	}
 	if (!path) {
 		gaveUp++;

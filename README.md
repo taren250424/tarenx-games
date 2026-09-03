@@ -9,7 +9,7 @@ Some games ship a data file that a tool under `packages/<game>/tools/` produced.
 The output is committed, so a normal build never runs these — re-run one only
 when you mean to change what the game ships.
 
-- `packages/nonogram`, `packages/sudoku` — puzzle banks, generated and graded
+- `packages/nonogram`, `packages/sudoku`, `packages/numberlink` — puzzle banks, generated and graded
 - `packages/passant` — chess positions, built with a local Stockfish
 - `packages/word-guess` — word lists, built from a cached dictionary download
 - `packages/klondike` — the bank of Klondike games proved winnable; see below

@@ -335,6 +335,19 @@ tone(spider.complete, { freq: E5, start: 0.07, dur: 0.1, amp: 0.6, tau: 0.035, h
 tone(spider.complete, { freq: G5, start: 0.14, dur: 0.12, amp: 0.65, tau: 0.04, harmonics: [[2, 0.2]] });
 tone(spider.complete, { freq: C6, start: 0.21, dur: 0.22, amp: 0.8, tau: 0.07, harmonics: [[2, 0.25]] });
 
+// --- numberlink ---
+// Nonogram's pencil vocabulary for the strokes, with FreeCell's foundation
+// blip for a pair joining up.
+const numberlink = {};
+
+numberlink.draw = nonogram.fill;
+numberlink.connect = freecell.foundation;
+numberlink.erase = nonogram.erase;
+numberlink.error = nonogram.error;
+numberlink.hint = nonogram.hint;
+numberlink.button = nonogram.button;
+numberlink.win = nonogram.win;
+
 const games = [
 	["blockdrop", blockdrop],
 	["sokoban", sokoban],
@@ -346,6 +359,7 @@ const games = [
 	["freecell", freecell],
 	["klondike", klondike],
 	["spider", spider],
+	["numberlink", numberlink],
 ];
 const only = process.argv.slice(2);
 for (const [game, sounds] of games) {

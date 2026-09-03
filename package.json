@@ -34,6 +34,8 @@
     "build:klondike": "pnpm --filter klondike run build",
     "dev:spider": "pnpm --filter spider run dev",
     "build:spider": "pnpm --filter spider run build",
+    "dev:numberlink": "pnpm --filter numberlink run dev",
+    "build:numberlink": "pnpm --filter numberlink run build",
 
     "preview": "pnpm run build && node scripts/preview.mjs",
     "deploy": "pnpm run build && node scripts/deploy.mjs",

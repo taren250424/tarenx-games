@@ -348,6 +348,18 @@ numberlink.hint = nonogram.hint;
 numberlink.button = nonogram.button;
 numberlink.win = nonogram.win;
 
+// --- 24-game ---
+// Nonogram's ticks for picking cards and buttons, FreeCell's foundation blip
+// for two cards folding into one.
+const twentyFour = {};
+
+twentyFour.select = nonogram.button;
+twentyFour.merge = freecell.foundation;
+twentyFour.error = nonogram.error;
+twentyFour.hint = nonogram.hint;
+twentyFour.button = nonogram.button;
+twentyFour.win = nonogram.win;
+
 const games = [
 	["blockdrop", blockdrop],
 	["sokoban", sokoban],
@@ -360,6 +372,7 @@ const games = [
 	["klondike", klondike],
 	["spider", spider],
 	["numberlink", numberlink],
+	["24-game", twentyFour],
 ];
 const only = process.argv.slice(2);
 for (const [game, sounds] of games) {

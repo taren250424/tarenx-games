@@ -36,6 +36,8 @@
     "build:spider": "pnpm --filter spider run build",
     "dev:numberlink": "pnpm --filter numberlink run dev",
     "build:numberlink": "pnpm --filter numberlink run build",
+    "dev:24-game": "pnpm --filter 24-game run dev",
+    "build:24-game": "pnpm --filter 24-game run build",
 
     "preview": "pnpm run build && node scripts/preview.mjs",
     "deploy": "pnpm run build && node scripts/deploy.mjs",

@@ -1,0 +1,176 @@
+:root {
+	--card-w: clamp(64px, 17vmin, 104px);
+	--card-slot: #f1f5f9;
+	--hint: #3b82f6;
+	--hint-bg: #dbeafe;
+}
+
+/* --- table --- */
+.board-wrap {
+	position: relative;
+	width: 100%;
+	max-width: 520px;
+}
+
+#table {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 18px;
+	padding: 22px 16px;
+	border: 1px solid var(--line);
+	border-radius: var(--radius-lg);
+	background-color: var(--panel);
+	user-select: none;
+}
+
+#cards {
+	display: flex;
+	gap: 12px;
+}
+
+.card {
+	width: var(--card-w);
+	height: calc(var(--card-w) * 1.35);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: 10px;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+	color: var(--text);
+	font-family: inherit;
+	font-size: calc(var(--card-w) * 0.42);
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+	line-height: 1;
+	cursor: pointer;
+	transition:
+		transform 120ms ease,
+		border-color 120ms ease;
+}
+
+.card:hover:not(:disabled) {
+	border-color: var(--accent);
+}
+
+/* a focus ring must not read as the selected card, which has a solid edge */
+.card:focus-visible,
+#ops button:focus-visible {
+	outline: 2px dashed var(--muted);
+	outline-offset: 3px;
+}
+
+.card.selected {
+	border-color: var(--text);
+	box-shadow: 0 0 0 2px var(--text);
+	transform: translateY(-6px);
+}
+
+/* the slot a card has been merged out of: a quiet grey tray */
+.card.empty {
+	background-color: var(--card-slot);
+	border-color: transparent;
+	box-shadow: none;
+	cursor: default;
+}
+
+.card:disabled:not(.empty) {
+	cursor: default;
+}
+
+.card .frac {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-size: 0.68em;
+}
+
+.card .frac span:first-child {
+	border-bottom: 2px solid currentColor;
+	padding: 0 0.15em 0.08em;
+}
+
+.card .frac span:last-child {
+	padding-top: 0.08em;
+}
+
+.card.pop {
+	animation: pop 220ms ease-out;
+}
+
+@keyframes pop {
+	0% {
+		transform: scale(0.85);
+	}
+	60% {
+		transform: scale(1.06);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+#ops {
+	display: flex;
+	gap: 10px;
+}
+
+#ops button {
+	width: calc(var(--card-w) * 0.62);
+	height: calc(var(--card-w) * 0.62);
+	background-color: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	color: var(--text);
+	font-family: inherit;
+	font-size: calc(var(--card-w) * 0.3);
+	font-weight: 600;
+	cursor: pointer;
+}
+
+#ops button:hover {
+	border-color: var(--accent);
+}
+
+#ops button[aria-pressed="true"] {
+	background-color: var(--text);
+	border-color: var(--text);
+	color: var(--panel);
+}
+
+/* the hint: the two cards and the operator to use, lit together */
+.card.hint,
+#ops button.hint {
+	border-color: var(--hint);
+	background-color: var(--hint-bg);
+	box-shadow: 0 0 0 2px var(--hint);
+}
+
+#status {
+	min-height: 1.3em;
+	font-size: 0.9rem;
+	color: var(--muted);
+	text-align: center;
+}
+
+#trail {
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 6px 14px;
+	min-height: 1.3em;
+	font-size: 0.95rem;
+	font-variant-numeric: tabular-nums;
+	color: var(--muted);
+}
+
+#table.solved .card:not(.empty) {
+	border-color: var(--text);
+}
+
+#end-overlay p {
+	font-size: 1.05rem;
+}

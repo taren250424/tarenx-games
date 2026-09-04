@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#F8FAFC"/>
+  <g transform="translate(120, 190) scale(3.75)"><rect x="0.5" y="0.5" width="31" height="31" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/><rect x="6" y="6" width="20" height="20" rx="1.5" fill="none" stroke="#CBD5E1" stroke-width="1"/><path d="M11 6v20M16 6v20M21 6v20M6 11h20M6 16h20M6 21h20" stroke="#E2E8F0" stroke-width="1"/><path d="M8.5 8.5h10v10h5v5" fill="none" stroke="#334155" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 13.5v10h10" fill="none" stroke="#94A3B8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><g fill="#334155"><circle cx="8.5" cy="8.5" r="2.3"/><circle cx="23.5" cy="23.5" r="2.3"/></g><g fill="#94A3B8"><circle cx="8.5" cy="13.5" r="2.3"/><circle cx="18.5" cy="23.5" r="2.3"/></g></g>
+  <text x="300" y="270" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="76" font-weight="800" fill="#1E293B">Numberlink</text>
+  <text x="300" y="340" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="34" font-weight="400" fill="#64748B">Join the pairs. Fill the grid.</text>
+  <text x="300" y="470" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="26" font-weight="400" fill="#94A3B8">games.tarenx.com/numberlink</text>
+  <rect x="300" y="380" width="360" height="4" rx="2" fill="#E2E8F0"/>
+</svg>

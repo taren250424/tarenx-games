@@ -21,6 +21,7 @@
  * so the frequency and fill can be read off analytics.
  */
 
+import { h5 } from "./providers/h5.ts";
 import { none } from "./providers/none.ts";
 
 export type Placement = "next" | "pause" | "browse";
@@ -42,7 +43,7 @@ declare global {
 
 const MIN_INTERVAL_MS = 90_000;
 
-const provider: AdProvider = none;
+const provider: AdProvider = import.meta.env.DEV ? none : h5;
 
 let roundsEnded = 0;
 let lastShownAt = 0;

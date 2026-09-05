@@ -10,8 +10,12 @@
 }
 
 /* --- board --- */
+/* a 20×20 board outgrows a phone: the wrap scrolls it, and the page can be
+   pinch-zoomed with two fingers while one finger still paints */
 .board-wrap {
 	position: relative;
+	max-width: 100%;
+	overflow: auto;
 }
 
 /* while the win card is up, grow the wrap so the card sits below the finished
@@ -35,7 +39,7 @@
 		calc(var(--col-clue-slots) * var(--clue-slot) + 8px)
 		auto;
 	user-select: none;
-	touch-action: none;
+	touch-action: pinch-zoom;
 }
 
 #col-clues,

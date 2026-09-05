@@ -19,6 +19,12 @@
  *      tapped needs nothing more. Hover styles live under
  *      `@media (hover: hover)` so a tap never leaves one stuck, and tap
  *      targets grow to 44px under `@media (pointer: coarse)`.
+ *   5. Phones (`max-width: 640px`): the column reorders itself so the HUD
+ *      sits above the board, whatever the game is played with (toolbar,
+ *      numpad, keyboard, d-pad) sits right under it in thumb reach, and the
+ *      housekeeping controls (new game, size, sound) drop below that. A
+ *      square board sizes itself with `min(<desktop cap>, var(--board-max))`
+ *      so it shares the first screen with the HUD and one row of buttons.
  */
 
 * {
@@ -44,6 +50,11 @@
 
 	/* the game column between the two ad slots */
 	--column-max: 900px;
+
+	/* the largest square a board can be and still share the first screen of a
+	   phone with the HUD above it and one row of buttons below (12px gutters,
+	   ~180px of chrome) */
+	--board-max: min(100vw - 24px, 100dvh - 180px);
 }
 
 body {
@@ -79,6 +90,9 @@ select,
 }
 
 /* --- header --- */
+/* Every game shares it: brand on the left, and on the right the way back to
+   the hub plus the sound toggle (#sound-btn, which each game's script wires
+   up by id — it lives here so no controls row has to make room for it). */
 header {
 	display: flex;
 	align-items: center;
@@ -115,6 +129,34 @@ header {
 @media (hover: hover) {
 	.header-home:hover {
 		color: var(--text);
+	}
+}
+
+.header-actions {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.header-sound {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	background-color: var(--panel);
+	color: var(--text);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	font-size: 1.05rem;
+	font-family: inherit;
+	cursor: pointer;
+}
+
+@media (hover: hover) {
+	.header-sound:hover {
+		border-color: var(--accent);
 	}
 }
 
@@ -412,5 +454,51 @@ footer a {
 		display: inline-flex;
 		align-items: center;
 		min-height: 44px;
+	}
+
+	.header-sound {
+		width: 44px;
+		height: 44px;
+	}
+}
+
+/* --- phones --- */
+@media (max-width: 640px) {
+	header {
+		/* 6px around a 44px toggle = the 56px app bar phones are used to */
+		padding-top: calc(6px + env(safe-area-inset-top));
+		padding-bottom: 6px;
+		padding-left: calc(12px + env(safe-area-inset-left));
+		padding-right: calc(12px + env(safe-area-inset-right));
+	}
+
+	main {
+		padding: 12px 12px 40px;
+		padding-left: calc(12px + env(safe-area-inset-left));
+		padding-right: calc(12px + env(safe-area-inset-right));
+	}
+
+	main .game-column {
+		gap: 12px;
+	}
+
+	/* HUD, board, then the game's own input row; controls and the article
+	   after. Only direct children move, so a board nested in a game's own
+	   layout (blockdrop, passant) stays where that layout puts it. */
+	main .game-column > .hud {
+		order: -3;
+		gap: 8px 16px;
+	}
+
+	main .game-column > .board-wrap {
+		order: -2;
+	}
+
+	main .game-column > .controls {
+		order: 1;
+	}
+
+	main .game-column > article {
+		order: 2;
 	}
 }

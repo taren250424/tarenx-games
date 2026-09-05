@@ -60,7 +60,10 @@
 				<img class="header-logo" src="shared/minesweeper/logo.svg" alt="Minesweeper Logo" />
 				<span class="header-title">Minesweeper</span>
 			</div>
-			<a class="header-home" href="/">← All games</a>
+			<div class="header-actions">
+				<a class="header-home" href="/">← All games</a>
+				<button id="sound-btn" class="header-sound" title="Toggle sound"></button>
+			</div>
 		</header>
 
 		<main>
@@ -70,7 +73,6 @@
 				<select id="difficulty-select" aria-label="Select board size"></select>
 				<button id="new-btn" title="New game (R)">⟳ New Game</button>
 				<button id="flag-btn" title="Flag mode (F)" aria-pressed="false"><i data-icon="flag"></i> Flag</button>
-				<button id="sound-btn" title="Toggle sound"></button>
 			</div>
 
 			<div class="hud">

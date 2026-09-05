@@ -42,7 +42,7 @@
 #board {
 	--n: 4;
 	--gap: clamp(6px, 1.7vmin, 12px);
-	--board-px: min(460px, calc(100vw - 40px));
+	--board-px: min(460px, var(--board-max));
 	/* the 2px is the border, which the width includes */
 	--tile-size: calc((var(--board-px) - 2px - (var(--n) + 1) * var(--gap)) / var(--n));
 	position: relative;

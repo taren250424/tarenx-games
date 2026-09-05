@@ -66,11 +66,6 @@
 	background-color: var(--player);
 }
 
-/* --- win overlay --- */
-#win-overlay {
-	border-radius: 0;
-}
-
 /* --- d-pad (touch) --- */
 .dpad {
 	display: none;

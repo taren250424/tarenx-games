@@ -505,4 +505,13 @@ footer a {
 	.footer-more {
 		display: none;
 	}
+
+	.controls {
+		gap: 8px;
+	}
+
+	.controls select,
+	.controls button {
+		padding: 8px 12px;
+	}
 }

@@ -111,3 +111,9 @@
 #overlay.stuck h2 {
 	color: var(--red);
 }
+
+@media (max-width: 640px) {
+	#board {
+		--card-w: clamp(30px, min(7vw, 8.2vh), 78px);
+	}
+}

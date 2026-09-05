@@ -3,11 +3,13 @@ import "../../shared/theme/base.css";
 import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
+import { markPlayed } from "../../shared/progress/recent.ts";
 import { type Card, SUITS, isRed, orderedDeck, rank, suit } from "../../shared/cards/deck.ts";
 import { type SlotSpec, createTable } from "../../shared/cards/table.ts";
 import { DEAL_MAX, DEAL_MIN, IMPOSSIBLE_DEAL, clampDeal, deal, randomDeal } from "./deal.ts";
 
 mountIcons();
+markPlayed();
 
 const EMPTY = -1;
 const STORAGE_KEY = "tarenx.freecell.progress";

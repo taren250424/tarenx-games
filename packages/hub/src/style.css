@@ -74,6 +74,54 @@ main {
   padding-right: calc(16px + env(safe-area-inset-right));
 }
 
+/* --- recently played --- */
+.recent {
+  margin-bottom: 20px;
+}
+
+.recent h2 {
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+}
+
+.recent-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.recent-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 6px;
+  background-color: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: inherit;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.recent-card img {
+  width: 36px;
+  height: 36px;
+}
+
+@media (hover: hover) {
+  .recent-card:hover {
+    border-color: var(--text);
+  }
+}
+
 /* --- category chips --- */
 .chips {
   display: flex;
@@ -234,6 +282,27 @@ footer a {
   }
 
   .chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .recent {
+    margin-bottom: 12px;
+  }
+
+  .recent h2 {
+    text-align: left;
+  }
+
+  .recent-row {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    margin: 0 -12px;
+    padding: 2px 12px 8px;
+    scrollbar-width: none;
+  }
+
+  .recent-row::-webkit-scrollbar {
     display: none;
   }
 

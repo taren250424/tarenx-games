@@ -4,6 +4,7 @@ import "./style.css";
 import { Chess } from "chess.js";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
+import { markPlayed } from "../../shared/progress/recent.ts";
 import { pieceSprite } from "./pieces.ts";
 import { Board, type UserMove } from "./board.ts";
 import {
@@ -31,6 +32,7 @@ import {
 } from "./scoring.ts";
 
 mountIcons();
+markPlayed();
 
 type Mode = "quick" | "daily";
 

@@ -3,6 +3,7 @@ import "../../shared/theme/base.css";
 import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
+import { markPlayed } from "../../shared/progress/recent.ts";
 import { type Card, SUITS, orderedDeck, suit } from "../../shared/cards/deck.ts";
 import { type SlotSpec, createTable } from "../../shared/cards/table.ts";
 import { GAME_MAX, GAME_MIN, clampGame, randomGame, seedOf } from "./bank.ts";
@@ -29,6 +30,7 @@ import {
 } from "./rules.ts";
 
 mountIcons();
+markPlayed();
 
 const STORAGE_KEY = "tarenx.klondike.progress";
 const MAX_UNDO = 500;

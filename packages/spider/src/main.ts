@@ -3,6 +3,7 @@ import "../../shared/theme/base.css";
 import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
+import { markPlayed } from "../../shared/progress/recent.ts";
 import { type SlotSpec, createTable } from "../../shared/cards/table.ts";
 import { GAME_MIN, clampGame, gameMax, randomGame, seedOf } from "./bank.ts";
 import {
@@ -24,6 +25,7 @@ import {
 import { COLUMNS, DECK, type SuitCount, packOf } from "./shuffle.ts";
 
 mountIcons();
+markPlayed();
 
 const STORAGE_KEY = "tarenx.spider.progress";
 const MAX_UNDO = 500;

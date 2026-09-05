@@ -3,6 +3,7 @@ import "../../shared/theme/base.css";
 import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
+import { markPlayed } from "../../shared/progress/recent.ts";
 import { PUZZLES, type Difficulty } from "./puzzles.ts";
 import {
 	TARGET,
@@ -18,6 +19,7 @@ import {
 } from "./solve.ts";
 
 mountIcons();
+markPlayed();
 
 interface Session {
 	key: string; // "difficulty:index"

@@ -3,8 +3,10 @@ import "../../shared/theme/base.css";
 import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
+import { markPlayed } from "../../shared/progress/recent.ts";
 
 mountIcons();
+markPlayed();
 
 type Mark = "correct" | "present" | "absent";
 type Status = "playing" | "won" | "lost";

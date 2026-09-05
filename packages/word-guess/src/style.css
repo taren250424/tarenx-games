@@ -242,12 +242,6 @@ body.high-contrast {
 	color: var(--key-spent-fg);
 }
 
-/* --- end overlay --- */
-#end-overlay {
-	gap: 10px;
-	padding: 18px;
-	border-radius: 10px;
-}
 #end-word {
 	font-size: 1.6rem;
 	font-weight: 800;

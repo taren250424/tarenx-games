@@ -76,20 +76,13 @@ button.panel {
 	cursor: pointer;
 }
 
-/* drop under one thumb, left / rotate / right under the other, a small pause
-   between them */
+/* rotate, drop and pause under one thumb, left and right under the other */
 .touch-controls {
 	display: none;
-	grid-template-columns: 1.3fr 44px 1fr 1fr 1fr;
+	grid-template-columns: repeat(5, 1fr);
 	gap: 8px;
 	width: 100%;
 	max-width: 360px;
-}
-
-.touch-controls .pause {
-	height: 44px;
-	align-self: center;
-	font-size: 0.9rem;
 }
 
 .touch-controls button {

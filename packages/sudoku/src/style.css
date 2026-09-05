@@ -152,8 +152,3 @@
 	min-height: 0.65rem;
 	font-variant-numeric: tabular-nums;
 }
-
-/* --- win overlay --- */
-#win-overlay {
-	border-radius: 6px;
-}

@@ -178,3 +178,10 @@
 #end-overlay p {
 	font-size: 1.05rem;
 }
+
+@media (pointer: coarse) {
+	#ops button {
+		min-width: 44px;
+		min-height: 44px;
+	}
+}

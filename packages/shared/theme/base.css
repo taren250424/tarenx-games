@@ -501,4 +501,8 @@ footer a {
 	main .game-column > article {
 		order: 2;
 	}
+
+	.footer-more {
+		display: none;
+	}
 }

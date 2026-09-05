@@ -98,15 +98,6 @@
 }
 
 /* --- overlay --- */
-#overlay {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	/* absolute positioning would size the card to the half of the table right of
-	   its centre and wrap the buttons; it should be as wide as they need */
-	width: max-content;
-}
 
 #overlay.stuck h2 {
 	color: var(--red);

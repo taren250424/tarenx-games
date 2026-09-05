@@ -1,5 +1,5 @@
 :root {
-	--cell: clamp(32px, 9.6vmin, 52px);
+	--cell: clamp(32px, calc(var(--board-max) / 9.4), 52px);
 	/* the player's own digits, and the numpad that enters them */
 	--entry: #4338ca;
 	--grid-line: #cbd5e1;

@@ -14,6 +14,7 @@ when you mean to change what the game ships.
 - `packages/passant` — chess positions, built with a local Stockfish
 - `packages/word-guess` — word lists, built from a cached dictionary download
 - `packages/klondike` — the bank of Klondike games proved winnable; see below
+- `packages/hub/public/icons` — the app icons, rendered from `packages/shared/hub/logo.svg` by `pnpm icons`
 - `packages/spider` — the same idea per suit count; see below
 
 ### Extending the Klondike bank

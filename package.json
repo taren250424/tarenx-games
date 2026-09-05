@@ -7,9 +7,7 @@
   "scripts": {
     "dev": "pnpm -r run dev",
     "build": "pnpm -r run build && pnpm run sitemap",
-
     "lint": "pnpm -r run lint",
-
     "dev:hub": "pnpm --filter hub run dev",
     "build:hub": "pnpm --filter hub run build",
     "dev:sokoban": "pnpm --filter sokoban run dev",
@@ -38,14 +36,15 @@
     "build:numberlink": "pnpm --filter numberlink run build",
     "dev:24-game": "pnpm --filter 24-game run dev",
     "build:24-game": "pnpm --filter 24-game run build",
-
     "preview": "pnpm run build && node scripts/preview.mjs",
     "deploy": "pnpm run build && node scripts/deploy.mjs",
-    "sitemap": "node scripts/sitemap.mjs"
+    "sitemap": "node scripts/sitemap.mjs",
+    "icons": "node scripts/gen-icons.mjs"
   },
   "packageManager": "pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@resvg/resvg-js": "^2.6.2",
     "@types/node": "^25.9.1",
     "eslint": "^10.4.0",
     "gh-pages": "^6.3.0",

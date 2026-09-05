@@ -424,26 +424,30 @@ document.addEventListener("keydown", (e) => {
 	}
 });
 
-let touchStart: { x: number; y: number } | null = null;
+let swipeStart: { x: number; y: number } | null = null;
 
-boardEl.addEventListener(
-	"touchstart",
-	(e) => {
-		if (e.touches.length !== 1) return;
-		touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-	},
-	{ passive: true }
-);
+boardEl.addEventListener("pointerdown", (e) => {
+	if (e.pointerType === "mouse") return;
+	try {
+		boardEl.setPointerCapture(e.pointerId);
+	} catch {
+		// a pointer that is already gone has nothing to capture
+	}
+	swipeStart = { x: e.clientX, y: e.clientY };
+});
 
-boardEl.addEventListener("touchend", (e) => {
-	if (!touchStart) return;
-	const t = e.changedTouches[0];
-	const dx = t.clientX - touchStart.x;
-	const dy = t.clientY - touchStart.y;
-	touchStart = null;
+boardEl.addEventListener("pointerup", (e) => {
+	if (!swipeStart) return;
+	const dx = e.clientX - swipeStart.x;
+	const dy = e.clientY - swipeStart.y;
+	swipeStart = null;
 	// short flicks are taps, not swipes
-	if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+	if (Math.max(Math.abs(dx), Math.abs(dy)) < 20) return;
 	move(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : dy > 0 ? "down" : "up");
+});
+
+boardEl.addEventListener("pointercancel", () => {
+	swipeStart = null;
 });
 
 newBtn.addEventListener("click", () => newGame());

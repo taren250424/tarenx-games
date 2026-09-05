@@ -24,12 +24,6 @@
 	position: relative;
 }
 
-/* while the win card is up, grow the wrap so the card sits below the finished
-   board instead of covering the lines the player just drew */
-.board-wrap:has(#win-overlay:not(.hidden)) {
-	padding-bottom: 62px;
-}
-
 #board {
 	/* the whole board scales off one cell size, which shrinks as the grid grows */
 	--cell: clamp(28px, calc(var(--board-max) / (var(--size) + 0.5)), 60px);
@@ -159,28 +153,3 @@
 }
 
 /* --- win overlay --- */
-/* A card below the grid rather than a curtain over it: the finished board is
-   the reward, so nothing covers it. */
-#win-overlay {
-	position: absolute;
-	left: 50%;
-	bottom: 0;
-	transform: translateX(-50%);
-	flex-direction: row;
-	gap: 14px;
-	padding: 12px 18px;
-	white-space: nowrap;
-}
-
-#win-overlay h2 {
-	font-size: 1.1rem;
-}
-
-#win-overlay p {
-	font-size: 0.9rem;
-}
-
-#win-overlay button {
-	padding: 8px 16px;
-	font-size: 0.9rem;
-}

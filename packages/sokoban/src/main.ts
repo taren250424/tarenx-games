@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { ads } from "../../shared/ads/ads.ts";
 import { COLLECTIONS } from "./levels.ts";
 
 mountIcons();
@@ -94,6 +95,7 @@ const progress = loadProgress();
 
 // --- audio ---
 const play = createSfx(["bump", "goal", "clear"] as const, () => progress.settings.sound);
+ads.init({ sound: () => progress.settings.sound });
 
 function updateSoundBtn() {
 	setSoundIcon(soundBtn, progress.settings.sound);
@@ -265,8 +267,9 @@ function nextPosition(): [number, number] {
 	return [(colIndex + 1) % COLLECTIONS.length, 0];
 }
 
-function nextLevel() {
+async function nextLevel() {
 	const [nc, nl] = nextPosition();
+	await ads.interstitial("next", "sokoban-next");
 	loadLevel(nc, nl);
 }
 
@@ -284,7 +287,7 @@ document.addEventListener("keydown", (e) => {
 	};
 	if (!overlayEl.classList.contains("hidden") && (e.key === "Enter" || e.key === " ")) {
 		e.preventDefault();
-		nextLevel();
+		void nextLevel();
 		return;
 	}
 	const dir = keyMap[e.key];
@@ -323,7 +326,7 @@ boardEl.addEventListener("touchend", (e) => {
 // buttons
 (document.getElementById("undo-btn") as HTMLButtonElement).addEventListener("click", undo);
 (document.getElementById("restart-btn") as HTMLButtonElement).addEventListener("click", restart);
-nextBtn.addEventListener("click", nextLevel);
+nextBtn.addEventListener("click", () => void nextLevel());
 
 for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-dir]")) {
 	btn.addEventListener("click", () => move(btn.dataset.dir as Dir));

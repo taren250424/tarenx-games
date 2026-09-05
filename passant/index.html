@@ -21,6 +21,7 @@
 			async
 			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6810007868749586"
 			crossorigin="anonymous"
+			data-ad-frequency-hint="120s"
 		></script>
 
 		<meta charset="UTF-8" />
@@ -29,8 +30,14 @@
 			content="Play Passant free in your browser: you get a fresh chess position, you make one move, and it is graded instantly against the engine's best. Quick play or the daily ten."
 		/>
 
+		<meta name="hub:category" content="board" />
+		<meta name="hub:tagline" content="One chess move, graded by the engine" />
+
 		<link rel="canonical" href="https://games.tarenx.com/passant/" />
 		<link rel="icon" type="image/svg+xml" href="shared/passant/favicon.svg" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+		<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+		<meta name="theme-color" content="#f8fafc" />
 
 		<meta property="og:title" content="Passant" />
 		<meta
@@ -39,10 +46,10 @@
 		/>
 		<meta property="og:image" content="shared/passant/og.svg" />
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 		<title>Passant</title>
-		<script type="module" crossorigin src="/passant/assets/index-C3YQOXow.js"></script>
-		<link rel="stylesheet" crossorigin href="/passant/assets/index-D4DM0Vmp.css">
+		<script type="module" crossorigin src="/passant/assets/index-BJFB7TyP.js"></script>
+		<link rel="stylesheet" crossorigin href="/passant/assets/index-B5vcwC5E.css">
 	</head>
 
 	<body>
@@ -62,7 +69,10 @@
 				<img class="header-logo" src="shared/passant/logo.svg" alt="Passant Logo" />
 				<span class="header-title">Passant</span>
 			</div>
-			<a class="header-home" href="/">← All games</a>
+			<div class="header-actions">
+				<a class="header-home" href="/">← All games</a>
+				<button id="sound-btn" class="header-sound" title="Toggle sound"></button>
+			</div>
 		</header>
 
 		<main>
@@ -75,7 +85,6 @@
 				</div>
 				<select id="difficulty-select" aria-label="Select difficulty"></select>
 				<button id="stats-btn" title="Your statistics"><i data-icon="chart"></i> Stats</button>
-				<button id="sound-btn" title="Toggle sound"></button>
 			</div>
 
 			<div class="hud">
@@ -211,8 +220,9 @@
 
 		<footer>
 			<p>
-				Part of <a href="/">Tarenx Games</a> · free browser games, no install,
-				no sign-up · <a href="/privacy/">Privacy</a>
+				Part of <a href="/">Tarenx Games</a>
+				<span class="footer-more">· free browser games, no install, no sign-up</span>
+				· <a href="/privacy/">Privacy</a>
 			</p>
 		</footer>
 

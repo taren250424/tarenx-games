@@ -21,6 +21,7 @@
 			async
 			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6810007868749586"
 			crossorigin="anonymous"
+			data-ad-frequency-hint="120s"
 		></script>
 
 		<meta charset="UTF-8" />
@@ -29,8 +30,14 @@
 			content="Free word guessing game — play as many rounds as you like, no daily limit. Pick 4, 5, or 6 letters, use the colour clues, and find the hidden word. Hard mode and colour-blind mode included."
 		/>
 
+		<meta name="hub:category" content="words" />
+		<meta name="hub:tagline" content="Find the hidden word from colour clues" />
+
 		<link rel="canonical" href="https://games.tarenx.com/word-guess/" />
 		<link rel="icon" type="image/svg+xml" href="shared/word-guess/favicon.svg" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+		<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+		<meta name="theme-color" content="#f8fafc" />
 
 		<meta property="og:title" content="Word Guess" />
 		<meta
@@ -39,10 +46,10 @@
 		/>
 		<meta property="og:image" content="shared/word-guess/og.svg" />
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 		<title>Word Guess</title>
-		<script type="module" crossorigin src="/word-guess/assets/index-Cc265DYX.js"></script>
-		<link rel="stylesheet" crossorigin href="/word-guess/assets/index-IV-dTd9e.css">
+		<script type="module" crossorigin src="/word-guess/assets/index-iiNnO4xA.js"></script>
+		<link rel="stylesheet" crossorigin href="/word-guess/assets/index-D-q8o4Rz.css">
 	</head>
 
 	<body>
@@ -62,7 +69,10 @@
 				<img class="header-logo" src="shared/word-guess/logo.svg" alt="Word Guess Logo" />
 				<span class="header-title">Word Guess</span>
 			</div>
-			<a class="header-home" href="/">← All games</a>
+			<div class="header-actions">
+				<a class="header-home" href="/">← All games</a>
+				<button id="sound-btn" class="header-sound" title="Toggle sound"></button>
+			</div>
 		</header>
 
 		<main>
@@ -73,7 +83,6 @@
 				<button id="new-btn" title="New word">⟳ New Word</button>
 				<button id="hard-btn" title="Hard mode: revealed clues must be reused" aria-pressed="false">Hard</button>
 				<button id="contrast-btn" title="Colour-blind friendly colours" aria-pressed="false"><i data-icon="eye"></i> Colours</button>
-				<button id="sound-btn" title="Toggle sound"></button>
 			</div>
 
 			<div class="hud">
@@ -85,7 +94,7 @@
 			<div class="board-wrap">
 				<div id="board" aria-label="Guess board"></div>
 				<div id="toast" role="status"></div>
-				<div id="end-overlay" class="overlay-veil hidden">
+				<div id="end-overlay" class="result hidden">
 					<h2 id="end-title">Got it!</h2>
 					<p id="end-word"></p>
 					<div id="end-stats"></div>
@@ -197,8 +206,9 @@
 
 		<footer>
 			<p>
-				Part of <a href="/">Tarenx Games</a> · free browser games, no install,
-				no sign-up · <a href="/privacy/">Privacy</a>
+				Part of <a href="/">Tarenx Games</a>
+				<span class="footer-more">· free browser games, no install, no sign-up</span>
+				· <a href="/privacy/">Privacy</a>
 			</p>
 		</footer>
 

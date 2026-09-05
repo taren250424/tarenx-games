@@ -21,6 +21,7 @@
 			async
 			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6810007868749586"
 			crossorigin="anonymous"
+			data-ad-frequency-hint="120s"
 		></script>
 
 		<meta charset="UTF-8" />
@@ -29,8 +30,14 @@
 			content="Play Klondike Solitaire free in your browser — the classic Windows card game. Every game here has been solved by machine first, so the one you are dealt can always be won. Draw one or draw three, unlimited undo."
 		/>
 
+		<meta name="hub:category" content="cards" />
+		<meta name="hub:tagline" content="Classic solitaire, every deal winnable" />
+
 		<link rel="canonical" href="https://games.tarenx.com/klondike/" />
 		<link rel="icon" type="image/svg+xml" href="shared/klondike/favicon.svg" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+		<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+		<meta name="theme-color" content="#f8fafc" />
 
 		<meta property="og:title" content="Klondike Solitaire" />
 		<meta
@@ -39,10 +46,10 @@
 		/>
 		<meta property="og:image" content="shared/klondike/og.svg" />
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 		<title>Klondike Solitaire</title>
-		<script type="module" crossorigin src="/klondike/assets/index-CDFX8yy2.js"></script>
-		<link rel="stylesheet" crossorigin href="/klondike/assets/index-D7Ndz50q.css">
+		<script type="module" crossorigin src="/klondike/assets/index-DfNUD_fA.js"></script>
+		<link rel="stylesheet" crossorigin href="/klondike/assets/index-B0ZfpPed.css">
 	</head>
 
 	<body>
@@ -62,7 +69,10 @@
 				<img class="header-logo" src="shared/klondike/logo.svg" alt="Klondike Solitaire Logo" />
 				<span class="header-title">Klondike Solitaire</span>
 			</div>
-			<a class="header-home" href="/">← All games</a>
+			<div class="header-actions">
+				<a class="header-home" href="/">← All games</a>
+				<button id="sound-btn" class="header-sound" title="Toggle sound"></button>
+			</div>
 		</header>
 
 		<main>
@@ -84,7 +94,6 @@
 					<label class="check-label" title="Send cards to the foundations as soon as they cannot be needed">
 						<input type="checkbox" id="auto-check" checked /> Auto-play
 					</label>
-					<button id="sound-btn" title="Toggle sound"></button>
 				</div>
 
 				<div class="hud">
@@ -96,7 +105,7 @@
 
 				<div class="board-wrap">
 					<div id="board" aria-label="Klondike table"></div>
-					<div id="overlay" class="overlay-card hidden">
+					<div id="overlay" class="result hidden">
 						<h2 id="overlay-title">Solved!</h2>
 						<p id="overlay-stats"></p>
 						<div class="overlay-buttons">
@@ -231,8 +240,9 @@
 
 		<footer>
 			<p>
-				Part of <a href="/">Tarenx Games</a> · free browser games, no install,
-				no sign-up · <a href="/privacy/">Privacy</a>
+				Part of <a href="/">Tarenx Games</a>
+				<span class="footer-more">· free browser games, no install, no sign-up</span>
+				· <a href="/privacy/">Privacy</a>
 			</p>
 		</footer>
 

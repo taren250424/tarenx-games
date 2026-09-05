@@ -21,6 +21,7 @@
 			async
 			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6810007868749586"
 			crossorigin="anonymous"
+			data-ad-frequency-hint="120s"
 		></script>
 
 		<meta charset="UTF-8" />
@@ -29,8 +30,14 @@
 			content="Play Block Drop free in your browser — stack falling blocks, clear lines, and chase your high score. Ghost piece, hold queue, and 7-bag randomizer included."
 		/>
 
+		<meta name="hub:category" content="arcade" />
+		<meta name="hub:tagline" content="Stack falling blocks and clear lines" />
+
 		<link rel="canonical" href="https://games.tarenx.com/blockdrop/" />
 		<link rel="icon" type="image/svg+xml" href="shared/blockdrop/favicon.svg" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+		<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+		<meta name="theme-color" content="#f8fafc" />
 
 		<meta property="og:title" content="Block Drop" />
 		<meta
@@ -39,10 +46,10 @@
 		/>
 		<meta property="og:image" content="shared/blockdrop/og.svg" />
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 		<title>Block Drop</title>
-		<script type="module" crossorigin src="/blockdrop/assets/index-rcI6_tdq.js"></script>
-		<link rel="stylesheet" crossorigin href="/blockdrop/assets/index-CM32YrN9.css">
+		<script type="module" crossorigin src="/blockdrop/assets/index-ky5tlZ7s.js"></script>
+		<link rel="stylesheet" crossorigin href="/blockdrop/assets/index-BuZ74uon.css">
 	</head>
 
 	<body>
@@ -62,7 +69,10 @@
 				<img class="header-logo" src="shared/blockdrop/logo.svg" alt="Block Drop Logo" />
 				<span class="header-title">Block Drop</span>
 			</div>
-			<a class="header-home" href="/">← All games</a>
+			<div class="header-actions">
+				<a class="header-home" href="/">← All games</a>
+				<button id="sound-btn" class="header-sound" title="Toggle sound"></button>
+			</div>
 		</header>
 
 		<main>
@@ -70,10 +80,10 @@
 			<section class="game-column">
 			<div class="game-layout">
 				<div class="side-panel">
-					<div class="panel">
+					<button class="panel" data-action="hold" title="Hold the current piece (C)">
 						<h3>Hold</h3>
 						<canvas id="hold"></canvas>
-					</div>
+					</button>
 					<div class="panel">
 						<h3>Score</h3>
 						<strong id="score">0</strong>
@@ -86,7 +96,7 @@
 
 				<div class="board-wrap">
 					<canvas id="game"></canvas>
-					<div id="overlay" class="overlay-veil">
+					<div id="overlay" class="result">
 						<h2 id="overlay-title">Block Drop</h2>
 						<p id="overlay-text">Press Enter or tap to start</p>
 					</div>
@@ -105,17 +115,15 @@
 						<h3>Level</h3>
 						<strong id="level">1</strong>
 					</div>
-					<button id="sound-btn" class="panel" title="Toggle sound"></button>
 				</div>
 			</div>
 
 			<div class="touch-controls" aria-label="Touch controls">
+				<button data-action="rotate" aria-label="Rotate">⟳</button>
+				<button data-action="drop" aria-label="Hard drop">⤓</button>
+				<button data-action="pause" aria-label="Pause">⏸</button>
 				<button data-action="left" aria-label="Move left">◀</button>
 				<button data-action="right" aria-label="Move right">▶</button>
-				<button data-action="rotate" aria-label="Rotate">⟳</button>
-				<button data-action="down" aria-label="Soft drop">▼</button>
-				<button data-action="drop" aria-label="Hard drop">⤓</button>
-				<button data-action="hold" aria-label="Hold">H</button>
 			</div>
 
 			<article>
@@ -140,7 +148,7 @@
 						<li><kbd>Space</kbd> — hard drop (+2 points per cell)</li>
 						<li><kbd>C</kbd> or <kbd>Shift</kbd> — hold the current piece</li>
 						<li><kbd>P</kbd> — pause · <kbd>R</kbd> — restart</li>
-						<li>On touch screens: use the on-screen buttons below the well</li>
+						<li>On a touch screen: drag sideways to move, tap to rotate, drag down to soft drop, flick down to hard drop, swipe up to hold. The buttons under the well are rotate, hard drop and pause on the left and left / right on the right; tapping the Hold panel holds</li>
 					</ul>
 				</section>
 
@@ -189,8 +197,9 @@
 
 		<footer>
 			<p>
-				Part of <a href="/">Tarenx Games</a> · free browser games, no install,
-				no sign-up · <a href="/privacy/">Privacy</a>
+				Part of <a href="/">Tarenx Games</a>
+				<span class="footer-more">· free browser games, no install, no sign-up</span>
+				· <a href="/privacy/">Privacy</a>
 			</p>
 		</footer>
 

@@ -21,6 +21,7 @@
 			async
 			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6810007868749586"
 			crossorigin="anonymous"
+			data-ad-frequency-hint="120s"
 		></script>
 
 		<meta charset="UTF-8" />
@@ -29,8 +30,14 @@
 			content="Play Nonogram — also known as Picross or Griddler — free in your browser. 750 picture puzzles in 10×10, 15×15 and 20×20, every one solvable by pure logic with no guessing."
 		/>
 
+		<meta name="hub:category" content="puzzle" />
+		<meta name="hub:tagline" content="Picture puzzles solved by pure logic" />
+
 		<link rel="canonical" href="https://games.tarenx.com/nonogram/" />
 		<link rel="icon" type="image/svg+xml" href="shared/nonogram/favicon.svg" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+		<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+		<meta name="theme-color" content="#f8fafc" />
 
 		<meta property="og:title" content="Nonogram" />
 		<meta
@@ -39,10 +46,10 @@
 		/>
 		<meta property="og:image" content="shared/nonogram/og.svg" />
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 		<title>Nonogram</title>
-		<script type="module" crossorigin src="/nonogram/assets/index-CvwEIdHa.js"></script>
-		<link rel="stylesheet" crossorigin href="/nonogram/assets/index-B966wHre.css">
+		<script type="module" crossorigin src="/nonogram/assets/index-ZEwZmtb5.js"></script>
+		<link rel="stylesheet" crossorigin href="/nonogram/assets/index-CKMnDmRM.css">
 	</head>
 
 	<body>
@@ -62,7 +69,10 @@
 				<img class="header-logo" src="shared/nonogram/logo.svg" alt="Nonogram Logo" />
 				<span class="header-title">Nonogram</span>
 			</div>
-			<a class="header-home" href="/">← All games</a>
+			<div class="header-actions">
+				<a class="header-home" href="/">← All games</a>
+				<button id="sound-btn" class="header-sound" title="Toggle sound"></button>
+			</div>
 		</header>
 
 		<main>
@@ -75,7 +85,6 @@
 				<label class="check-label" title="Highlight squares filled in by mistake">
 					<input type="checkbox" id="mistakes-check" checked /> Show mistakes
 				</label>
-				<button id="sound-btn" title="Toggle sound"></button>
 			</div>
 
 			<div class="hud">
@@ -91,7 +100,7 @@
 					<div id="row-clues" aria-hidden="true"></div>
 					<div id="cells"></div>
 				</div>
-				<div id="win-overlay" class="overlay-card hidden">
+				<div id="win-overlay" class="result hidden">
 					<h2>Solved!</h2>
 					<p id="win-stats"></p>
 					<button id="next-btn" class="primary">Next Puzzle →</button>
@@ -128,6 +137,7 @@
 					<ul>
 						<li><strong>Left-click / drag</strong> — fill squares (drag locks to a row or column)</li>
 						<li><strong>Right-click / drag</strong> — cross out squares you have ruled out</li>
+						<li>On a touch screen: drag to paint with the mode chosen in the toolbar, and pinch with two fingers to zoom into a large board</li>
 						<li><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> — move the cursor</li>
 						<li><kbd>Space</kbd> or <kbd>F</kbd> — fill the square under the cursor</li>
 						<li><kbd>X</kbd> or <kbd>Delete</kbd> — cross out the square under the cursor</li>
@@ -196,8 +206,9 @@
 
 		<footer>
 			<p>
-				Part of <a href="/">Tarenx Games</a> · free browser games, no install,
-				no sign-up · <a href="/privacy/">Privacy</a>
+				Part of <a href="/">Tarenx Games</a>
+				<span class="footer-more">· free browser games, no install, no sign-up</span>
+				· <a href="/privacy/">Privacy</a>
 			</p>
 		</footer>
 

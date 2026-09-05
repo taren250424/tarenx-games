@@ -21,6 +21,7 @@
 			async
 			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6810007868749586"
 			crossorigin="anonymous"
+			data-ad-frequency-hint="120s"
 		></script>
 
 		<meta charset="UTF-8" />
@@ -29,8 +30,14 @@
 			content="Play FreeCell solitaire free in your browser. All 32,000 classic Microsoft deals by number, drag or click to move, unlimited undo — and every deal but one can be won."
 		/>
 
+		<meta name="hub:category" content="cards" />
+		<meta name="hub:tagline" content="FreeCell with all 32,000 classic deals" />
+
 		<link rel="canonical" href="https://games.tarenx.com/freecell/" />
 		<link rel="icon" type="image/svg+xml" href="shared/freecell/favicon.svg" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+		<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+		<meta name="theme-color" content="#f8fafc" />
 
 		<meta property="og:title" content="FreeCell Solitaire" />
 		<meta
@@ -39,10 +46,10 @@
 		/>
 		<meta property="og:image" content="shared/freecell/og.svg" />
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 		<title>FreeCell Solitaire</title>
-		<script type="module" crossorigin src="/freecell/assets/index-BURI9XW3.js"></script>
-		<link rel="stylesheet" crossorigin href="/freecell/assets/index-rT-PsQQ6.css">
+		<script type="module" crossorigin src="/freecell/assets/index-CbogF9Li.js"></script>
+		<link rel="stylesheet" crossorigin href="/freecell/assets/index-Bw2z1zK5.css">
 	</head>
 
 	<body>
@@ -62,7 +69,10 @@
 				<img class="header-logo" src="shared/freecell/logo.svg" alt="FreeCell Solitaire Logo" />
 				<span class="header-title">FreeCell Solitaire</span>
 			</div>
-			<a class="header-home" href="/">← All games</a>
+			<div class="header-actions">
+				<a class="header-home" href="/">← All games</a>
+				<button id="sound-btn" class="header-sound" title="Toggle sound"></button>
+			</div>
 		</header>
 
 		<main>
@@ -80,7 +90,6 @@
 					<label class="check-label" title="Send cards to the foundations as soon as they cannot be needed">
 						<input type="checkbox" id="auto-check" checked /> Auto-play
 					</label>
-					<button id="sound-btn" title="Toggle sound"></button>
 				</div>
 
 				<div class="hud">
@@ -94,7 +103,7 @@
 
 				<div class="board-wrap">
 					<div id="board" aria-label="FreeCell table"></div>
-					<div id="overlay" class="overlay-card hidden">
+					<div id="overlay" class="result hidden">
 						<h2 id="overlay-title">Solved!</h2>
 						<p id="overlay-stats"></p>
 						<div class="overlay-buttons">
@@ -219,8 +228,9 @@
 
 		<footer>
 			<p>
-				Part of <a href="/">Tarenx Games</a> · free browser games, no install,
-				no sign-up · <a href="/privacy/">Privacy</a>
+				Part of <a href="/">Tarenx Games</a>
+				<span class="footer-more">· free browser games, no install, no sign-up</span>
+				· <a href="/privacy/">Privacy</a>
 			</p>
 		</footer>
 

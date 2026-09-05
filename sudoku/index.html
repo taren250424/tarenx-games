@@ -21,6 +21,7 @@
 			async
 			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6810007868749586"
 			crossorigin="anonymous"
+			data-ad-frequency-hint="120s"
 		></script>
 
 		<meta charset="UTF-8" />
@@ -29,8 +30,14 @@
 			content="Play Sudoku free in your browser. 300 handpicked puzzles across three difficulties — every one solvable by pure logic, with notes, hints, and unlimited undo."
 		/>
 
+		<meta name="hub:category" content="puzzle" />
+		<meta name="hub:tagline" content="300 handpicked puzzles, pure logic" />
+
 		<link rel="canonical" href="https://games.tarenx.com/sudoku/" />
 		<link rel="icon" type="image/svg+xml" href="shared/sudoku/favicon.svg" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+		<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+		<meta name="theme-color" content="#f8fafc" />
 
 		<meta property="og:title" content="Sudoku" />
 		<meta
@@ -39,10 +46,10 @@
 		/>
 		<meta property="og:image" content="shared/sudoku/og.svg" />
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 		<title>Sudoku</title>
-		<script type="module" crossorigin src="/sudoku/assets/index-DHAOBXvp.js"></script>
-		<link rel="stylesheet" crossorigin href="/sudoku/assets/index-DujDGIr2.css">
+		<script type="module" crossorigin src="/sudoku/assets/index-BS7qUKJj.js"></script>
+		<link rel="stylesheet" crossorigin href="/sudoku/assets/index-Q7pW35Rk.css">
 	</head>
 
 	<body>
@@ -62,7 +69,10 @@
 				<img class="header-logo" src="shared/sudoku/logo.svg" alt="Sudoku Logo" />
 				<span class="header-title">Sudoku</span>
 			</div>
-			<a class="header-home" href="/">← All games</a>
+			<div class="header-actions">
+				<a class="header-home" href="/">← All games</a>
+				<button id="sound-btn" class="header-sound" title="Toggle sound"></button>
+			</div>
 		</header>
 
 		<main>
@@ -74,7 +84,6 @@
 				<label class="check-label" title="Highlight digits that don't match the solution">
 					<input type="checkbox" id="mistakes-check" checked /> Show mistakes
 				</label>
-				<button id="sound-btn" title="Toggle sound"></button>
 			</div>
 
 			<div class="hud">
@@ -85,7 +94,7 @@
 
 			<div class="board-wrap">
 				<div id="board" aria-label="Sudoku board"></div>
-				<div id="win-overlay" class="overlay-veil hidden">
+				<div id="win-overlay" class="result hidden">
 					<h2>Puzzle Complete!</h2>
 					<p id="win-stats"></p>
 					<button id="next-btn" class="primary">Next Puzzle →</button>
@@ -179,8 +188,9 @@
 
 		<footer>
 			<p>
-				Part of <a href="/">Tarenx Games</a> · free browser games, no install,
-				no sign-up · <a href="/privacy/">Privacy</a>
+				Part of <a href="/">Tarenx Games</a>
+				<span class="footer-more">· free browser games, no install, no sign-up</span>
+				· <a href="/privacy/">Privacy</a>
 			</p>
 		</footer>
 

@@ -8,10 +8,25 @@
  *      style.css: `import "../../shared/theme/base.css";`
  *   2. A game redefines the tokens it wants on its own `:root` — usually only
  *      `--accent` and `--accent-strong`.
- *   3. End-of-game surfaces: `.overlay-veil` covers the board (a frosted
- *      curtain), `.overlay-card` floats a card over or beside it. Inside
- *      either, `button.primary` is the one action the player most likely
- *      wants next; the rest stay quiet.
+ *   3. End of a round: one `.result` sheet for every game. It rises from the
+ *      bottom of the screen, leaves the finished board in view, and covers
+ *      whatever sat under the board — numpad, keyboard, controls — which the
+ *      player is done with. Its size never depends on the board's. Inside it,
+ *      `button.primary` is the one action the player most likely wants next;
+ *      the rest stay quiet.
+ *   4. Touch: `.board-wrap` is the play surface every game wraps its board
+ *      in, and it carries the touch defaults — no text selection, no
+ *      long-press callout, no double-tap zoom. A board that is dragged or
+ *      swiped sets `touch-action: none` on itself; a board that is only
+ *      tapped needs nothing more. Hover styles live under
+ *      `@media (hover: hover)` so a tap never leaves one stuck, and tap
+ *      targets grow to 44px under `@media (pointer: coarse)`.
+ *   5. Phones (`max-width: 640px`): the column reorders itself so the HUD
+ *      sits above the board, whatever the game is played with (toolbar,
+ *      numpad, keyboard, d-pad) sits right under it in thumb reach, and the
+ *      housekeeping controls (new game, size, sound) drop below that. A
+ *      square board sizes itself with `min(<desktop cap>, var(--board-max))`
+ *      so it shares the first screen with the HUD and one row of buttons.
  */
 
 * {
@@ -32,11 +47,14 @@
 	--radius: 8px;
 	--radius-lg: 12px;
 	--shadow-card: 0 12px 32px rgba(15, 23, 42, 0.12);
-	/* frosted curtain over a finished board */
-	--veil: rgba(248, 250, 252, 0.9);
 
 	/* the game column between the two ad slots */
 	--column-max: 900px;
+
+	/* the largest square a board can be and still share the first screen of a
+	   phone with the HUD above it and one row of buttons below (12px gutters,
+	   ~180px of chrome) */
+	--board-max: min(100vw - 24px, 100dvh - 180px);
 }
 
 body {
@@ -44,6 +62,27 @@ body {
 	background-color: var(--bg);
 	color: var(--text);
 	min-height: 100vh;
+	/* the height that is actually visible on a phone, browser bar and all */
+	min-height: 100dvh;
+	/* a pull at the top edge of a board must not reload the page */
+	overscroll-behavior-y: contain;
+	-webkit-tap-highlight-color: transparent;
+}
+
+/* a tap acts at once: no double-tap zoom, so no 300ms wait for a second tap */
+a,
+button,
+select,
+[role="button"] {
+	touch-action: manipulation;
+}
+
+/* --- play surface --- */
+.board-wrap {
+	touch-action: manipulation;
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
 }
 
 .hidden {
@@ -51,11 +90,17 @@ body {
 }
 
 /* --- header --- */
+/* Every game shares it: brand on the left, and on the right the way back to
+   the hub plus the sound toggle (#sound-btn, which each game's script wires
+   up by id — it lives here so no controls row has to make room for it). */
 header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	padding: 12px 20px;
+	/* clear the notch and the rounded corners on phones */
+	padding: calc(12px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) 12px
+		calc(20px + env(safe-area-inset-left));
 	border-bottom: 1px solid var(--line);
 }
 
@@ -81,8 +126,38 @@ header {
 	font-size: 0.9rem;
 }
 
-.header-home:hover {
+@media (hover: hover) {
+	.header-home:hover {
+		color: var(--text);
+	}
+}
+
+.header-actions {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.header-sound {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	background-color: var(--panel);
 	color: var(--text);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	font-size: 1.05rem;
+	font-family: inherit;
+	cursor: pointer;
+}
+
+@media (hover: hover) {
+	.header-sound:hover {
+		border-color: var(--accent);
+	}
 }
 
 /* --- page column --- */
@@ -92,6 +167,8 @@ main {
 	justify-content: center;
 	gap: 24px;
 	padding: 24px 16px 48px;
+	padding-left: calc(16px + env(safe-area-inset-left));
+	padding-right: calc(16px + env(safe-area-inset-right));
 }
 
 main .game-column {
@@ -130,10 +207,12 @@ main .game-column {
 	cursor: pointer;
 }
 
-.controls select:hover,
-.controls button:hover:not(:disabled),
-.toolbar button:hover:not(:disabled) {
-	border-color: var(--accent);
+@media (hover: hover) {
+	.controls select:hover,
+	.controls button:hover:not(:disabled),
+	.toolbar button:hover:not(:disabled) {
+		border-color: var(--accent);
+	}
 }
 
 .controls button:disabled,
@@ -160,10 +239,12 @@ main .game-column {
 	font-weight: 600;
 }
 
-.controls button.primary:hover:not(:disabled),
-.toolbar button.primary:hover:not(:disabled) {
-	background-color: var(--accent-strong);
-	border-color: var(--accent-strong);
+@media (hover: hover) {
+	.controls button.primary:hover:not(:disabled),
+	.toolbar button.primary:hover:not(:disabled) {
+		background-color: var(--accent-strong);
+		border-color: var(--accent-strong);
+	}
 }
 
 .icon {
@@ -200,48 +281,44 @@ main .game-column {
 	font-variant-numeric: tabular-nums;
 }
 
-/* --- end-of-game surfaces --- */
-.overlay-veil {
-	position: absolute;
-	inset: 0;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	gap: 12px;
-	padding: 20px;
-	text-align: center;
-	background-color: var(--veil);
-	backdrop-filter: blur(3px);
-	border-radius: var(--radius-lg);
-	/* keeps the board's edge visible through the curtain, which would otherwise
-	   erase a white board against the page */
-	box-shadow: inset 0 0 0 1px var(--line);
-	z-index: 2;
-}
-
-.overlay-card {
+/* --- end of a round --- */
+.result {
+	position: fixed;
+	left: 50%;
+	bottom: 0;
+	transform: translateX(-50%);
+	width: min(100%, 520px);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 10px;
-	padding: 20px 26px;
+	padding: 18px 20px;
+	padding-bottom: calc(18px + env(safe-area-inset-bottom));
 	text-align: center;
+	/* its own, whatever the board around it sets for a canvas */
+	line-height: 1.5;
 	background-color: var(--panel);
 	border: 1px solid var(--line);
-	border-radius: 14px;
-	box-shadow: var(--shadow-card);
-	z-index: 2;
+	border-bottom: none;
+	border-radius: 16px 16px 0 0;
+	box-shadow: 0 -12px 32px rgba(15, 23, 42, 0.14);
+	z-index: 20;
+	animation: result-rise 200ms ease-out;
 }
 
-.overlay-veil h2,
-.overlay-card h2 {
+@keyframes result-rise {
+	from {
+		transform: translate(-50%, 24px);
+		opacity: 0;
+	}
+}
+
+.result h2 {
 	font-size: 1.5rem;
 	color: var(--text);
 }
 
-.overlay-veil p,
-.overlay-card p {
+.result p {
 	color: var(--muted);
 	font-variant-numeric: tabular-nums;
 }
@@ -255,8 +332,7 @@ main .game-column {
 	margin-top: 4px;
 }
 
-.overlay-veil button,
-.overlay-card button {
+.result button {
 	background-color: var(--panel);
 	color: var(--text);
 	border: 1px solid var(--line);
@@ -268,22 +344,23 @@ main .game-column {
 	cursor: pointer;
 }
 
-.overlay-veil button:hover,
-.overlay-card button:hover {
-	border-color: var(--text);
+@media (hover: hover) {
+	.result button:hover {
+		border-color: var(--text);
+	}
 }
 
-.overlay-veil button.primary,
-.overlay-card button.primary {
+.result button.primary {
 	background-color: var(--text);
 	border-color: var(--text);
 	color: var(--panel);
 	font-weight: 600;
 }
 
-.overlay-veil button.primary:hover,
-.overlay-card button.primary:hover {
-	background-color: var(--accent-strong);
+@media (hover: hover) {
+	.result button.primary:hover {
+		background-color: var(--accent-strong);
+	}
 }
 
 /* --- article content --- */
@@ -339,6 +416,7 @@ article a {
 footer {
 	text-align: center;
 	padding: 24px;
+	padding-bottom: calc(24px + env(safe-area-inset-bottom));
 	color: var(--muted);
 	font-size: 0.85rem;
 	border-top: 1px solid var(--line);
@@ -346,4 +424,85 @@ footer {
 
 footer a {
 	color: var(--accent-strong);
+}
+
+/* --- touch --- */
+@media (pointer: coarse) {
+	/* a fingertip needs 44px, and 16px keeps iOS from zooming into a focused select */
+	.controls select,
+	.controls button,
+	.toolbar button,
+	.result button {
+		min-height: 44px;
+		font-size: 1rem;
+	}
+
+	.controls .check-label {
+		min-height: 44px;
+	}
+
+	.header-home {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+	}
+
+	.header-sound {
+		width: 44px;
+		height: 44px;
+	}
+}
+
+/* --- phones --- */
+@media (max-width: 640px) {
+	header {
+		/* 6px around a 44px toggle = the 56px app bar phones are used to */
+		padding-top: calc(6px + env(safe-area-inset-top));
+		padding-bottom: 6px;
+		padding-left: calc(12px + env(safe-area-inset-left));
+		padding-right: calc(12px + env(safe-area-inset-right));
+	}
+
+	main {
+		padding: 12px 12px 40px;
+		padding-left: calc(12px + env(safe-area-inset-left));
+		padding-right: calc(12px + env(safe-area-inset-right));
+	}
+
+	main .game-column {
+		gap: 12px;
+	}
+
+	/* HUD, board, then the game's own input row; controls and the article
+	   after. Only direct children move, so a board nested in a game's own
+	   layout (blockdrop, passant) stays where that layout puts it. */
+	main .game-column > .hud {
+		order: -3;
+		gap: 8px 16px;
+	}
+
+	main .game-column > .board-wrap {
+		order: -2;
+	}
+
+	main .game-column > .controls {
+		order: 1;
+	}
+
+	main .game-column > article {
+		order: 2;
+	}
+
+	.footer-more {
+		display: none;
+	}
+
+	.controls {
+		gap: 8px;
+	}
+
+	.controls select,
+	.controls button {
+		padding: 8px 12px;
+	}
 }

@@ -10,12 +10,14 @@
 /* --- board --- */
 .board-wrap {
 	position: relative;
+	max-width: 100%;
+	overflow: auto;
 }
 
 #board {
 	display: grid;
 	gap: 0;
-	touch-action: none;
+	touch-action: pinch-zoom;
 	user-select: none;
 }
 

@@ -8,6 +8,8 @@ body {
   display: grid;
   grid-template-rows: 200px 1fr auto;
   min-height: 100vh;
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   background-color: #f8fafc;
   color: #1e293b;
@@ -31,6 +33,8 @@ main {
   flex-direction: column;
   align-content: start;
   padding: 0 24px 40px;
+  padding-left: calc(24px + env(safe-area-inset-left));
+  padding-right: calc(24px + env(safe-area-inset-right));
   max-width: 760px;
   width: 100%;
   margin: 0 auto;
@@ -54,8 +58,10 @@ main a:last-child {
   border-bottom: none;
 }
 
-main a:hover .game-name {
-  text-decoration: underline;
+@media (hover: hover) {
+  main a:hover .game-name {
+    text-decoration: underline;
+  }
 }
 
 main a .game-brand {
@@ -102,6 +108,7 @@ main a .game-desc {
 footer {
   text-align: center;
   padding: 24px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
   color: #64748b;
   font-size: 0.85rem;
 }

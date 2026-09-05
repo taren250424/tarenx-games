@@ -12,6 +12,13 @@
  *      curtain), `.overlay-card` floats a card over or beside it. Inside
  *      either, `button.primary` is the one action the player most likely
  *      wants next; the rest stay quiet.
+ *   4. Touch: `.board-wrap` is the play surface every game wraps its board
+ *      in, and it carries the touch defaults — no text selection, no
+ *      long-press callout, no double-tap zoom. A board that is dragged or
+ *      swiped sets `touch-action: none` on itself; a board that is only
+ *      tapped needs nothing more. Hover styles live under
+ *      `@media (hover: hover)` so a tap never leaves one stuck, and tap
+ *      targets grow to 44px under `@media (pointer: coarse)`.
  */
 
 * {
@@ -44,6 +51,27 @@ body {
 	background-color: var(--bg);
 	color: var(--text);
 	min-height: 100vh;
+	/* the height that is actually visible on a phone, browser bar and all */
+	min-height: 100dvh;
+	/* a pull at the top edge of a board must not reload the page */
+	overscroll-behavior-y: contain;
+	-webkit-tap-highlight-color: transparent;
+}
+
+/* a tap acts at once: no double-tap zoom, so no 300ms wait for a second tap */
+a,
+button,
+select,
+[role="button"] {
+	touch-action: manipulation;
+}
+
+/* --- play surface --- */
+.board-wrap {
+	touch-action: manipulation;
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
 }
 
 .hidden {
@@ -56,6 +84,9 @@ header {
 	align-items: center;
 	justify-content: space-between;
 	padding: 12px 20px;
+	/* clear the notch and the rounded corners on phones */
+	padding: calc(12px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) 12px
+		calc(20px + env(safe-area-inset-left));
 	border-bottom: 1px solid var(--line);
 }
 
@@ -81,8 +112,10 @@ header {
 	font-size: 0.9rem;
 }
 
-.header-home:hover {
-	color: var(--text);
+@media (hover: hover) {
+	.header-home:hover {
+		color: var(--text);
+	}
 }
 
 /* --- page column --- */
@@ -92,6 +125,8 @@ main {
 	justify-content: center;
 	gap: 24px;
 	padding: 24px 16px 48px;
+	padding-left: calc(16px + env(safe-area-inset-left));
+	padding-right: calc(16px + env(safe-area-inset-right));
 }
 
 main .game-column {
@@ -130,10 +165,12 @@ main .game-column {
 	cursor: pointer;
 }
 
-.controls select:hover,
-.controls button:hover:not(:disabled),
-.toolbar button:hover:not(:disabled) {
-	border-color: var(--accent);
+@media (hover: hover) {
+	.controls select:hover,
+	.controls button:hover:not(:disabled),
+	.toolbar button:hover:not(:disabled) {
+		border-color: var(--accent);
+	}
 }
 
 .controls button:disabled,
@@ -160,10 +197,12 @@ main .game-column {
 	font-weight: 600;
 }
 
-.controls button.primary:hover:not(:disabled),
-.toolbar button.primary:hover:not(:disabled) {
-	background-color: var(--accent-strong);
-	border-color: var(--accent-strong);
+@media (hover: hover) {
+	.controls button.primary:hover:not(:disabled),
+	.toolbar button.primary:hover:not(:disabled) {
+		background-color: var(--accent-strong);
+		border-color: var(--accent-strong);
+	}
 }
 
 .icon {
@@ -268,9 +307,11 @@ main .game-column {
 	cursor: pointer;
 }
 
-.overlay-veil button:hover,
-.overlay-card button:hover {
-	border-color: var(--text);
+@media (hover: hover) {
+	.overlay-veil button:hover,
+	.overlay-card button:hover {
+		border-color: var(--text);
+	}
 }
 
 .overlay-veil button.primary,
@@ -281,9 +322,11 @@ main .game-column {
 	font-weight: 600;
 }
 
-.overlay-veil button.primary:hover,
-.overlay-card button.primary:hover {
-	background-color: var(--accent-strong);
+@media (hover: hover) {
+	.overlay-veil button.primary:hover,
+	.overlay-card button.primary:hover {
+		background-color: var(--accent-strong);
+	}
 }
 
 /* --- article content --- */
@@ -339,6 +382,7 @@ article a {
 footer {
 	text-align: center;
 	padding: 24px;
+	padding-bottom: calc(24px + env(safe-area-inset-bottom));
 	color: var(--muted);
 	font-size: 0.85rem;
 	border-top: 1px solid var(--line);
@@ -346,4 +390,27 @@ footer {
 
 footer a {
 	color: var(--accent-strong);
+}
+
+/* --- touch --- */
+@media (pointer: coarse) {
+	/* a fingertip needs 44px, and 16px keeps iOS from zooming into a focused select */
+	.controls select,
+	.controls button,
+	.toolbar button,
+	.overlay-veil button,
+	.overlay-card button {
+		min-height: 44px;
+		font-size: 1rem;
+	}
+
+	.controls .check-label {
+		min-height: 44px;
+	}
+
+	.header-home {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+	}
 }

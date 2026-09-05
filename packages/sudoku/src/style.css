@@ -128,8 +128,10 @@
 	padding: 4px 0;
 }
 
-.numpad button:hover {
-	border-color: var(--accent);
+@media (hover: hover) {
+	.numpad button:hover {
+		border-color: var(--accent);
+	}
 }
 
 .numpad button.done {

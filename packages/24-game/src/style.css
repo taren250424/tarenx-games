@@ -51,8 +51,10 @@
 		border-color 120ms ease;
 }
 
-.card:hover:not(:disabled) {
-	border-color: var(--accent);
+@media (hover: hover) {
+	.card:hover:not(:disabled) {
+		border-color: var(--accent);
+	}
 }
 
 /* a focus ring must not read as the selected card, which has a solid edge */
@@ -130,8 +132,10 @@
 	cursor: pointer;
 }
 
-#ops button:hover {
-	border-color: var(--accent);
+@media (hover: hover) {
+	#ops button:hover {
+		border-color: var(--accent);
+	}
 }
 
 #ops button[aria-pressed="true"] {

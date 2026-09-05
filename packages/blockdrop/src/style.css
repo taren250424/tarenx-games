@@ -46,8 +46,10 @@
 	cursor: pointer;
 }
 
-#sound-btn:hover {
-	border-color: var(--accent);
+@media (hover: hover) {
+	#sound-btn:hover {
+		border-color: var(--accent);
+	}
 }
 
 .panel canvas {

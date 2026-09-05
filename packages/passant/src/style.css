@@ -193,8 +193,10 @@
 	padding: 4px;
 }
 
-#promo button:hover {
-	background-color: var(--light-sq);
+@media (hover: hover) {
+	#promo button:hover {
+		background-color: var(--light-sq);
+	}
 }
 
 #promo button svg {
@@ -269,9 +271,11 @@
 	cursor: pointer;
 }
 
-.panel button:hover {
-	background-color: var(--accent-strong);
-	border-color: var(--accent-strong);
+@media (hover: hover) {
+	.panel button:hover {
+		background-color: var(--accent-strong);
+		border-color: var(--accent-strong);
+	}
 }
 
 .panel button.secondary {
@@ -281,9 +285,11 @@
 	font-weight: 500;
 }
 
-.panel button.secondary:hover {
-	background-color: transparent;
-	border-color: var(--text);
+@media (hover: hover) {
+	.panel button.secondary:hover {
+		background-color: transparent;
+		border-color: var(--text);
+	}
 }
 
 .panel .actions {

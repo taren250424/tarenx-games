@@ -221,8 +221,10 @@ body.high-contrast {
 	font-size: 0.75rem;
 }
 
-.key:hover {
-	background-color: var(--key-hover);
+@media (hover: hover) {
+	.key:hover {
+		background-color: var(--key-hover);
+	}
 }
 
 .key[data-mark="correct"] {

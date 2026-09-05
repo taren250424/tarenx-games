@@ -32,9 +32,11 @@
 	color: var(--muted);
 }
 
-.controls .deal-picker button:hover {
-	background-color: var(--bg);
-	color: var(--text);
+@media (hover: hover) {
+	.controls .deal-picker button:hover {
+		background-color: var(--bg);
+		color: var(--text);
+	}
 }
 
 .controls .deal-picker label {

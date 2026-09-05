@@ -32,9 +32,11 @@
 	color: var(--muted);
 }
 
-.controls .game-picker button:hover {
-	background-color: var(--bg);
-	color: var(--text);
+@media (hover: hover) {
+	.controls .game-picker button:hover {
+		background-color: var(--bg);
+		color: var(--text);
+	}
 }
 
 .controls .game-picker label {

@@ -8,10 +8,12 @@
  *      style.css: `import "../../shared/theme/base.css";`
  *   2. A game redefines the tokens it wants on its own `:root` — usually only
  *      `--accent` and `--accent-strong`.
- *   3. End-of-game surfaces: `.overlay-veil` covers the board (a frosted
- *      curtain), `.overlay-card` floats a card over or beside it. Inside
- *      either, `button.primary` is the one action the player most likely
- *      wants next; the rest stay quiet.
+ *   3. End of a round: one `.result` sheet for every game. It rises from the
+ *      bottom of the screen, leaves the finished board in view, and covers
+ *      whatever sat under the board — numpad, keyboard, controls — which the
+ *      player is done with. Its size never depends on the board's. Inside it,
+ *      `button.primary` is the one action the player most likely wants next;
+ *      the rest stay quiet.
  *   4. Touch: `.board-wrap` is the play surface every game wraps its board
  *      in, and it carries the touch defaults — no text selection, no
  *      long-press callout, no double-tap zoom. A board that is dragged or
@@ -45,8 +47,6 @@
 	--radius: 8px;
 	--radius-lg: 12px;
 	--shadow-card: 0 12px 32px rgba(15, 23, 42, 0.12);
-	/* frosted curtain over a finished board */
-	--veil: rgba(248, 250, 252, 0.9);
 
 	/* the game column between the two ad slots */
 	--column-max: 900px;
@@ -281,48 +281,42 @@ main .game-column {
 	font-variant-numeric: tabular-nums;
 }
 
-/* --- end-of-game surfaces --- */
-.overlay-veil {
-	position: absolute;
-	inset: 0;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	gap: 12px;
-	padding: 20px;
-	text-align: center;
-	background-color: var(--veil);
-	backdrop-filter: blur(3px);
-	border-radius: var(--radius-lg);
-	/* keeps the board's edge visible through the curtain, which would otherwise
-	   erase a white board against the page */
-	box-shadow: inset 0 0 0 1px var(--line);
-	z-index: 2;
-}
-
-.overlay-card {
+/* --- end of a round --- */
+.result {
+	position: fixed;
+	left: 50%;
+	bottom: 0;
+	transform: translateX(-50%);
+	width: min(100%, 520px);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 10px;
-	padding: 20px 26px;
+	padding: 18px 20px;
+	padding-bottom: calc(18px + env(safe-area-inset-bottom));
 	text-align: center;
 	background-color: var(--panel);
 	border: 1px solid var(--line);
-	border-radius: 14px;
-	box-shadow: var(--shadow-card);
-	z-index: 2;
+	border-bottom: none;
+	border-radius: 16px 16px 0 0;
+	box-shadow: 0 -12px 32px rgba(15, 23, 42, 0.14);
+	z-index: 20;
+	animation: result-rise 200ms ease-out;
 }
 
-.overlay-veil h2,
-.overlay-card h2 {
+@keyframes result-rise {
+	from {
+		transform: translate(-50%, 24px);
+		opacity: 0;
+	}
+}
+
+.result h2 {
 	font-size: 1.5rem;
 	color: var(--text);
 }
 
-.overlay-veil p,
-.overlay-card p {
+.result p {
 	color: var(--muted);
 	font-variant-numeric: tabular-nums;
 }
@@ -336,8 +330,7 @@ main .game-column {
 	margin-top: 4px;
 }
 
-.overlay-veil button,
-.overlay-card button {
+.result button {
 	background-color: var(--panel);
 	color: var(--text);
 	border: 1px solid var(--line);
@@ -350,14 +343,12 @@ main .game-column {
 }
 
 @media (hover: hover) {
-	.overlay-veil button:hover,
-	.overlay-card button:hover {
+	.result button:hover {
 		border-color: var(--text);
 	}
 }
 
-.overlay-veil button.primary,
-.overlay-card button.primary {
+.result button.primary {
 	background-color: var(--text);
 	border-color: var(--text);
 	color: var(--panel);
@@ -365,8 +356,7 @@ main .game-column {
 }
 
 @media (hover: hover) {
-	.overlay-veil button.primary:hover,
-	.overlay-card button.primary:hover {
+	.result button.primary:hover {
 		background-color: var(--accent-strong);
 	}
 }
@@ -440,8 +430,7 @@ footer a {
 	.controls select,
 	.controls button,
 	.toolbar button,
-	.overlay-veil button,
-	.overlay-card button {
+	.result button {
 		min-height: 44px;
 		font-size: 1rem;
 	}

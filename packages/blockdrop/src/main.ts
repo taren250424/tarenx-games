@@ -329,7 +329,7 @@ function togglePause() {
 	paused = !paused;
 	if (paused) {
 		running = false;
-		showOverlay("Paused", "Press P to resume");
+		showOverlay("Paused", "Tap or press P to resume");
 	} else {
 		running = true;
 		lastTime = 0;
@@ -543,20 +543,73 @@ const touchActions: Record<string, () => void> = {
 	left: () => tryMove(0, -1),
 	right: () => tryMove(0, 1),
 	rotate: () => rotate(),
-	down: () => softDrop(),
 	drop: () => hardDrop(),
 	hold: () => holdPiece(),
 };
 
 for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-action]")) {
 	btn.addEventListener("click", () => {
-		if (!running) {
-			if (!paused) void playAgain();
+		const action = btn.dataset.action!;
+		if (action === "pause") {
+			togglePause();
 			return;
 		}
-		touchActions[btn.dataset.action!]?.();
+		if (!running) {
+			if (!paused && action !== "hold") void playAgain();
+			return;
+		}
+		touchActions[action]?.();
 	});
 }
+
+// gestures on the well: drag sideways to move a cell at a time, drag down to
+// soft-drop, tap to rotate, flick down to hard-drop, swipe up to hold
+let gesture: { x: number; y: number; at: number; cols: number; rows: number } | null = null;
+
+canvas.addEventListener("pointerdown", (e) => {
+	if (!running || paused || e.pointerType === "mouse") return;
+	try {
+		canvas.setPointerCapture(e.pointerId);
+	} catch {
+		// a pointer that is already gone, or a synthetic one, has nothing to capture
+	}
+	gesture = { x: e.clientX, y: e.clientY, at: performance.now(), cols: 0, rows: 0 };
+});
+
+canvas.addEventListener("pointermove", (e) => {
+	if (!gesture) return;
+	const cell = canvas.getBoundingClientRect().width / COLS;
+	const cols = Math.trunc((e.clientX - gesture.x) / cell);
+	while (gesture.cols < cols) {
+		tryMove(0, 1);
+		gesture.cols++;
+	}
+	while (gesture.cols > cols) {
+		tryMove(0, -1);
+		gesture.cols--;
+	}
+	const rows = Math.trunc((e.clientY - gesture.y) / cell);
+	while (gesture.rows < rows) {
+		softDrop();
+		gesture.rows++;
+	}
+});
+
+canvas.addEventListener("pointerup", (e) => {
+	if (!gesture) return;
+	const dx = e.clientX - gesture.x;
+	const dy = e.clientY - gesture.y;
+	const dt = performance.now() - gesture.at;
+	const moved = gesture.cols !== 0 || gesture.rows !== 0;
+	if (!moved && dt < 300 && Math.abs(dx) < 10 && Math.abs(dy) < 10) rotate();
+	else if (dy > 50 && dt < 250 && dy > Math.abs(dx) * 2) hardDrop();
+	else if (dy < -40 && -dy > Math.abs(dx) * 2 && !moved) holdPiece();
+	gesture = null;
+});
+
+canvas.addEventListener("pointercancel", () => {
+	gesture = null;
+});
 
 async function playAgain() {
 	await ads.interstitial("next", "blockdrop-next");

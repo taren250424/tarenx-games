@@ -59,6 +59,7 @@
 	border: 1px solid var(--line);
 	border-radius: 8px;
 	background-color: var(--board);
+	touch-action: none;
 }
 
 /* the whole curtain is the start/restart button */
@@ -69,14 +70,32 @@
 }
 
 /* --- touch controls --- */
+button.panel {
+	display: block;
+	width: 100%;
+	font: inherit;
+	color: inherit;
+	cursor: pointer;
+}
+
+/* drop under one thumb, left / rotate / right under the other, a small pause
+   between them */
 .touch-controls {
 	display: none;
-	grid-template-columns: repeat(6, 52px);
-	gap: 6px;
+	grid-template-columns: 1.3fr 44px 1fr 1fr 1fr;
+	gap: 8px;
+	width: 100%;
+	max-width: 360px;
+}
+
+.touch-controls .pause {
+	height: 44px;
+	align-self: center;
+	font-size: 0.9rem;
 }
 
 .touch-controls button {
-	height: 52px;
+	height: 56px;
 	background-color: var(--panel);
 	color: var(--text);
 	border: 1px solid var(--line);
@@ -91,16 +110,56 @@
 	}
 }
 
+/* Phones: the six panels become one strip above the well, the well takes
+   the height left under the strip, and the buttons sit under the well. */
 @media (max-width: 640px) {
 	.game-layout {
-		flex-direction: column;
-		align-items: center;
+		flex-wrap: wrap;
+		gap: 8px;
 	}
 
 	.side-panel {
-		flex-direction: row;
-		width: auto;
-		flex-wrap: wrap;
+		display: contents;
+	}
+
+	.panel {
+		flex: 1 1 0;
+		min-width: 0;
+		padding: 6px 4px;
+	}
+
+	.panel h3 {
+		font-size: 0.6rem;
+		letter-spacing: 0.04em;
+		margin-bottom: 2px;
+	}
+
+	.panel strong {
+		font-size: 0.95rem;
+	}
+
+	.panel canvas {
+		width: 40px;
+		height: auto;
+		padding: 2px;
+	}
+
+	/* only the first queued piece fits the strip */
+	#next {
+		height: 36px;
+		object-fit: cover;
+		object-position: top;
+	}
+
+	.board-wrap {
+		order: 1;
+		flex: 0 0 100%;
+		display: flex;
 		justify-content: center;
 	}
+
+	#game {
+		width: min(300px, 84vw, calc((100dvh - 230px) / 2));
+	}
+
 }

@@ -78,10 +78,10 @@
 			<section class="game-column">
 			<div class="game-layout">
 				<div class="side-panel">
-					<div class="panel">
+					<button class="panel" data-action="hold" title="Hold the current piece (C)">
 						<h3>Hold</h3>
 						<canvas id="hold"></canvas>
-					</div>
+					</button>
 					<div class="panel">
 						<h3>Score</h3>
 						<strong id="score">0</strong>
@@ -117,12 +117,11 @@
 			</div>
 
 			<div class="touch-controls" aria-label="Touch controls">
-				<button data-action="left" aria-label="Move left">◀</button>
-				<button data-action="right" aria-label="Move right">▶</button>
-				<button data-action="rotate" aria-label="Rotate">⟳</button>
-				<button data-action="down" aria-label="Soft drop">▼</button>
 				<button data-action="drop" aria-label="Hard drop">⤓</button>
-				<button data-action="hold" aria-label="Hold">H</button>
+				<button data-action="pause" class="pause" aria-label="Pause">⏸</button>
+				<button data-action="left" aria-label="Move left">◀</button>
+				<button data-action="rotate" aria-label="Rotate">⟳</button>
+				<button data-action="right" aria-label="Move right">▶</button>
 			</div>
 
 			<article>
@@ -147,7 +146,7 @@
 						<li><kbd>Space</kbd> — hard drop (+2 points per cell)</li>
 						<li><kbd>C</kbd> or <kbd>Shift</kbd> — hold the current piece</li>
 						<li><kbd>P</kbd> — pause · <kbd>R</kbd> — restart</li>
-						<li>On touch screens: use the on-screen buttons below the well</li>
+						<li>On a touch screen: drag sideways to move, tap to rotate, drag down to soft drop, flick down to hard drop, swipe up to hold. The buttons under the well put drop under one thumb and left, rotate and right under the other, with pause between them; tapping the Hold panel holds</li>
 					</ul>
 				</section>
 

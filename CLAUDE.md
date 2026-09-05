@@ -3,6 +3,10 @@
 - Use standard Conventional Commits types (e.g. feat, fix, refactor, docs, test, build, ci, chore, perf, revert, style).
 - The style type means code formatting (whitespace, blank lines, etc. — no logic change), not CSS/visual styling.
 - Avoid comments by default. Add a concise comment only when the code's intent or non-obvious reasoning would otherwise be misunderstood. Do not comment on obvious behavior or restate what the code already expresses.
-- When implementing a new package, reference packages/hub, packages/shared, and two or three other existing packages to keep the implementation consistent with them.
+- When implementing a new package, reference packages/hub, packages/shared, and four or five other existing packages to keep the implementation consistent with them.
 - Default to a minimal, light design, and add a dark theme option alongside it where feasible.
+- Build every game mobile-first, desktop second. Take the phone layout, the touch defaults and the end-of-round `.result` sheet from `packages/shared/theme/base.css` — its header comment is the reference — instead of writing per-game responsive rules.
+- A game has to be playable with one thumb: gestures or on-screen buttons beside the keyboard controls, no hover- or right-click-only action, 44px tap targets, and hover styles only under `@media (hover: hover)`.
+- A game asks the shared ad door (`packages/shared/ads/ads.ts`) before it starts the next round, and never on a mid-game restart. Read how four or five of the existing games call it and follow them.
+- A new game joins the hub on its own: `<meta name="hub:tagline">` and `<meta name="hub:category">` in its index.html put its card on the list, and `markPlayed()` from `packages/shared/progress/recent.ts` on load puts it in "Recently played". Nothing errors when they are missing — the card just goes quiet.
 - For sound effects, use `scripts/gen-sfx.mjs` (`node scripts/gen-sfx.mjs [game ...]`) rather than adding audio files by hand.

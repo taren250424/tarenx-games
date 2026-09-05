@@ -333,7 +333,47 @@ function cellIndex(e: Event): number | null {
 	return cell ? Number(cell.dataset.i) : null;
 }
 
+// A long press flags on a touch screen, where there is no right button.
+// Android also raises contextmenu for a long press and iOS raises click after
+// one, so both are told the press already did the work.
+let press: { i: number; x: number; y: number; timer: number } | null = null;
+let pressFlagged = false;
+
+function endPress(): void {
+	if (press) clearTimeout(press.timer);
+	press = null;
+}
+
+boardEl.addEventListener("pointerdown", (e) => {
+	pressFlagged = false;
+	if (e.pointerType === "mouse") return;
+	const i = cellIndex(e);
+	if (i === null || revealed.has(i)) return;
+	press = {
+		i,
+		x: e.clientX,
+		y: e.clientY,
+		timer: window.setTimeout(() => {
+			press = null;
+			pressFlagged = true;
+			toggleFlag(i);
+			navigator.vibrate?.(30);
+		}, 350),
+	};
+});
+
+boardEl.addEventListener("pointermove", (e) => {
+	if (press && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 10) endPress();
+});
+
+boardEl.addEventListener("pointerup", endPress);
+boardEl.addEventListener("pointercancel", endPress);
+
 boardEl.addEventListener("click", (e) => {
+	if (pressFlagged) {
+		pressFlagged = false;
+		return;
+	}
 	const i = cellIndex(e);
 	if (i === null) return;
 	if (flagMode && !revealed.has(i)) {
@@ -345,6 +385,7 @@ boardEl.addEventListener("click", (e) => {
 
 boardEl.addEventListener("contextmenu", (e) => {
 	e.preventDefault();
+	if (pressFlagged) return;
 	const i = cellIndex(e);
 	if (i !== null) toggleFlag(i);
 });

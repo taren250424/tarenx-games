@@ -64,8 +64,6 @@
 
 /* the whole curtain is the start/restart button */
 #overlay {
-	border-radius: 8px;
-	line-height: 1.5;
 	cursor: pointer;
 }
 

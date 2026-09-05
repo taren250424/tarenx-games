@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { ads } from "../../shared/ads/ads.ts";
 
 mountIcons();
 markPlayed();
@@ -136,6 +137,7 @@ function saveProgress() {
 }
 
 const progress = loadProgress();
+ads.init({ sound: () => progress.settings.sound });
 
 function statsFor(len: number): Stats {
 	const key = String(len);
@@ -532,7 +534,7 @@ document.addEventListener("keydown", (e) => {
 	if (!overlayEl.classList.contains("hidden")) {
 		if (e.key === "Enter" || e.key === " ") {
 			e.preventDefault();
-			startGame();
+			void playAgain();
 		}
 		return;
 	}
@@ -556,8 +558,13 @@ keyboardEl.addEventListener("click", (e) => {
 	else typeLetter(value);
 });
 
+async function playAgain() {
+	await ads.interstitial("next", "word-guess-next");
+	startGame();
+}
+
 newBtn.addEventListener("click", () => startGame());
-againBtn.addEventListener("click", () => startGame());
+againBtn.addEventListener("click", () => void playAgain());
 
 lengthSelectEl.addEventListener("change", () => {
 	void setLength(Number(lengthSelectEl.value));

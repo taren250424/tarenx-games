@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { ads } from "../../shared/ads/ads.ts";
 
 mountIcons();
 markPlayed();
@@ -119,6 +120,7 @@ const soundBtn = document.getElementById("sound-btn") as HTMLButtonElement;
 // --- audio ---
 let soundOn = localStorage.getItem(SOUND_KEY) !== "0";
 const play = createSfx(["drop", "clear", "levelup", "gameover"] as const, () => soundOn);
+ads.init({ sound: () => soundOn });
 
 function updateSoundBtn() {
 	setSoundIcon(soundBtn, soundOn);
@@ -503,7 +505,7 @@ document.addEventListener("keydown", (e) => {
 	if (!running) {
 		if (e.key === "Enter" || e.key === " ") {
 			e.preventDefault();
-			if (!paused) newGame();
+			if (!paused) void playAgain();
 		}
 		return;
 	}
@@ -549,18 +551,23 @@ const touchActions: Record<string, () => void> = {
 for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-action]")) {
 	btn.addEventListener("click", () => {
 		if (!running) {
-			if (!paused) newGame();
+			if (!paused) void playAgain();
 			return;
 		}
 		touchActions[btn.dataset.action!]?.();
 	});
 }
 
+async function playAgain() {
+	await ads.interstitial("next", "blockdrop-next");
+	newGame();
+}
+
 overlayEl.addEventListener("click", () => {
 	if (paused) {
 		togglePause();
 	} else if (!running) {
-		newGame();
+		void playAgain();
 	}
 });
 

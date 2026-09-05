@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { ads } from "../../shared/ads/ads.ts";
 import { type Card, SUITS, isRed, orderedDeck, rank, suit } from "../../shared/cards/deck.ts";
 import { type SlotSpec, createTable } from "../../shared/cards/table.ts";
 import { DEAL_MAX, DEAL_MIN, IMPOSSIBLE_DEAL, clampDeal, deal, randomDeal } from "./deal.ts";
@@ -142,6 +143,7 @@ function saveProgress() {
 }
 
 const progress = loadProgress();
+ads.init({ sound: () => progress.settings.sound });
 
 function saveSession() {
 	progress.session = finished ? null : { deal: dealNumber, board: cloneBoard(board), moves, elapsed };
@@ -770,10 +772,13 @@ overlayUndoBtn.addEventListener("click", () => {
 	undo();
 });
 document.getElementById("overlay-restart")?.addEventListener("click", restart);
-overlayNextBtn.addEventListener("click", () => {
+async function nextRound() {
+	await ads.interstitial("next", "freecell-next");
 	if (finished) stepDeal(1);
 	else startDeal(randomDeal());
-});
+}
+
+overlayNextBtn.addEventListener("click", () => void nextRound());
 
 // --- timer ---
 setInterval(() => {

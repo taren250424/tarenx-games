@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { ads } from "../../shared/ads/ads.ts";
 import { type Card, SUITS, orderedDeck, suit } from "../../shared/cards/deck.ts";
 import { type SlotSpec, createTable } from "../../shared/cards/table.ts";
 import { GAME_MAX, GAME_MIN, clampGame, randomGame, seedOf } from "./bank.ts";
@@ -157,6 +158,7 @@ function saveProgress() {
 }
 
 const progress = loadProgress();
+ads.init({ sound: () => progress.settings.sound });
 
 function scoreKey(): string {
 	return `${gameNumber}:${progress.settings.draw}`;
@@ -611,10 +613,13 @@ overlayUndoBtn.addEventListener("click", () => {
 	undo();
 });
 document.getElementById("overlay-restart")?.addEventListener("click", restart);
-overlayNextBtn.addEventListener("click", () => {
+async function nextRound() {
+	await ads.interstitial("next", "klondike-next");
 	if (finished) stepGame(1);
 	else startGame(randomGame());
-});
+}
+
+overlayNextBtn.addEventListener("click", () => void nextRound());
 
 // --- timer ---
 setInterval(() => {

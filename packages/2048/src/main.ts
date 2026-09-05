@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { ads } from "../../shared/ads/ads.ts";
 
 mountIcons();
 markPlayed();
@@ -111,6 +112,7 @@ function saveProgress() {
 }
 
 const progress = loadProgress();
+ads.init({ sound: () => progress.settings.sound });
 
 function saveSession() {
 	progress.session = { size: size.key, ...snapshot() };
@@ -282,6 +284,11 @@ function newGame(next: BoardSize = size) {
 	saveSession();
 }
 
+async function playAgain() {
+	await ads.interstitial("next", "2048-next");
+	newGame();
+}
+
 function move(dir: Dir) {
 	if (over || !overlayEl.classList.contains("hidden")) return;
 
@@ -408,7 +415,7 @@ document.addEventListener("keydown", (e) => {
 	}
 	if (!overlayEl.classList.contains("hidden") && (e.key === "Enter" || e.key === " ")) {
 		e.preventDefault();
-		if (over) newGame();
+		if (over) void playAgain();
 		else hideOverlay();
 	} else if (key === "r") {
 		newGame();
@@ -440,7 +447,7 @@ boardEl.addEventListener("touchend", (e) => {
 });
 
 newBtn.addEventListener("click", () => newGame());
-againBtn.addEventListener("click", () => newGame());
+againBtn.addEventListener("click", () => void playAgain());
 undoBtn.addEventListener("click", () => undo());
 continueBtn.addEventListener("click", () => hideOverlay());
 

@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { icon, mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { ads } from "../../shared/ads/ads.ts";
 
 mountIcons();
 markPlayed();
@@ -86,6 +87,7 @@ function saveProgress(progress: Progress) {
 }
 
 const progress = loadProgress();
+ads.init({ sound: () => progress.settings.sound });
 
 // --- audio ---
 const play = createSfx(["reveal", "flag", "boom", "win"] as const, () => progress.settings.sound);
@@ -350,7 +352,7 @@ boardEl.addEventListener("contextmenu", (e) => {
 document.addEventListener("keydown", (e) => {
 	if (!overlayEl.classList.contains("hidden") && (e.key === "Enter" || e.key === " ")) {
 		e.preventDefault();
-		newGame();
+		void playAgain();
 		return;
 	}
 	if (e.key === "r" || e.key === "R") {
@@ -361,8 +363,13 @@ document.addEventListener("keydown", (e) => {
 	}
 });
 
+async function playAgain() {
+	await ads.interstitial("next", "minesweeper-next");
+	newGame();
+}
+
 newBtn.addEventListener("click", () => newGame());
-againBtn.addEventListener("click", () => newGame());
+againBtn.addEventListener("click", () => void playAgain());
 
 flagBtn.addEventListener("click", () => {
 	flagMode = !flagMode;

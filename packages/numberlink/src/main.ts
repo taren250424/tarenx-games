@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { ads } from "../../shared/ads/ads.ts";
 import { PUZZLES, type Difficulty } from "./puzzles.ts";
 
 mountIcons();
@@ -101,6 +102,7 @@ function saveProgress() {
 }
 
 const progress = loadProgress();
+ads.init({ sound: () => progress.settings.sound });
 
 function puzzleKey(): string {
 	return `${difficulty}:${puzzleIndex}`;
@@ -428,8 +430,9 @@ function checkWin() {
 	renderAll();
 }
 
-function nextPuzzle() {
+async function nextPuzzle() {
 	const [nd, ni] = nextPosition();
+	await ads.interstitial("next", "numberlink-next");
 	loadPuzzle(nd, ni);
 }
 
@@ -569,7 +572,7 @@ document.addEventListener("keydown", (e) => {
 	if (e.ctrlKey || e.metaKey || e.altKey) return;
 	if (!overlayEl.classList.contains("hidden") && (e.key === "Enter" || e.key === " ")) {
 		e.preventDefault();
-		nextPuzzle();
+		void nextPuzzle();
 		return;
 	}
 	const key = e.key.toLowerCase();
@@ -625,7 +628,7 @@ soundBtn.addEventListener("click", () => {
 	play("button");
 	renderStatus();
 });
-nextBtn.addEventListener("click", nextPuzzle);
+nextBtn.addEventListener("click", () => void nextPuzzle());
 
 puzzleSelectEl.addEventListener("change", () => {
 	const [d, i] = puzzleSelectEl.value.split(":");

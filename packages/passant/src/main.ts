@@ -5,6 +5,7 @@ import { Chess } from "chess.js";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { ads } from "../../shared/ads/ads.ts";
 import { pieceSprite } from "./pieces.ts";
 import { Board, type UserMove } from "./board.ts";
 import {
@@ -120,6 +121,7 @@ function saveProgress(): void {
 
 // --- state ---
 const progress = loadProgress();
+ads.init({ sound: () => progress.settings.sound });
 let index: Index | null = null;
 let mode: Mode = progress.settings.mode;
 let current: { idx: number; pos: Position } | null = null;
@@ -388,7 +390,7 @@ function renderResult(score: MoveScore): void {
 			<button id="line-btn" class="secondary">Show best line</button>
 		</div>
 	`;
-	document.getElementById("next-btn")?.addEventListener("click", next);
+	document.getElementById("next-btn")?.addEventListener("click", () => void next());
 	document.getElementById("line-btn")?.addEventListener("click", toggleBestLine);
 	requestAnimationFrame(() => {
 		const fill = panelEl.querySelector<HTMLElement>(".win-bar .fill");
@@ -438,9 +440,10 @@ function toggleBestLine(): void {
 	lineTimer = window.setTimeout(step, 300);
 }
 
-function next(): void {
+async function next(): Promise<void> {
 	stopLine();
 	showingLine = false;
+	await ads.interstitial("next", "passant-next");
 	if (mode === "quick") nextQuick();
 	else startDaily();
 }
@@ -616,7 +619,7 @@ function bindControls(): void {
 		}
 		if ((e.key === "Enter" || e.key === " " || e.key.toLowerCase() === "n") && answered) {
 			e.preventDefault();
-			next();
+			void next();
 		} else if (e.key.toLowerCase() === "l" && answered) {
 			toggleBestLine();
 		}

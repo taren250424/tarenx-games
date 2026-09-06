@@ -475,7 +475,15 @@ function submit() {
 
 function typeLetter(letter: string) {
 	if (status !== "playing" || revealing) return;
-	if (current.length >= length) return;
+	// A rejected guess stays on the board, so the row is often already full when
+	// the next word is typed; dropping those keystrokes in silence reads as the
+	// game having frozen.
+	if (current.length >= length) {
+		toast("Backspace to edit");
+		shakeActiveRow();
+		play("nope");
+		return;
+	}
 	current += letter;
 	paintRow(rows.length, current, null);
 	const tile = tilesIn(rows.length)[current.length - 1];

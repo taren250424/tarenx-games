@@ -164,7 +164,7 @@ body.high-contrast {
 /* --- toast --- */
 #toast {
 	position: absolute;
-	top: 12px;
+	bottom: calc(100% + 6px);
 	left: 50%;
 	transform: translateX(-50%);
 	padding: 8px 16px;

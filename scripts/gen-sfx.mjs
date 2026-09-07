@@ -360,6 +360,19 @@ twentyFour.hint = nonogram.hint;
 twentyFour.button = nonogram.button;
 twentyFour.win = nonogram.win;
 
+// --- word-hive ---
+// Word Guess's buzz for a rejected word and jingle for reaching Genius,
+// FreeCell's foundation blip for a word that counts, Spider's completed run
+// for a pangram, Nonogram's chime for a new rank and tick for the buttons.
+const wordHive = {};
+
+wordHive.found = freecell.foundation;
+wordHive.pangram = spider.complete;
+wordHive.nope = wordGuess.nope;
+wordHive.rank = nonogram.hint;
+wordHive.win = wordGuess.win;
+wordHive.button = nonogram.button;
+
 const games = [
 	["blockdrop", blockdrop],
 	["sokoban", sokoban],
@@ -373,6 +386,7 @@ const games = [
 	["spider", spider],
 	["numberlink", numberlink],
 	["24-game", twentyFour],
+	["word-hive", wordHive],
 ];
 const only = process.argv.slice(2);
 for (const [game, sounds] of games) {

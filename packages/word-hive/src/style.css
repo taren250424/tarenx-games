@@ -1,0 +1,362 @@
+:root {
+	--cell: #f1f5f9;
+	--cell-hover: #e2e8f0;
+	--cell-center: #1e293b;
+	--bad: #cbd5e1;
+	--good: #059669;
+
+	/* one hexagon across; the hive is three across and two and a half high */
+	--hex: clamp(58px, 17vmin, 78px);
+	--hex-h: calc(var(--hex) * 1.1547);
+	--gap: 6px;
+}
+
+/* --- play surface --- */
+.board-wrap {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 14px;
+	width: 100%;
+	max-width: 520px;
+}
+
+/* --- rank --- */
+#rank-bar {
+	display: flex;
+	align-items: center;
+	gap: 0;
+	width: min(100%, 320px);
+}
+
+#rank-bar .dot {
+	position: relative;
+	flex: 1 1 auto;
+	height: 2px;
+	background-color: var(--line);
+}
+
+#rank-bar .dot:first-child {
+	flex: 0 0 auto;
+	width: 0;
+}
+
+#rank-bar .dot::after {
+	content: "";
+	position: absolute;
+	right: -5px;
+	top: -4px;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background-color: var(--panel);
+	border: 2px solid var(--line);
+}
+
+#rank-bar .dot.reached {
+	background-color: var(--text);
+}
+
+#rank-bar .dot.reached::after {
+	background-color: var(--text);
+	border-color: var(--text);
+}
+
+#rank-bar .dot.current::after {
+	transform: scale(1.4);
+}
+
+/* --- the word being typed --- */
+#entry {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 2.4rem;
+	font-size: 1.6rem;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--text);
+}
+
+#entry .center {
+	color: var(--good);
+}
+
+#entry .bad {
+	color: var(--bad);
+}
+
+#entry .caret {
+	width: 2px;
+	height: 1.5rem;
+	margin-left: 2px;
+	background-color: var(--text);
+	animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+	to {
+		visibility: hidden;
+	}
+}
+
+#entry.empty::before {
+	content: "Type or tap letters";
+	font-size: 1rem;
+	font-weight: 400;
+	letter-spacing: 0;
+	text-transform: none;
+	color: var(--muted);
+}
+
+#entry.empty .caret {
+	display: none;
+}
+
+#entry.shake {
+	animation: shake 380ms ease;
+}
+
+@keyframes shake {
+	20% {
+		transform: translateX(-7px);
+	}
+	40% {
+		transform: translateX(7px);
+	}
+	60% {
+		transform: translateX(-4px);
+	}
+	80% {
+		transform: translateX(4px);
+	}
+}
+
+/* --- hive --- */
+#hive {
+	position: relative;
+	width: calc(var(--hex) * 3 + var(--gap) * 2);
+	height: calc(var(--hex-h) * 2.5 + var(--gap) * 2);
+	transition: opacity 130ms ease;
+}
+
+#hive.shuffling {
+	opacity: 0;
+}
+
+.cell {
+	position: absolute;
+	width: var(--hex);
+	height: var(--hex-h);
+	border: none;
+	padding: 0;
+	clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+	background-color: var(--cell);
+	color: var(--text);
+	font-family: inherit;
+	font-size: calc(var(--hex) * 0.42);
+	font-weight: 700;
+	cursor: pointer;
+	user-select: none;
+	transition: transform 80ms ease;
+}
+
+.cell.center {
+	background-color: var(--cell-center);
+	color: var(--panel);
+	left: calc(var(--hex) + var(--gap));
+	top: calc(var(--hex-h) * 0.75 + var(--gap));
+}
+
+/* the outer six clockwise from the top left, around the centre */
+.cell:nth-child(2) {
+	left: calc(var(--hex) * 0.5 + var(--gap) * 0.5);
+	top: 0;
+}
+
+.cell:nth-child(3) {
+	left: calc(var(--hex) * 1.5 + var(--gap) * 1.5);
+	top: 0;
+}
+
+.cell:nth-child(4) {
+	left: calc(var(--hex) * 2 + var(--gap) * 2);
+	top: calc(var(--hex-h) * 0.75 + var(--gap));
+}
+
+.cell:nth-child(5) {
+	left: calc(var(--hex) * 1.5 + var(--gap) * 1.5);
+	top: calc(var(--hex-h) * 1.5 + var(--gap) * 2);
+}
+
+.cell:nth-child(6) {
+	left: calc(var(--hex) * 0.5 + var(--gap) * 0.5);
+	top: calc(var(--hex-h) * 1.5 + var(--gap) * 2);
+}
+
+.cell:nth-child(7) {
+	left: 0;
+	top: calc(var(--hex-h) * 0.75 + var(--gap));
+}
+
+@media (hover: hover) {
+	.cell:hover {
+		background-color: var(--cell-hover);
+	}
+
+	.cell.center:hover {
+		background-color: var(--accent-strong);
+	}
+}
+
+.cell:active,
+.cell.pressed {
+	animation: press 140ms ease-out;
+}
+
+@keyframes press {
+	40% {
+		transform: scale(0.9);
+	}
+}
+
+/* --- delete, shuffle, enter --- */
+.hive-actions {
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+}
+
+.hive-actions button {
+	min-width: 44px;
+	min-height: 44px;
+	padding: 8px 18px;
+	background-color: var(--panel);
+	color: var(--text);
+	border: 1px solid var(--line);
+	border-radius: 22px;
+	font-size: 0.95rem;
+	font-family: inherit;
+	cursor: pointer;
+}
+
+@media (hover: hover) {
+	.hive-actions button:hover {
+		border-color: var(--text);
+	}
+}
+
+.hive-actions #shuffle-btn {
+	width: 44px;
+	padding: 0;
+	font-size: 1.1rem;
+}
+
+/* --- toast --- */
+/* over the entry line: the word it answers has just been cleared from there */
+#toast {
+	position: absolute;
+	top: 26px;
+	left: 50%;
+	transform: translateX(-50%);
+	padding: 8px 16px;
+	border-radius: 8px;
+	background-color: var(--text);
+	color: #ffffff;
+	font-size: 0.9rem;
+	font-weight: 600;
+	white-space: nowrap;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 140ms ease;
+	z-index: 3;
+}
+
+#toast.good {
+	background-color: var(--good);
+}
+
+#toast.show {
+	opacity: 1;
+}
+
+/* --- found words --- */
+#found {
+	width: 100%;
+	padding: 12px 14px;
+	border: 1px solid var(--line);
+	border-radius: var(--radius-lg);
+	background-color: var(--panel);
+}
+
+#found-count {
+	display: block;
+	margin-bottom: 8px;
+	font-size: 0.85rem;
+	color: var(--muted);
+}
+
+.word-list {
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 8px;
+	max-height: 30vh;
+	overflow-y: auto;
+	font-size: 0.9rem;
+	text-transform: capitalize;
+}
+
+.word-list li {
+	padding: 3px 9px;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	color: var(--text);
+}
+
+.word-list li.pangram {
+	background-color: var(--text);
+	border-color: var(--text);
+	color: var(--panel);
+}
+
+/* --- end of a round --- */
+.result .word-list {
+	justify-content: center;
+	width: 100%;
+	max-height: 38vh;
+	text-align: left;
+}
+
+.result .word-list li {
+	color: var(--muted);
+	border-style: dashed;
+}
+
+.result .word-list li.have {
+	color: var(--text);
+	border-style: solid;
+}
+
+.result .word-list li.have.pangram {
+	color: var(--panel);
+}
+
+.result .word-list li.pangram:not(.have) {
+	background-color: transparent;
+	color: var(--text);
+	border-color: var(--text);
+}
+
+/* --- phones --- */
+@media (max-width: 640px) {
+	.board-wrap {
+		gap: 10px;
+	}
+
+	.word-list {
+		max-height: 22vh;
+	}
+}

@@ -36,6 +36,8 @@
     "build:numberlink": "pnpm --filter numberlink run build",
     "dev:24-game": "pnpm --filter 24-game run dev",
     "build:24-game": "pnpm --filter 24-game run build",
+    "dev:word-hive": "pnpm --filter word-hive run dev",
+    "build:word-hive": "pnpm --filter word-hive run build",
     "preview": "pnpm run build && node scripts/preview.mjs",
     "deploy": "pnpm run build && node scripts/deploy.mjs",
     "sitemap": "node scripts/sitemap.mjs",

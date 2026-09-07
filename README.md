@@ -12,7 +12,7 @@ when you mean to change what the game ships.
 - `packages/nonogram`, `packages/sudoku`, `packages/numberlink` — puzzle banks, generated and graded
 - `packages/24-game` — every solvable hand, graded; its tool imports the game's own solver, so it needs Node 22.18+
 - `packages/passant` — chess positions, built with a local Stockfish
-- `packages/word-guess` — word lists, built from a cached dictionary download
+- `packages/word-guess`, `packages/word-hive` — word lists, built from a dictionary download cached under `packages/shared/words/`
 - `packages/klondike` — the bank of Klondike games proved winnable; see below
 - `packages/hub/public/icons` — the app icons, rendered from `packages/shared/hub/logo.svg` by `pnpm icons`
 - `packages/spider` — the same idea per suit count; see below

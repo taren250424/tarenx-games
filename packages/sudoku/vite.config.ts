@@ -8,7 +8,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: normalizePath(path.resolve(__dirname, '../shared/sudoku')) + '/**/*',
+          src: normalizePath(path.resolve(__dirname, '../shared/sudoku')) + '/*.svg',
           dest: 'shared',
           rename: { stripBase: 1 },
         }

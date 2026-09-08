@@ -1,0 +1,217 @@
+:root {
+	--cell: clamp(32px, calc(var(--board-max) / 9.4), 52px);
+	--grid-line: #cbd5e1;
+	--grid-box: #475569;
+	--cage-line: #94a3b8;
+	--cell-peer: #f1f5f9;
+	--cell-same: #e2e8f0;
+	--cell-selected: #cbd5e1;
+	--wrong: #dc2626;
+	--wrong-bg: #fee2e2;
+}
+
+/* --- board --- */
+.board-wrap {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+}
+
+#board {
+	display: grid;
+	grid-template-columns: repeat(9, var(--cell));
+	border: 2px solid var(--grid-box);
+	border-radius: 6px;
+	overflow: hidden;
+	background-color: var(--panel);
+	touch-action: manipulation;
+	user-select: none;
+}
+
+.cell {
+	position: relative;
+	width: var(--cell);
+	height: var(--cell);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: none;
+	border-top: 1px solid var(--grid-line);
+	border-left: 1px solid var(--grid-line);
+	background-color: var(--panel);
+	font-family: inherit;
+	font-size: calc(var(--cell) * 0.5);
+	color: var(--text);
+	cursor: pointer;
+	padding: 0;
+}
+
+.cell:nth-child(-n + 9) {
+	border-top: none;
+}
+
+.cell:nth-child(9n + 1) {
+	border-left: none;
+}
+
+.cell.bt {
+	border-top: 2px solid var(--grid-box);
+}
+
+.cell.bl {
+	border-left: 2px solid var(--grid-box);
+}
+
+/* the cage outline: a dashed line set in from the cell's edges, drawn on
+   each side where the neighbour belongs to another cage, so the outlines
+   of one cage's cells join into a single dashed shape */
+.cell::before {
+	content: "";
+	position: absolute;
+	inset: 2px;
+	pointer-events: none;
+	border: 0 dashed var(--cage-line);
+}
+
+.cell.ct::before {
+	border-top-width: 1px;
+}
+
+.cell.cb::before {
+	border-bottom-width: 1px;
+}
+
+.cell.cl::before {
+	border-left-width: 1px;
+}
+
+.cell.cr::before {
+	border-right-width: 1px;
+}
+
+.cell .sum {
+	position: absolute;
+	top: 3px;
+	left: 4px;
+	font-size: calc(var(--cell) * 0.24);
+	font-weight: 600;
+	line-height: 1;
+	color: var(--muted);
+	font-variant-numeric: tabular-nums;
+}
+
+.cell .sum.bad {
+	color: var(--wrong);
+}
+
+.cell.peer {
+	background-color: var(--cell-peer);
+}
+
+.cell.same {
+	background-color: var(--cell-same);
+}
+
+.cell.selected {
+	background-color: var(--cell-selected);
+}
+
+.cell.conflict,
+.cell.wrong {
+	color: var(--wrong);
+}
+
+.cell.wrong:not(.selected) {
+	background-color: var(--wrong-bg);
+}
+
+.cell .notes {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(3, 1fr);
+	width: 100%;
+	height: 100%;
+	padding: 4px 2px 2px;
+}
+
+.cell .note {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(var(--cell) * 0.22);
+	line-height: 1;
+	color: var(--muted);
+}
+
+/* the selected cage's sum and the ways its open cells can still reach it */
+#cage-info {
+	min-height: 1.4em;
+	max-width: calc(9 * var(--cell) + 4px);
+	font-size: 0.85rem;
+	line-height: 1.4;
+	text-align: center;
+	color: var(--muted);
+	font-variant-numeric: tabular-nums;
+}
+
+#cage-info strong {
+	color: var(--text);
+	font-weight: 600;
+}
+
+#cage-info .combo {
+	display: inline-block;
+	margin: 0 5px;
+	letter-spacing: 0.04em;
+}
+
+/* --- toolbar & numpad --- */
+.numpad {
+	display: grid;
+	grid-template-columns: repeat(9, minmax(34px, 52px));
+	gap: 6px;
+	width: 100%;
+	max-width: calc(9 * var(--cell) + 4px);
+	justify-content: center;
+}
+
+.numpad button {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 2px;
+	aspect-ratio: 4 / 5;
+	background-color: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	cursor: pointer;
+	padding: 4px 0;
+}
+
+@media (hover: hover) {
+	.numpad button:hover {
+		border-color: var(--accent);
+	}
+}
+
+.numpad button.done {
+	opacity: 0.35;
+}
+
+.numpad .digit {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: var(--text);
+	line-height: 1;
+}
+
+.numpad .count {
+	font-size: 0.65rem;
+	color: var(--muted);
+	line-height: 1;
+	min-height: 0.65rem;
+	font-variant-numeric: tabular-nums;
+}

@@ -9,7 +9,7 @@ Some games ship a data file that a tool under `packages/<game>/tools/` produced.
 The output is committed, so a normal build never runs these — re-run one only
 when you mean to change what the game ships.
 
-- `packages/nonogram`, `packages/sudoku`, `packages/numberlink` — puzzle banks, generated and graded
+- `packages/nonogram`, `packages/sudoku`, `packages/killer-sudoku`, `packages/numberlink` — puzzle banks, generated and graded; the two sudokus share the engine in `packages/shared/sudoku/solver.mjs`
 - `packages/24-game` — every solvable hand, graded; its tool imports the game's own solver, so it needs Node 22.18+
 - `packages/passant` — chess positions, built with a local Stockfish
 - `packages/word-guess`, `packages/word-hive` — word lists, built from a dictionary download cached under `packages/shared/words/`

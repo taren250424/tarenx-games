@@ -373,6 +373,19 @@ wordHive.rank = nonogram.hint;
 wordHive.win = wordGuess.win;
 wordHive.button = nonogram.button;
 
+// --- killer-sudoku ---
+// Nonogram's pencil vocabulary: a tick to pick a cell or press a button, a
+// stroke to set a digit, a swish to clear it, the buzz, the chime, the jingle.
+const killerSudoku = {};
+
+killerSudoku.select = nonogram.button;
+killerSudoku.place = nonogram.fill;
+killerSudoku.erase = nonogram.erase;
+killerSudoku.error = nonogram.error;
+killerSudoku.hint = nonogram.hint;
+killerSudoku.button = nonogram.button;
+killerSudoku.win = nonogram.win;
+
 const games = [
 	["blockdrop", blockdrop],
 	["sokoban", sokoban],
@@ -387,6 +400,7 @@ const games = [
 	["numberlink", numberlink],
 	["24-game", twentyFour],
 	["word-hive", wordHive],
+	["killer-sudoku", killerSudoku],
 ];
 const only = process.argv.slice(2);
 for (const [game, sounds] of games) {

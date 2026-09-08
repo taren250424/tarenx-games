@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+	<head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-NLCK842B");
+    </script>
+    <!-- End Google Tag Manager -->
+
+		<!-- Google AdSense -->
+		<script
+			async
+			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6810007868749586"
+			crossorigin="anonymous"
+			data-ad-frequency-hint="120s"
+		></script>
+
+		<meta charset="UTF-8" />
+		<meta
+			name="description"
+			content="Play Killer Sudoku free in your browser. 300 puzzles across three difficulties — cages, sums and no given digits, every one solvable by pure logic, with notes, hints and cage combinations shown as you play."
+		/>
+
+		<meta name="hub:category" content="puzzle" />
+		<meta name="hub:tagline" content="Sudoku with cages and sums, no givens" />
+
+		<link rel="canonical" href="https://games.tarenx.com/killer-sudoku/" />
+		<link rel="icon" type="image/svg+xml" href="shared/killer-sudoku/favicon.svg" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+		<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+		<meta name="theme-color" content="#f8fafc" />
+
+		<meta property="og:title" content="Killer Sudoku" />
+		<meta
+			property="og:description"
+			content="Sudoku with cages: make every cage add up, with no digits given. 300 logic-solvable puzzles, free."
+		/>
+		<meta property="og:image" content="shared/killer-sudoku/og.svg" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+		<title>Killer Sudoku</title>
+		<script type="module" crossorigin src="/killer-sudoku/assets/index-CA0T_VBu.js"></script>
+		<link rel="stylesheet" crossorigin href="/killer-sudoku/assets/index-BGx4fIWy.css">
+	</head>
+
+	<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-NLCK842B"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+		<header>
+			<div class="header-brand">
+				<img class="header-logo" src="shared/killer-sudoku/logo.svg" alt="Killer Sudoku Logo" />
+				<span class="header-title">Killer Sudoku</span>
+			</div>
+			<div class="header-actions">
+				<a class="header-home" href="/">← All games</a>
+				<button id="sound-btn" class="header-sound" title="Toggle sound"></button>
+			</div>
+		</header>
+
+		<main>
+			<aside class="ad"></aside>
+			<section class="game-column">
+			<div class="controls">
+				<select id="puzzle-select" aria-label="Select puzzle"></select>
+				<button id="restart-btn" title="Restart (R)">⟳ Restart</button>
+				<label class="check-label" title="Highlight digits that don't match the solution">
+					<input type="checkbox" id="mistakes-check" checked /> Show mistakes
+				</label>
+			</div>
+
+			<div class="hud">
+				<span>Time <strong id="time">0:00</strong></span>
+				<span>Best <strong id="best">—</strong></span>
+				<span>Hints <strong id="hints">3</strong></span>
+			</div>
+
+			<div class="board-wrap">
+				<div id="board" aria-label="Killer Sudoku board"></div>
+				<div id="cage-info" aria-live="polite"></div>
+				<div id="win-overlay" class="result hidden">
+					<h2>Puzzle Complete!</h2>
+					<p id="win-stats"></p>
+					<button id="next-btn" class="primary">Next Puzzle →</button>
+				</div>
+			</div>
+
+			<div class="toolbar" aria-label="Tools">
+				<button id="undo-btn" title="Undo (Z)">↩ Undo</button>
+				<button id="erase-btn" title="Erase (Delete)">⌫ Erase</button>
+				<button id="notes-btn" title="Notes (N)" aria-pressed="false">✎ Notes</button>
+				<button id="hint-btn" title="Hint (H)"><i data-icon="bulb"></i> Hint</button>
+			</div>
+
+			<div class="numpad" aria-label="Number pad"></div>
+
+			<article>
+				<section>
+					<h2>How to play</h2>
+					<p>
+						Killer Sudoku is Sudoku with nothing given. Every row, column and
+						3×3 box still takes the digits 1 through 9 exactly once, but the
+						grid starts empty. Instead, dashed outlines divide it into cages,
+						and the small number in a cage's corner is what its digits add
+						up to. Inside one cage no digit repeats. Tap a cell, then tap a
+						number to fill it in; the line under the board lists every way
+						the selected cage can still be completed. Each puzzle here has
+						exactly one solution, and none of them require guessing.
+					</p>
+				</section>
+
+				<section>
+					<h2>Controls</h2>
+					<ul>
+						<li>Click or tap a cell, then a number — or type <kbd>1</kbd>–<kbd>9</kbd> directly</li>
+						<li><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> — move between cells</li>
+						<li><kbd>N</kbd> — toggle notes (pencil marks)</li>
+						<li><kbd>Z</kbd> or <kbd>U</kbd> — undo (unlimited)</li>
+						<li><kbd>Delete</kbd>, <kbd>Backspace</kbd> or <kbd>0</kbd> — erase a cell</li>
+						<li><kbd>H</kbd> — use a hint (3 per puzzle)</li>
+						<li><kbd>R</kbd> — restart the puzzle</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Strategy tips</h2>
+					<ul>
+						<li>
+							<strong>Start with the cages that have one answer.</strong> Two
+							cells adding to 3 are 1 and 2; two cells adding to 17 are 8
+							and 9; three cells adding to 6 are 1, 2 and 3, and three
+							adding to 24 are 7, 8 and 9. Note those digits in and they
+							ripple through their rows, columns and boxes.
+						</li>
+						<li>
+							<strong>Use the 45 rule.</strong> Every row, column and box
+							adds up to 45. If a box holds whole cages adding to 38 and one
+							cell of a cage that sticks out, that cell is 7. Two rows make
+							90, three make 135 — the same trick, bigger.
+						</li>
+						<li>
+							<strong>Read the cage line.</strong> Selecting any cell shows
+							every combination its cage can still take. As digits go in,
+							the list shrinks — when it is down to one combination, the
+							cage is as good as solved.
+						</li>
+						<li>
+							<strong>Then play Sudoku.</strong> Once the cages have seeded a
+							few digits, the ordinary techniques take over: singles, pairs,
+							locked candidates. A digit a cage must contain can be treated
+							like a pointing pair against the cells that see all of it.
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>About Killer Sudoku</h2>
+					<p>
+						Killer Sudoku appeared in Japan in the 1990s under the name
+						サムナンプレ ("sum number place"), crossing the arithmetic of Kakuro
+						with the grid of Sudoku, and reached a wide audience when British
+						newspapers took it up in 2005. The cages replace the given digits
+						entirely: all the information is in the sums, which makes the
+						opening slower and more mathematical than a classic Sudoku, and
+						the finish just the same.
+					</p>
+					<p>
+						This edition ships 300 puzzles — 100 each of Easy, Medium and
+						Hard. Every puzzle is proven to have a single solution and is
+						graded by the techniques it needs: Easy falls to small-cage
+						combinations, singles and the 45 rule on one row, column or box;
+						Medium adds big cages, pairs, locked candidates and the 45 rule
+						across two units; Hard calls for triples, X-wings and the 45 rule
+						across three. Nothing ever requires trial and error.
+					</p>
+				</section>
+			</article>
+			</section>
+			<aside class="ad"></aside>
+		</main>
+
+		<footer>
+			<p>
+				Part of <a href="/">Tarenx Games</a>
+				<span class="footer-more">· free browser games, no install, no sign-up</span>
+				· <a href="/privacy/">Privacy</a>
+			</p>
+		</footer>
+
+	</body>
+</html>

@@ -260,10 +260,6 @@ footer a {
     font-size: 0.8rem;
   }
 
-  .footer-more {
-    display: none;
-  }
-
   main {
     padding: 0 12px 32px;
     padding-left: calc(12px + env(safe-area-inset-left));

@@ -10,3 +10,4 @@
 - A game asks the shared ad door (`packages/shared/ads/ads.ts`) before it starts the next round, and never on a mid-game restart. Read how four or five of the existing games call it and follow them.
 - A new game joins the hub on its own: `<meta name="hub:tagline">` and `<meta name="hub:category">` in its index.html put its card on the list, and `markPlayed()` from `packages/shared/progress/recent.ts` on load puts it in "Recently played". Nothing errors when they are missing — the card just goes quiet.
 - For sound effects, use `scripts/gen-sfx.mjs` (`node scripts/gen-sfx.mjs [game ...]`) rather than adding audio files by hand.
+- Anything that ships from outside this repo — a word list, a level set, a position database, a runtime npm dependency — gets its source and license terms in both `THIRD-PARTY-NOTICES.md` and the site's `/credits/` page (`packages/hub/public/credits/index.html`). Credit data the player sees in the game's About section too.

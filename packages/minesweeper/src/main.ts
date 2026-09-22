@@ -17,9 +17,18 @@ interface Difficulty {
 	mines: number;
 }
 
+interface Session {
+	key: string; // difficulty key
+	mines: number[];
+	revealed: number[];
+	flagged: number[];
+	seconds: number;
+}
+
 interface Progress {
 	current: string; // difficulty key
 	best: Record<string, number>; // difficulty key -> best time in seconds
+	session: Session | null;
 	settings: { sound: boolean };
 }
 
@@ -68,6 +77,7 @@ function loadProgress(): Progress {
 				return {
 					current: typeof parsed.current === "string" ? parsed.current : "beginner",
 					best: parsed.best,
+					session: parsed.session ?? null,
 					settings: { sound: parsed.settings?.sound ?? true },
 				};
 			}
@@ -75,7 +85,7 @@ function loadProgress(): Progress {
 	} catch {
 		// corrupted storage — start fresh
 	}
-	return { current: "beginner", best: {}, settings: { sound: true } };
+	return { current: "beginner", best: {}, session: null, settings: { sound: true } };
 }
 
 function saveProgress(progress: Progress) {
@@ -88,6 +98,26 @@ function saveProgress(progress: Progress) {
 
 const progress = loadProgress();
 ads.init({ sound: () => progress.settings.sound });
+
+// A field exists only after the first reveal, so there is nothing to save before it.
+function saveSession() {
+	progress.session =
+		started && alive && !won
+			? { key: difficulty.key, mines: [...mines], revealed: [...revealed], flagged: [...flagged], seconds }
+			: null;
+	saveProgress(progress);
+}
+
+function validSession(session: Session | null, d: Difficulty): session is Session {
+	if (!session || session.key !== d.key) return false;
+	const total = d.cols * d.rows;
+	const inRange = (list: unknown): list is number[] =>
+		Array.isArray(list) && list.every((i) => Number.isInteger(i) && i >= 0 && i < total);
+	if (!inRange(session.mines) || !inRange(session.revealed) || !inRange(session.flagged)) return false;
+	if (new Set(session.mines).size !== d.mines) return false;
+	if (session.revealed.some((i) => session.mines.includes(i))) return false;
+	return typeof session.seconds === "number" && session.seconds >= 0;
+}
 
 // --- audio ---
 const play = createSfx(["reveal", "flag", "boom", "win"] as const, () => progress.settings.sound);
@@ -142,19 +172,23 @@ function startTimer() {
 }
 
 // --- game ---
-function newGame(d: Difficulty = difficulty) {
+function newGame(d: Difficulty = difficulty, session?: Session) {
 	difficulty = d;
-	mines = new Set();
-	revealed = new Set();
-	flagged = new Set();
+	mines = new Set(session?.mines);
+	revealed = new Set(session?.revealed);
+	flagged = new Set(session?.flagged);
 	counts = Array(totalCells()).fill(0);
-	started = false;
+	started = session !== undefined;
 	alive = true;
 	won = false;
-	seconds = 0;
+	seconds = session?.seconds ?? 0;
 	stopTimer();
+	if (session) {
+		countMines();
+		startTimer();
+	}
 	progress.current = d.key;
-	saveProgress(progress);
+	saveSession();
 	difficultySelectEl.value = d.key;
 	boardEl.dataset.size = d.key;
 	overlayEl.classList.add("hidden");
@@ -174,6 +208,10 @@ function placeMines(safe: number) {
 		[pool[k], pool[j]] = [pool[j], pool[k]];
 		mines.add(pool[k]);
 	}
+	countMines();
+}
+
+function countMines() {
 	for (let i = 0; i < totalCells(); i++) {
 		counts[i] = neighbors(i).filter((n) => mines.has(n)).length;
 	}
@@ -218,6 +256,7 @@ function handleReveal(i: number) {
 	if (openCell(i)) {
 		play("reveal");
 		checkWin();
+		saveSession();
 	}
 }
 
@@ -235,6 +274,7 @@ function chord(i: number) {
 	}
 	play("reveal");
 	checkWin();
+	saveSession();
 }
 
 function toggleFlag(i: number) {
@@ -245,6 +285,7 @@ function toggleFlag(i: number) {
 		flagged.add(i);
 	}
 	play("flag");
+	saveSession();
 	render();
 }
 
@@ -252,6 +293,7 @@ function lose(i: number) {
 	alive = false;
 	revealed.add(i); // the hit mine renders as the exploded cell
 	stopTimer();
+	saveSession();
 	play("boom");
 	endTitleEl.textContent = "Boom!";
 	endStatsEl.textContent = `Survived ${formatTime(seconds)} — better luck next field`;
@@ -273,8 +315,8 @@ function checkWin() {
 	const isRecord = best === undefined || seconds < best;
 	if (isRecord) {
 		progress.best[difficulty.key] = seconds;
-		saveProgress(progress);
 	}
+	saveSession();
 	endTitleEl.textContent = "Field Cleared!";
 	endStatsEl.textContent = `${formatTime(seconds)}${isRecord ? " · New best!" : ""}`;
 	againBtn.textContent = "Play Again";
@@ -422,6 +464,8 @@ difficultySelectEl.addEventListener("change", () => {
 	if (d) newGame(d);
 });
 
+window.addEventListener("pagehide", saveSession);
+
 // --- init ---
 function init() {
 	difficultySelectEl.innerHTML = DIFFICULTIES.map(
@@ -430,7 +474,7 @@ function init() {
 	updateSoundBtn();
 	updateFlagBtn();
 	const saved = DIFFICULTIES.find((d) => d.key === progress.current) ?? DIFFICULTIES[0];
-	newGame(saved);
+	newGame(saved, validSession(progress.session, saved) ? progress.session : undefined);
 }
 
 init();

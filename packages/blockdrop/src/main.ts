@@ -14,10 +14,13 @@ const COLS = 10;
 const ROWS = 20;
 const HIDDEN = 2; // spawn rows above the visible field
 const TOTAL_ROWS = ROWS + HIDDEN;
-const STORAGE_KEY = "tarenx.blockdrop.highscore";
-const SOUND_KEY = "tarenx.blockdrop.sound";
+const STORAGE_KEY = "tarenx.blockdrop.progress";
+// the two keys the game used before it kept one progress record
+const LEGACY_HIGH_KEY = "tarenx.blockdrop.highscore";
+const LEGACY_SOUND_KEY = "tarenx.blockdrop.sound";
 
 type PieceType = "I" | "O" | "T" | "S" | "Z" | "J" | "L";
+const PIECE_TYPES: PieceType[] = ["I", "O", "T", "S", "Z", "J", "L"];
 
 // flat, mid-weight hues that hold their own on the white well
 const COLORS: Record<PieceType, string> = {
@@ -85,6 +88,24 @@ interface Piece {
 	col: number;
 }
 
+interface Session {
+	board: string[]; // one row per string, "." for an empty cell
+	current: Piece;
+	queue: PieceType[];
+	bag: PieceType[];
+	hold: PieceType | null;
+	canHold: boolean;
+	score: number;
+	lines: number;
+	level: number;
+}
+
+interface Progress {
+	best: number;
+	session: Session | null;
+	settings: { sound: boolean };
+}
+
 // --- state ---
 let board: (PieceType | null)[][] = [];
 let current: Piece | null = null;
@@ -95,11 +116,84 @@ let canHold = true;
 let score = 0;
 let lines = 0;
 let level = 1;
-let highScore = Number(localStorage.getItem(STORAGE_KEY) ?? 0);
 let running = false;
 let paused = false;
 let dropTimer = 0;
 let lastTime = 0;
+
+// --- persistence ---
+function loadProgress(): Progress {
+	const fallback: Progress = {
+		best: Number(localStorage.getItem(LEGACY_HIGH_KEY) ?? 0),
+		session: null,
+		settings: { sound: localStorage.getItem(LEGACY_SOUND_KEY) !== "0" },
+	};
+	try {
+		const raw = localStorage.getItem(STORAGE_KEY);
+		if (raw) {
+			const parsed = JSON.parse(raw) as Partial<Progress>;
+			return {
+				best: typeof parsed.best === "number" ? parsed.best : fallback.best,
+				session: parsed.session ?? null,
+				settings: { sound: parsed.settings?.sound ?? fallback.settings.sound },
+			};
+		}
+	} catch {
+		// corrupted storage — start fresh
+	}
+	return fallback;
+}
+
+function saveProgress() {
+	try {
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+		localStorage.removeItem(LEGACY_HIGH_KEY);
+		localStorage.removeItem(LEGACY_SOUND_KEY);
+	} catch {
+		// storage full or blocked — keep playing with in-memory progress
+	}
+}
+
+const progress = loadProgress();
+
+// A game in flight is saved when a piece locks, on hold, on pause and when the
+// page hides, so a reload picks it up from the last settled moment.
+function saveSession() {
+	progress.session =
+		current && (running || paused)
+			? {
+					board: board.map((row) => row.map((cell) => cell ?? ".").join("")),
+					current: { ...current, matrix: current.matrix.map((row) => [...row]) },
+					queue: [...queue],
+					bag: [...bag],
+					hold,
+					canHold,
+					score,
+					lines,
+					level,
+				}
+			: null;
+	saveProgress();
+}
+
+function isPieceType(v: unknown): v is PieceType {
+	return typeof v === "string" && (PIECE_TYPES as string[]).includes(v);
+}
+
+function validSession(session: Session | null): session is Session {
+	if (!session) return false;
+	const { board: rows, current: piece } = session;
+	if (!Array.isArray(rows) || rows.length !== TOTAL_ROWS) return false;
+	const validRow = (row: unknown) =>
+		typeof row === "string" && row.length === COLS && [...row].every((ch) => ch === "." || isPieceType(ch));
+	if (!rows.every(validRow)) return false;
+	if (!piece || !isPieceType(piece.type) || !Array.isArray(piece.matrix)) return false;
+	if (!Number.isInteger(piece.row) || !Number.isInteger(piece.col)) return false;
+	if (!Array.isArray(session.queue) || !session.queue.every(isPieceType)) return false;
+	if (!Array.isArray(session.bag) || !session.bag.every(isPieceType)) return false;
+	if (session.hold !== null && !isPieceType(session.hold)) return false;
+	return [session.score, session.lines, session.level].every((n) => Number.isInteger(n) && n >= 0);
+}
 
 // --- elements ---
 const canvas = document.getElementById("game") as HTMLCanvasElement;
@@ -118,17 +212,16 @@ const overlayTextEl = document.getElementById("overlay-text") as HTMLElement;
 const soundBtn = document.getElementById("sound-btn") as HTMLButtonElement;
 
 // --- audio ---
-let soundOn = localStorage.getItem(SOUND_KEY) !== "0";
-const play = createSfx(["drop", "clear", "levelup", "gameover"] as const, () => soundOn);
-ads.init({ sound: () => soundOn });
+const play = createSfx(["drop", "clear", "levelup", "gameover"] as const, () => progress.settings.sound);
+ads.init({ sound: () => progress.settings.sound });
 
 function updateSoundBtn() {
-	setSoundIcon(soundBtn, soundOn);
+	setSoundIcon(soundBtn, progress.settings.sound);
 }
 
 soundBtn.addEventListener("click", () => {
-	soundOn = !soundOn;
-	localStorage.setItem(SOUND_KEY, soundOn ? "1" : "0");
+	progress.settings.sound = !progress.settings.sound;
+	saveProgress();
 	updateSoundBtn();
 });
 
@@ -152,7 +245,7 @@ function emptyBoard(): (PieceType | null)[][] {
 }
 
 function refillBag(): PieceType[] {
-	const types: PieceType[] = ["I", "O", "T", "S", "Z", "J", "L"];
+	const types = [...PIECE_TYPES];
 	for (let i = types.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
 		[types[i], types[j]] = [types[j], types[i]];
@@ -248,6 +341,7 @@ function holdPiece() {
 	current = held ? spawnPiece(held) : spawnPiece();
 	canHold = false;
 	dropTimer = 0;
+	saveSession();
 }
 
 function ghostRow(): number {
@@ -292,16 +386,16 @@ function lockPiece() {
 
 	if (collides(current.matrix, current.row, current.col)) {
 		endGame();
+		return;
 	}
+	saveSession();
 }
 
 function endGame() {
 	running = false;
 	play("gameover");
-	if (score > highScore) {
-		highScore = score;
-		localStorage.setItem(STORAGE_KEY, String(highScore));
-	}
+	progress.best = Math.max(progress.best, score);
+	saveSession();
 	showOverlay("Game Over", `Score ${score.toLocaleString()} — press R or tap to play again`);
 	draw();
 }
@@ -324,12 +418,30 @@ function newGame() {
 	requestAnimationFrame(loop);
 }
 
+function restoreGame(session: Session) {
+	board = session.board.map((row) => [...row].map((ch) => (ch === "." ? null : (ch as PieceType))));
+	current = session.current;
+	queue = session.queue;
+	bag = session.bag;
+	hold = session.hold;
+	canHold = session.canHold;
+	score = session.score;
+	lines = session.lines;
+	level = session.level;
+	dropTimer = 0;
+	lastTime = 0;
+	running = false;
+	paused = true;
+	showOverlay("Welcome back", "Tap or press P to resume");
+}
+
 function togglePause() {
 	if (!running && !paused) return;
 	paused = !paused;
 	if (paused) {
 		running = false;
 		showOverlay("Paused", "Tap or press P to resume");
+		saveSession();
 	} else {
 		running = true;
 		lastTime = 0;
@@ -456,7 +568,7 @@ function draw() {
 	scoreEl.textContent = score.toLocaleString();
 	linesEl.textContent = String(lines);
 	levelEl.textContent = String(level);
-	highEl.textContent = highScore.toLocaleString();
+	highEl.textContent = progress.best.toLocaleString();
 }
 
 function drawMini(
@@ -505,7 +617,8 @@ document.addEventListener("keydown", (e) => {
 	if (!running) {
 		if (e.key === "Enter" || e.key === " ") {
 			e.preventDefault();
-			if (!paused) void playAgain();
+			if (paused) togglePause();
+			else void playAgain();
 		}
 		return;
 	}
@@ -624,9 +737,14 @@ overlayEl.addEventListener("click", () => {
 	}
 });
 
+window.addEventListener("pagehide", saveSession);
+
 // --- init ---
-board = emptyBoard();
-highEl.textContent = highScore.toLocaleString();
 updateSoundBtn();
-showOverlay("Block Drop", "Press Enter or tap to start");
+if (validSession(progress.session)) {
+	restoreGame(progress.session);
+} else {
+	board = emptyBoard();
+	showOverlay("Block Drop", "Press Enter or tap to start");
+}
 draw();

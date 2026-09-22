@@ -249,29 +249,8 @@ body.high-contrast {
 	color: var(--text);
 }
 
-.stat-grid {
-	display: flex;
-	justify-content: center;
-	gap: 18px;
-	margin-bottom: 10px;
-}
-
-.stat-grid div {
-	display: flex;
-	flex-direction: column;
-}
-
-.stat-grid strong {
-	font-size: 1.2rem;
-	color: var(--text);
-}
-
-.stat-grid span {
-	font-size: 0.72rem;
-	color: var(--muted);
-}
-
 .dist {
+	margin-top: 10px;
 	display: flex;
 	flex-direction: column;
 	gap: 3px;

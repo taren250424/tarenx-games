@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { importStats, recordResult, statGrid, statsFor, winPairs } from "../../shared/progress/stats.ts";
 import { ads } from "../../shared/ads/ads.ts";
 import { WORDS } from "./words.ts";
 
@@ -13,9 +14,13 @@ markPlayed();
 type Size = "small" | "medium" | "large";
 
 interface Stats {
-	played: number;
-	genius: number;
 	perfect: number;
+}
+
+// The counts the game kept for itself before the shared record store existed.
+interface LegacyStats extends Partial<Stats> {
+	played?: number;
+	genius?: number;
 }
 
 interface Session {
@@ -103,15 +108,23 @@ const toastEl = document.getElementById("toast") as HTMLElement;
 const overlayEl = document.getElementById("end-overlay") as HTMLElement;
 const endTitleEl = document.getElementById("end-title") as HTMLElement;
 const endTextEl = document.getElementById("end-text") as HTMLElement;
+const endRecordEl = document.getElementById("end-record") as HTMLElement;
 const endListEl = document.getElementById("end-list") as HTMLElement;
 const keepBtn = document.getElementById("keep-btn") as HTMLButtonElement;
 const againBtn = document.getElementById("again-btn") as HTMLButtonElement;
 
 // --- persistence ---
+function adoptStats(stats: LegacyStats): Stats {
+	if (typeof stats.played === "number") {
+		importStats("all", { played: stats.played, won: stats.genius ?? 0, streak: 0, bestStreak: 0 });
+	}
+	return { perfect: stats.perfect ?? 0 };
+}
+
 function loadProgress(): Progress {
 	const fallback: Progress = {
 		size: "medium",
-		stats: { played: 0, genius: 0, perfect: 0 },
+		stats: { perfect: 0 },
 		recent: [],
 		session: null,
 		settings: { sound: true },
@@ -122,7 +135,7 @@ function loadProgress(): Progress {
 			const parsed = JSON.parse(raw) as Partial<Progress>;
 			return {
 				size: parsed.size && parsed.size in SIZES ? parsed.size : "medium",
-				stats: { ...fallback.stats, ...parsed.stats },
+				stats: adoptStats(parsed.stats ?? {}),
 				recent: Array.isArray(parsed.recent) ? parsed.recent : [],
 				session: parsed.session ?? null,
 				settings: { sound: parsed.settings?.sound ?? true },
@@ -291,14 +304,10 @@ function reject(message: string) {
 	}, 380);
 }
 
-function statsLine(): string {
-	const s = progress.stats;
-	return `Puzzles ${s.played} · Genius ${s.genius} · Perfect ${s.perfect}`;
-}
-
 function showSheet(title: string, text: string, opts: { list?: boolean; keep?: boolean } = {}) {
 	endTitleEl.textContent = title;
 	endTextEl.textContent = text;
+	endRecordEl.innerHTML = statGrid([...winPairs(statsFor()), { value: progress.stats.perfect, label: "Perfect" }]);
 	endListEl.classList.toggle("hidden", !opts.list);
 	if (opts.list) {
 		const have = new Set(found);
@@ -354,12 +363,16 @@ function submit() {
 
 	if (found.length === answers.length) {
 		progress.stats.perfect++;
-		saveProgress();
+		if (!celebrated) {
+			celebrated = true;
+			recordResult(true);
+		}
+		saveSession();
 		play("win");
-		window.setTimeout(() => showSheet("Perfect!", `Every word found · ${score()} points · ${statsLine()}`), 700);
+		window.setTimeout(() => showSheet("Perfect!", `Every word found · ${score()} points`), 700);
 	} else if (rank >= GENIUS && !celebrated) {
 		celebrated = true;
-		progress.stats.genius++;
+		recordResult(true);
 		saveSession();
 		play("win");
 		window.setTimeout(
@@ -416,13 +429,14 @@ function renderAll() {
 }
 
 function startGame() {
+	// a puzzle left before Genius counts as lost, once a word was found in it
+	if (found.length > 0 && !celebrated) recordResult(false);
 	setPuzzle(pickPuzzle(progress.size));
 	rememberPuzzle(letters);
 	found = [];
 	typed = "";
 	revealed = false;
 	celebrated = false;
-	progress.stats.played++;
 	hideSheet();
 	renderAll();
 	saveSession();

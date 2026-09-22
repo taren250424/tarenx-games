@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { recordResult, statGrid, statsFor, winPairs } from "../../shared/progress/stats.ts";
 import { ads } from "../../shared/ads/ads.ts";
 import { type Card, SUITS, orderedDeck, suit } from "../../shared/cards/deck.ts";
 import { type SlotSpec, createTable } from "../../shared/cards/table.ts";
@@ -76,6 +77,7 @@ const finishBtn = document.getElementById("finish-btn") as HTMLButtonElement;
 const overlayEl = document.getElementById("overlay") as HTMLElement;
 const overlayTitleEl = document.getElementById("overlay-title") as HTMLElement;
 const overlayStatsEl = document.getElementById("overlay-stats") as HTMLElement;
+const overlayRecordEl = document.getElementById("overlay-record") as HTMLElement;
 const overlayUndoBtn = document.getElementById("overlay-undo") as HTMLButtonElement;
 const overlayNextBtn = document.getElementById("overlay-next") as HTMLButtonElement;
 
@@ -162,6 +164,10 @@ ads.init({ sound: () => progress.settings.sound });
 
 function scoreKey(): string {
 	return `${gameNumber}:${progress.settings.draw}`;
+}
+
+function variant(): string {
+	return `draw${progress.settings.draw}`;
 }
 
 function saveSession() {
@@ -362,6 +368,7 @@ function sweep() {
 
 function finish() {
 	finished = true;
+	overlayRecordEl.innerHTML = statGrid(winPairs(recordResult(true, variant())));
 	selection = null;
 	const key = scoreKey();
 	const previous = progress.best[key];
@@ -388,6 +395,7 @@ function finish() {
 function showStuck() {
 	overlayEl.classList.add("stuck");
 	overlayTitleEl.textContent = "No moves left";
+	overlayRecordEl.innerHTML = statGrid(winPairs(statsFor(variant())));
 	overlayStatsEl.textContent = `Game #${gameNumber} · ${moves} moves · take some back and try another line.`;
 	overlayUndoBtn.classList.remove("hidden");
 	overlayNextBtn.textContent = "New game";
@@ -517,6 +525,8 @@ function updateUrl() {
 }
 
 function startGame(number: number, session?: Session) {
+	// a game left for another one counts as lost, the way solitaire scores itself
+	if (moves > 0 && !finished) recordResult(false, variant());
 	gameNumber = clampGame(number);
 	board = session ? cloneBoard(session.board) : dealBoard(seedOf(gameNumber));
 	moves = session ? session.moves : 0;

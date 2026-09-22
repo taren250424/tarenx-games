@@ -1,5 +1,6 @@
 import "./style.css";
 import { recentlyPlayed } from "../../shared/progress/recent.ts";
+import { totalsFor } from "../../shared/progress/stats.ts";
 
 // The game list is prerendered into index.html at build time by the
 // prerender-game-list plugin in vite.config.ts. This wires the category
@@ -36,7 +37,12 @@ if (recent.length > 0) {
 		const link = document.createElement("a");
 		link.className = "recent-card";
 		link.href = card.href;
-		link.innerHTML = `<img src="${card.querySelector("img")!.getAttribute("src")}" alt="" width="36" height="36" /><span>${card.querySelector(".card-name")!.textContent}</span>`;
+		const totals = totalsFor(card.getAttribute("href")!.replace(/\//g, ""));
+		const record =
+			totals.played === 0
+				? ""
+				: `<small>${totals.played} played${totals.streak > 1 ? ` · ${totals.streak} streak` : ""}</small>`;
+		link.innerHTML = `<img src="${card.querySelector("img")!.getAttribute("src")}" alt="" width="36" height="36" /><span>${card.querySelector(".card-name")!.textContent}${record}</span>`;
 		row.append(link);
 	}
 	document.querySelector(".chips")!.before(section);

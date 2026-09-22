@@ -116,6 +116,19 @@ main {
   height: 36px;
 }
 
+.recent-card span {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.recent-card small {
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
 @media (hover: hover) {
   .recent-card:hover {
     border-color: var(--text);

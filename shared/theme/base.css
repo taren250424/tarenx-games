@@ -13,7 +13,8 @@
  *      whatever sat under the board — numpad, keyboard, controls — which the
  *      player is done with. Its size never depends on the board's. Inside it,
  *      `button.primary` is the one action the player most likely wants next;
- *      the rest stay quiet.
+ *      the rest stay quiet. The record row from shared/progress/stats.ts
+ *      (`statGrid`) sits inside it as `.stat-grid`.
  *   4. Touch: `.board-wrap` is the play surface every game wraps its board
  *      in, and it carries the touch defaults — no text selection, no
  *      long-press callout, no double-tap zoom. A board that is dragged or
@@ -321,6 +322,29 @@ main .game-column {
 .result p {
 	color: var(--muted);
 	font-variant-numeric: tabular-nums;
+}
+
+/* the record row from shared/progress/stats.ts: played, win rate, streak */
+.result .stat-grid {
+	display: flex;
+	justify-content: center;
+	gap: 18px;
+}
+
+.result .stat-grid div {
+	display: flex;
+	flex-direction: column;
+}
+
+.result .stat-grid strong {
+	font-size: 1.2rem;
+	color: var(--text);
+	font-variant-numeric: tabular-nums;
+}
+
+.result .stat-grid span {
+	font-size: 0.72rem;
+	color: var(--muted);
 }
 
 .overlay-actions,

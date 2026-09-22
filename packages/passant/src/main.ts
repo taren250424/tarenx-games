@@ -51,6 +51,8 @@ interface Progress {
 	seen: number[];
 	daily: { date: string; picks: number[]; results: DailyResult[] } | null;
 	dailyHistory: { days: number; bestScore: number; streak: number; lastDate: string | null };
+	/** The quick-play position still waiting for an answer, so a reload shows it again. */
+	session: { idx: number } | null;
 }
 
 const STORAGE_KEY = "tarenx.passant.progress";
@@ -90,6 +92,7 @@ function defaultProgress(): Progress {
 		seen: [],
 		daily: null,
 		dailyHistory: { days: 0, bestScore: 0, streak: 0, lastDate: null },
+		session: null,
 	};
 }
 
@@ -105,6 +108,7 @@ function loadProgress(): Progress {
 			seen: Array.isArray(saved.seen) ? saved.seen : [],
 			daily: saved.daily ?? null,
 			dailyHistory: { ...base.dailyHistory, ...saved.dailyHistory },
+			session: saved.session ?? null,
 		};
 	} catch {
 		return base;
@@ -128,7 +132,7 @@ let current: { idx: number; pos: Position } | null = null;
 let answered: MoveScore | null = null;
 let playedMove: UserMove | null = null;
 let lineTimer: number | null = null;
-const session = { played: 0, points: 0 };
+const tally = { played: 0, points: 0 };
 
 document.body.insertAdjacentHTML("afterbegin", pieceSprite());
 const board = new Board(boardSvg, promoEl);
@@ -203,8 +207,8 @@ function updateHud(): void {
 		posRatingEl.textContent = "—";
 	}
 	turnLabel.classList.toggle("idle", !current);
-	sessionScoreEl.textContent = session.played
-		? `${Math.round(session.points / session.played)} avg · ${session.played} played`
+	sessionScoreEl.textContent = tally.played
+		? `${Math.round(tally.points / tally.played)} avg · ${tally.played} played`
 		: "—";
 	if (mode === "daily" && progress.daily) {
 		const { results, picks } = progress.daily;
@@ -232,6 +236,8 @@ async function present(idx: number): Promise<void> {
 	answered = null;
 	playedMove = null;
 	current = null;
+	progress.session = mode === "quick" ? { idx } : null;
+	saveProgress();
 	panelEl.innerHTML = `<p class="hint">Loading position…</p>`;
 	let pos: Position;
 	try {
@@ -310,8 +316,8 @@ function onUserMove(m: UserMove): void {
 	drawResultArrows(score);
 
 	// record
-	session.played++;
-	session.points += score.points;
+	tally.played++;
+	tally.points += score.points;
 	progress.totals.played++;
 	progress.totals.points += score.points;
 	progress.totals.grades[score.grade]++;
@@ -320,6 +326,7 @@ function onUserMove(m: UserMove): void {
 		progress.daily.results.push({ idx: current.idx, uci, points: score.points, grade: score.grade });
 		if (progress.daily.results.length >= progress.daily.picks.length) finishDaily();
 	}
+	progress.session = null;
 	saveProgress();
 	updateHud();
 	renderResult(score);
@@ -540,7 +547,7 @@ async function renderDailySummary(): Promise<void> {
 }
 
 // --- modes & controls ---
-function setMode(m: Mode): void {
+function setMode(m: Mode, resumeIdx?: number): void {
 	mode = m;
 	progress.settings.mode = m;
 	saveProgress();
@@ -549,8 +556,9 @@ function setMode(m: Mode): void {
 	difficultySelect.disabled = m === "daily";
 	stopLine();
 	showingLine = false;
-	if (m === "quick") nextQuick();
-	else startDaily();
+	if (m === "daily") startDaily();
+	else if (resumeIdx === undefined) nextQuick();
+	else present(resumeIdx);
 }
 
 function renderStats(): void {
@@ -636,7 +644,9 @@ async function start(): Promise<void> {
 		panelEl.innerHTML = `<h3>Could not load the positions</h3><p>Check your connection and reload the page.</p>`;
 		return;
 	}
-	setMode(mode);
+	const pending = progress.session?.idx;
+	const resumable = pending !== undefined && Number.isInteger(pending) && pending >= 0 && pending < index.count;
+	setMode(mode, mode === "quick" && resumable ? pending : undefined);
 }
 
 start();

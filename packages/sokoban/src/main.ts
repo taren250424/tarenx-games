@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { recordResult, statGrid } from "../../shared/progress/stats.ts";
 import { ads } from "../../shared/ads/ads.ts";
 import { COLLECTIONS } from "./levels.ts";
 
@@ -64,6 +65,7 @@ const pushesEl = document.getElementById("pushes") as HTMLElement;
 const bestEl = document.getElementById("best") as HTMLElement;
 const overlayEl = document.getElementById("win-overlay") as HTMLElement;
 const winStatsEl = document.getElementById("win-stats") as HTMLElement;
+const winRecordEl = document.getElementById("win-record") as HTMLElement;
 const nextBtn = document.getElementById("next-btn") as HTMLButtonElement;
 const soundBtn = document.getElementById("sound-btn") as HTMLButtonElement;
 
@@ -288,6 +290,11 @@ function checkWin() {
 		levelSelectEl.value = key;
 	}
 	saveSession();
+	const record = recordResult(true, `col${colIndex}`);
+	winRecordEl.innerHTML = statGrid([
+		{ value: record.played, label: "Solved" },
+		{ value: progress.best[key], label: "Best moves" },
+	]);
 	winStatsEl.textContent = `${moves} moves · ${pushes} pushes${isRecord ? " · New best!" : ""}`;
 	const [nc, nl] = nextPosition();
 	const isWrap = nc === 0 && nl === 0 && !(colIndex === 0 && levelIndex === 0);

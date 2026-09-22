@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { recordResult, statGrid } from "../../shared/progress/stats.ts";
 import { ads } from "../../shared/ads/ads.ts";
 
 mountIcons();
@@ -209,6 +210,7 @@ const highEl = document.getElementById("high") as HTMLElement;
 const overlayEl = document.getElementById("overlay") as HTMLElement;
 const overlayTitleEl = document.getElementById("overlay-title") as HTMLElement;
 const overlayTextEl = document.getElementById("overlay-text") as HTMLElement;
+const overlayRecordEl = document.getElementById("overlay-record") as HTMLElement;
 const soundBtn = document.getElementById("sound-btn") as HTMLButtonElement;
 
 // --- audio ---
@@ -396,7 +398,15 @@ function endGame() {
 	play("gameover");
 	progress.best = Math.max(progress.best, score);
 	saveSession();
-	showOverlay("Game Over", `Score ${score.toLocaleString()} — press R or tap to play again`);
+	const record = recordResult(false);
+	showOverlay(
+		"Game Over",
+		`Score ${score.toLocaleString()} — press R or tap to play again`,
+		statGrid([
+			{ value: record.played, label: "Played" },
+			{ value: progress.best.toLocaleString(), label: "Best" },
+		])
+	);
 	draw();
 }
 
@@ -450,9 +460,10 @@ function togglePause() {
 	}
 }
 
-function showOverlay(title: string, text: string) {
+function showOverlay(title: string, text: string, record = "") {
 	overlayTitleEl.textContent = title;
 	overlayTextEl.textContent = text;
+	overlayRecordEl.innerHTML = record;
 	overlayEl.classList.remove("hidden");
 }
 

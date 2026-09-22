@@ -5,6 +5,7 @@ import { Chess } from "chess.js";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { recordResult } from "../../shared/progress/stats.ts";
 import { ads } from "../../shared/ads/ads.ts";
 import { pieceSprite } from "./pieces.ts";
 import { Board, type UserMove } from "./board.ts";
@@ -321,6 +322,7 @@ function onUserMove(m: UserMove): void {
 	progress.totals.played++;
 	progress.totals.points += score.points;
 	progress.totals.grades[score.grade]++;
+	recordResult(score.grade === "best" || score.grade === "excellent", difficultyOf(pos.rating));
 	markSeen(current.idx);
 	if (mode === "daily" && progress.daily) {
 		progress.daily.results.push({ idx: current.idx, uci, points: score.points, grade: score.grade });

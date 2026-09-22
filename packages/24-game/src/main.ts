@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { recordResult, statGrid } from "../../shared/progress/stats.ts";
 import { ads } from "../../shared/ads/ads.ts";
 import { PUZZLES, type Difficulty } from "./puzzles.ts";
 import {
@@ -76,6 +77,7 @@ const soundBtn = document.getElementById("sound-btn") as HTMLButtonElement;
 const overlayEl = document.getElementById("end-overlay") as HTMLElement;
 const endTitleEl = document.getElementById("end-title") as HTMLElement;
 const endStatsEl = document.getElementById("end-stats") as HTMLElement;
+const endRecordEl = document.getElementById("end-record") as HTMLElement;
 const nextBtn = document.getElementById("next-btn") as HTMLButtonElement;
 const retryBtn = document.getElementById("retry-btn") as HTMLButtonElement;
 
@@ -366,6 +368,11 @@ function checkWin() {
 	const best = progress.best[key];
 	const isRecord = best === undefined || elapsed < best;
 	if (isRecord) progress.best[key] = elapsed;
+	const record = recordResult(true, difficulty);
+	endRecordEl.innerHTML = statGrid([
+		{ value: record.played, label: "Solved" },
+		{ value: formatTime(progress.best[key]), label: "Best" },
+	]);
 	progress.session = null;
 	saveProgress();
 	buildPuzzleOptions();

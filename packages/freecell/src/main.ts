@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { recordResult, statGrid, statsFor, winPairs } from "../../shared/progress/stats.ts";
 import { ads } from "../../shared/ads/ads.ts";
 import { type Card, SUITS, isRed, orderedDeck, rank, suit } from "../../shared/cards/deck.ts";
 import { type SlotSpec, createTable } from "../../shared/cards/table.ts";
@@ -71,6 +72,7 @@ const finishBtn = document.getElementById("finish-btn") as HTMLButtonElement;
 const overlayEl = document.getElementById("overlay") as HTMLElement;
 const overlayTitleEl = document.getElementById("overlay-title") as HTMLElement;
 const overlayStatsEl = document.getElementById("overlay-stats") as HTMLElement;
+const overlayRecordEl = document.getElementById("overlay-record") as HTMLElement;
 const overlayUndoBtn = document.getElementById("overlay-undo") as HTMLButtonElement;
 const overlayNextBtn = document.getElementById("overlay-next") as HTMLButtonElement;
 
@@ -543,6 +545,7 @@ function sweep() {
 
 function finish() {
 	finished = true;
+	overlayRecordEl.innerHTML = statGrid(winPairs(recordResult(true, variant())));
 	selection = null;
 	const key = String(dealNumber);
 	const previous = progress.best[key];
@@ -566,9 +569,14 @@ function finish() {
 	render();
 }
 
+function variant(): string {
+	return "all";
+}
+
 function showStuck() {
 	overlayEl.classList.add("stuck");
 	overlayTitleEl.textContent = "No moves left";
+	overlayRecordEl.innerHTML = statGrid(winPairs(statsFor(variant())));
 	overlayStatsEl.textContent = `Deal #${dealNumber} · ${moves} moves · take one back and try another line.`;
 	overlayUndoBtn.classList.remove("hidden");
 	overlayNextBtn.textContent = "New deal";
@@ -684,6 +692,8 @@ function updateUrl() {
 }
 
 function startDeal(number: number, session?: Session) {
+	// a deal left for another one counts as lost, the way solitaire scores itself
+	if (moves > 0 && !finished) recordResult(false, variant());
 	dealNumber = clampDeal(number);
 	board = session ? cloneBoard(session.board) : { ...emptyBoard(), tableau: deal(dealNumber) };
 	moves = session ? session.moves : 0;

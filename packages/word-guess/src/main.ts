@@ -4,6 +4,14 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import {
+	importStats,
+	recordResult,
+	statGrid,
+	statsFor as sharedStatsFor,
+	winPairs,
+	type Stats,
+} from "../../shared/progress/stats.ts";
 import { ads } from "../../shared/ads/ads.ts";
 
 mountIcons();
@@ -24,12 +32,16 @@ interface Pack {
 	allowed: string;
 }
 
-interface Stats {
-	played: number;
-	won: number;
-	streak: number;
-	best: number;
+interface Distribution {
 	dist: number[]; // wins bucketed by the guess number that landed it
+}
+
+// The counts the game kept for itself before the shared record store existed.
+interface LegacyStats extends Partial<Distribution> {
+	played?: number;
+	won?: number;
+	streak?: number;
+	best?: number;
 }
 
 interface Session {
@@ -41,7 +53,7 @@ interface Session {
 
 interface Progress {
 	current: number; // word length
-	stats: Record<string, Stats>;
+	stats: Record<string, Distribution>;
 	recent: Record<string, string[]>;
 	session: Session | null;
 	settings: { sound: boolean; hard: boolean; contrast: boolean };
@@ -94,8 +106,15 @@ const endStatsEl = document.getElementById("end-stats") as HTMLElement;
 const againBtn = document.getElementById("again-btn") as HTMLButtonElement;
 
 // --- persistence ---
-function emptyStats(): Stats {
-	return { played: 0, won: 0, streak: 0, best: 0, dist: [] };
+function adoptStats(stats: Record<string, LegacyStats>): Record<string, Distribution> {
+	const kept: Record<string, Distribution> = {};
+	for (const [len, s] of Object.entries(stats)) {
+		if (typeof s.played === "number") {
+			importStats(len, { played: s.played, won: s.won ?? 0, streak: s.streak ?? 0, bestStreak: s.best ?? 0 });
+		}
+		kept[len] = { dist: Array.isArray(s.dist) ? s.dist : [] };
+	}
+	return kept;
 }
 
 function loadProgress(): Progress {
@@ -112,7 +131,7 @@ function loadProgress(): Progress {
 			const parsed = JSON.parse(raw) as Partial<Progress>;
 			return {
 				current: LENGTHS.includes(Number(parsed.current)) ? Number(parsed.current) : 5,
-				stats: parsed.stats && typeof parsed.stats === "object" ? parsed.stats : {},
+				stats: parsed.stats && typeof parsed.stats === "object" ? adoptStats(parsed.stats) : {},
 				recent: parsed.recent && typeof parsed.recent === "object" ? parsed.recent : {},
 				session: parsed.session ?? null,
 				settings: {
@@ -140,11 +159,13 @@ const progress = loadProgress();
 ads.init({ sound: () => progress.settings.sound });
 
 function statsFor(len: number): Stats {
+	return sharedStatsFor(String(len));
+}
+
+function distFor(len: number): number[] {
 	const key = String(len);
-	if (!progress.stats[key]) progress.stats[key] = emptyStats();
-	const s = progress.stats[key];
-	if (!Array.isArray(s.dist)) s.dist = [];
-	return s;
+	if (!progress.stats[key]) progress.stats[key] = { dist: [] };
+	return progress.stats[key].dist;
 }
 
 function saveSession() {
@@ -332,7 +353,7 @@ function renderKeyboard() {
 function renderHud() {
 	const s = statsFor(length);
 	streakEl.textContent = String(s.streak);
-	bestEl.textContent = String(s.best);
+	bestEl.textContent = String(s.bestStreak);
 	winRateEl.textContent = s.played > 0 ? `${Math.round((s.won / s.played) * 100)}%` : "—";
 }
 
@@ -353,11 +374,11 @@ function shakeActiveRow() {
 	row.classList.add("shake");
 }
 
-function distributionHtml(s: Stats): string {
+function distributionHtml(dist: number[]): string {
 	const total = guessesFor(length);
 	// dist is written by index and so has holes; spreading it raw hands Math.max
 	// an undefined and every bar comes out NaN wide.
-	const counts = Array.from({ length: total }, (_, i) => s.dist[i] ?? 0);
+	const counts = Array.from({ length: total }, (_, i) => dist[i] ?? 0);
 	const peak = Math.max(1, ...counts);
 	return counts.map((n, i) => {
 		const width = Math.max(8, Math.round((n / peak) * 100));
@@ -370,13 +391,7 @@ function showOverlay() {
 	const s = statsFor(length);
 	endTitleEl.textContent = status === "won" ? "Got it!" : "Out of guesses";
 	endWordEl.textContent = answer.toUpperCase();
-	endStatsEl.innerHTML =
-		`<div class="stat-grid">` +
-		`<div><strong>${s.played}</strong><span>Played</span></div>` +
-		`<div><strong>${s.played ? Math.round((s.won / s.played) * 100) : 0}%</strong><span>Win rate</span></div>` +
-		`<div><strong>${s.streak}</strong><span>Streak</span></div>` +
-		`<div><strong>${s.best}</strong><span>Best</span></div>` +
-		`</div><div class="dist">${distributionHtml(s)}</div>`;
+	endStatsEl.innerHTML = `${statGrid(winPairs(s))}<div class="dist">${distributionHtml(distFor(length))}</div>`;
 	overlayEl.classList.remove("hidden");
 }
 
@@ -394,15 +409,10 @@ function updateToggles() {
 // --- game ---
 function finish(won: boolean) {
 	status = won ? "won" : "lost";
-	const s = statsFor(length);
-	s.played++;
+	recordResult(won, String(length));
 	if (won) {
-		s.won++;
-		s.streak++;
-		s.best = Math.max(s.best, s.streak);
-		s.dist[rows.length - 1] = (s.dist[rows.length - 1] ?? 0) + 1;
-	} else {
-		s.streak = 0;
+		const dist = distFor(length);
+		dist[rows.length - 1] = (dist[rows.length - 1] ?? 0) + 1;
 	}
 	rememberAnswer(answer);
 	play(won ? "win" : "lose");

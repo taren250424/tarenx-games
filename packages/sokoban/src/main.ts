@@ -19,9 +19,15 @@ interface Snapshot {
 	pushes: number;
 }
 
+interface Session {
+	key: string; // "collectionIndex:levelIndex"
+	dirs: Dir[]; // every move since the level was loaded, replayed to rebuild the board and the undo stack
+}
+
 interface Progress {
 	current: string; // "collectionIndex:levelIndex"
 	best: Record<string, number>; // "collectionIndex:levelIndex" -> best moves
+	session: Session | null;
 	settings: { sound: boolean };
 }
 
@@ -47,6 +53,7 @@ let player = 0;
 let moves = 0;
 let pushes = 0;
 let history: Snapshot[] = [];
+let dirs: Dir[] = [];
 let won = false;
 
 // --- elements ---
@@ -73,6 +80,7 @@ function loadProgress(): Progress {
 				return {
 					current: parsed.current,
 					best: parsed.best,
+					session: parsed.session ?? null,
 					settings: { sound: parsed.settings?.sound ?? true },
 				};
 			}
@@ -80,7 +88,7 @@ function loadProgress(): Progress {
 	} catch {
 		// corrupted storage — start fresh
 	}
-	return { current: "0:0", best: {}, settings: { sound: true } };
+	return { current: "0:0", best: {}, session: null, settings: { sound: true } };
 }
 
 function saveProgress(progress: Progress) {
@@ -92,6 +100,20 @@ function saveProgress(progress: Progress) {
 }
 
 const progress = loadProgress();
+
+function saveSession() {
+	progress.session = dirs.length > 0 && !won ? { key: levelKey(colIndex, levelIndex), dirs: [...dirs] } : null;
+	saveProgress(progress);
+}
+
+function validSession(session: Session | null, key: string): session is Session {
+	return (
+		session !== null &&
+		session.key === key &&
+		Array.isArray(session.dirs) &&
+		session.dirs.every((d) => d in DIRS)
+	);
+}
 
 // --- audio ---
 const play = createSfx(["bump", "goal", "clear"] as const, () => progress.settings.sound);
@@ -115,7 +137,7 @@ function levelKey(ci: number, li: number): string {
 	return `${ci}:${li}`;
 }
 
-function loadLevel(ci: number, li: number) {
+function loadLevel(ci: number, li: number, session?: Session) {
 	colIndex = ci;
 	levelIndex = li;
 	const rows = COLLECTIONS[ci].levels[li].rows;
@@ -127,6 +149,7 @@ function loadLevel(ci: number, li: number) {
 	moves = 0;
 	pushes = 0;
 	history = [];
+	dirs = [];
 	won = false;
 
 	for (let r = 0; r < height; r++) {
@@ -154,8 +177,14 @@ function loadLevel(ci: number, li: number) {
 		}
 	}
 
+	if (session) {
+		for (const d of session.dirs) {
+			if (step(d) === "blocked") return loadLevel(ci, li);
+		}
+	}
+
 	progress.current = levelKey(ci, li);
-	saveProgress(progress);
+	saveSession();
 	levelSelectEl.value = levelKey(ci, li);
 	overlayEl.classList.add("hidden");
 	render();
@@ -189,34 +218,43 @@ function render() {
 	bestEl.textContent = best === undefined ? "—" : String(best);
 }
 
-function move(dir: Dir) {
-	if (won) return;
+type Step = "blocked" | "walked" | "pushed" | "scored";
+
+function step(dir: Dir): Step {
 	const { dr, dc } = DIRS[dir];
 	const delta = dr * width + dc;
 	const target = player + delta;
-	if (walls.has(target)) {
-		play("bump");
-		return;
-	}
+	if (walls.has(target)) return "blocked";
 
+	let result: Step = "walked";
 	if (boxes.has(target)) {
 		const beyond = target + delta;
-		if (walls.has(beyond) || boxes.has(beyond)) {
-			play("bump");
-			return;
-		}
+		if (walls.has(beyond) || boxes.has(beyond)) return "blocked";
 		history.push({ player, boxes: new Set(boxes), moves, pushes });
 		boxes.delete(target);
 		boxes.add(beyond);
-		if (goals.has(beyond)) play("goal");
+		result = goals.has(beyond) ? "scored" : "pushed";
 		pushes++;
 	} else {
 		history.push({ player, boxes: new Set(boxes), moves, pushes });
 	}
 	player = target;
 	moves++;
+	dirs.push(dir);
+	return result;
+}
+
+function move(dir: Dir) {
+	if (won) return;
+	const result = step(dir);
+	if (result === "blocked") {
+		play("bump");
+		return;
+	}
+	if (result === "scored") play("goal");
 	render();
 	checkWin();
+	saveSession();
 }
 
 function undo() {
@@ -226,7 +264,9 @@ function undo() {
 	boxes = snapshot.boxes;
 	moves = snapshot.moves;
 	pushes = snapshot.pushes;
+	dirs.pop();
 	render();
+	saveSession();
 }
 
 function restart() {
@@ -244,10 +284,10 @@ function checkWin() {
 	const isRecord = best === undefined || moves < best;
 	if (isRecord) {
 		progress.best[key] = moves;
-		saveProgress(progress);
 		buildLevelOptions();
 		levelSelectEl.value = key;
 	}
+	saveSession();
 	winStatsEl.textContent = `${moves} moves · ${pushes} pushes${isRecord ? " · New best!" : ""}`;
 	const [nc, nl] = nextPosition();
 	const isWrap = nc === 0 && nl === 0 && !(colIndex === 0 && levelIndex === 0);
@@ -337,6 +377,8 @@ levelSelectEl.addEventListener("change", () => {
 	loadLevel(ci, li);
 });
 
+window.addEventListener("pagehide", saveSession);
+
 // --- init ---
 function buildLevelOptions() {
 	levelSelectEl.innerHTML = COLLECTIONS.map((collection, ci) => {
@@ -358,7 +400,8 @@ function init() {
 		ci = 0;
 		li = 0;
 	}
-	loadLevel(ci, li);
+	const key = levelKey(ci, li);
+	loadLevel(ci, li, validSession(progress.session, key) ? progress.session : undefined);
 }
 
 init();

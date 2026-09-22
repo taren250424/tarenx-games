@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { recordResult, statGrid, statsFor, winPairs } from "../../shared/progress/stats.ts";
 import { ads } from "../../shared/ads/ads.ts";
 
 mountIcons();
@@ -81,6 +82,7 @@ const gainEl = document.getElementById("gain") as HTMLElement;
 const overlayEl = document.getElementById("end-overlay") as HTMLElement;
 const endTitleEl = document.getElementById("end-title") as HTMLElement;
 const endStatsEl = document.getElementById("end-stats") as HTMLElement;
+const endRecordEl = document.getElementById("end-record") as HTMLElement;
 const continueBtn = document.getElementById("continue-btn") as HTMLButtonElement;
 const againBtn = document.getElementById("again-btn") as HTMLButtonElement;
 
@@ -231,6 +233,7 @@ function showGain(amount: number) {
 function showOverlay(title: string, stats: string, canContinue: boolean) {
 	endTitleEl.textContent = title;
 	endStatsEl.textContent = stats;
+	endRecordEl.innerHTML = statGrid(winPairs(statsFor(size.key)));
 	continueBtn.classList.toggle("hidden", !canContinue);
 	againBtn.textContent = canContinue ? "New Game" : "Play Again";
 	overlayEl.classList.remove("hidden");
@@ -363,6 +366,7 @@ function move(dir: Dir) {
 	if (born.some((t) => t.value >= TARGET) && !celebrated) {
 		celebrated = true;
 		play("win");
+		recordResult(true, size.key);
 		showOverlay(
 			"2048!",
 			`${score.toLocaleString()} points. Keep going for a bigger tile?`,
@@ -371,6 +375,8 @@ function move(dir: Dir) {
 	} else if (!hasMoves()) {
 		over = true;
 		play("gameover");
+		// a run that reached 2048 was already counted as a win
+		if (!celebrated) recordResult(false, size.key);
 		const isRecord = score > best;
 		showOverlay(
 			"No moves left",

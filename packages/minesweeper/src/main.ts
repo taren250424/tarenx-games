@@ -4,6 +4,7 @@ import "./style.css";
 import { createSfx } from "../../shared/audio/sfx.ts";
 import { icon, mountIcons, setSoundIcon } from "../../shared/ui/icons.ts";
 import { markPlayed } from "../../shared/progress/recent.ts";
+import { recordResult, statGrid, winPairs } from "../../shared/progress/stats.ts";
 import { ads } from "../../shared/ads/ads.ts";
 
 mountIcons();
@@ -65,6 +66,7 @@ const bestEl = document.getElementById("best") as HTMLElement;
 const overlayEl = document.getElementById("end-overlay") as HTMLElement;
 const endTitleEl = document.getElementById("end-title") as HTMLElement;
 const endStatsEl = document.getElementById("end-stats") as HTMLElement;
+const endRecordEl = document.getElementById("end-record") as HTMLElement;
 const againBtn = document.getElementById("again-btn") as HTMLButtonElement;
 
 // --- persistence ---
@@ -296,6 +298,7 @@ function lose(i: number) {
 	saveSession();
 	play("boom");
 	endTitleEl.textContent = "Boom!";
+	endRecordEl.innerHTML = statGrid(winPairs(recordResult(false, difficulty.key)));
 	endStatsEl.textContent = `Survived ${formatTime(seconds)} — better luck next field`;
 	againBtn.textContent = "Try Again";
 	overlayEl.classList.remove("hidden");
@@ -318,6 +321,7 @@ function checkWin() {
 	}
 	saveSession();
 	endTitleEl.textContent = "Field Cleared!";
+	endRecordEl.innerHTML = statGrid(winPairs(recordResult(true, difficulty.key)));
 	endStatsEl.textContent = `${formatTime(seconds)}${isRecord ? " · New best!" : ""}`;
 	againBtn.textContent = "Play Again";
 	overlayEl.classList.remove("hidden");
